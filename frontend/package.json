@@ -1,0 +1,42 @@
+{
+  "name": "pgjones_dev_frontend",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "dependencies": {
+    "react": "*",
+    "react-dom": "*",
+    "react-router-dom": "*",
+    "react-scripts-ts": "*",
+    "styled-components": "*"
+  },
+  "scripts": {
+    "start": "react-scripts-ts start",
+    "build": "react-scripts-ts build",
+    "format": "yarn run prettier:base -- --list-different \"src/**/*.{ts,tsx}\"",
+    "reformat": "yarn run prettier:base -- --write \"src/**/*.{ts,tsx}\"",
+    "lint": "yarn run lint:ts; yarn run lint:css",
+    "lint:ts": "yarn run tslint \"src/**/*.{ts,tsx}\"",
+    "lint:css": "stylelint \"./src/**/*.{ts,tsx}\"",
+    "eject": "react-scripts-ts eject",
+    "prettier:base": "prettier --parser typescript",
+    "analyse": "source-map-explorer \"build/static/js/*.js\""
+  },
+  "devDependencies": {
+    "@types/node": "*",
+    "@types/react": "*",
+    "@types/react-dom": "*",
+    "@types/react-router-dom": "*",
+    "@types/styled-components": "*",
+    "enzyme": "*",
+    "enzyme-adapter-react-16": "*",
+    "prettier": "*",
+    "source-map-explorer": "*",
+    "stylelint": "*",
+    "stylelint-config-standard": "*",
+    "stylelint-config-styled-components": "*",
+    "stylelint-order": "*",
+    "stylelint-processor-styled-components": "*",
+    "typescript": "*"
+  }
+}
