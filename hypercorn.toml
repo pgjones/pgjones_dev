@@ -1,0 +1,4 @@
+bind = "0.0.0.0:8443"
+certfile = "/certs/certificate.pem"
+keyfile = "/certs/private.pem"
+worker_class = "trio"
