@@ -51,7 +51,7 @@ ecr-push:
     - pip install awscli
 
   script:
-    - $(aws ecr get-login --no-include-email --region eu-west-2)
+    - $(aws ecr get-login --no-include-email --region eu-west-1)
     - docker build --build-arg CI_COMMIT_SHA=$CI_COMMIT_SHA -t $AWS_REPOSITORY_URL .
     - docker push $AWS_REPOSITORY_URL
   only:
