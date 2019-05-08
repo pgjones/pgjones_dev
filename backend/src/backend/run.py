@@ -13,10 +13,10 @@ def create_app() -> QuartTrio:
     async def startup() -> None:
         static_root = app.static_folder
         static_root = cast(str, static_root)
-        app.push_promise_paths = ["/service-worker.js"]
-        app.push_promise_paths.extend(_extract_paths(static_root, "css"))
-        app.push_promise_paths.extend(_extract_paths(static_root, "js"))
-        app.push_promise_paths.extend(_extract_paths(static_root, "media"))
+        app.push_promise_paths = ["/service-worker.js"]  # type: ignore
+        app.push_promise_paths.extend(_extract_paths(static_root, "css"))  # type: ignore
+        app.push_promise_paths.extend(_extract_paths(static_root, "js"))  # type: ignore
+        app.push_promise_paths.extend(_extract_paths(static_root, "media"))  # type: ignore
 
     app.register_blueprint(serving_blueprint)
 

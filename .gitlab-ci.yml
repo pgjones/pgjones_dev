@@ -14,7 +14,6 @@ frontend-ci:
   script:
   - yarn run format
   - yarn run lint
-  - yarn run test
   - yarn run build
 
 backend-ci:
