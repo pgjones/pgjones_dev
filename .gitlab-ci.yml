@@ -29,7 +29,6 @@ backend-ci:
   script:
   - poetry run format
   - poetry run lint
-  - poetry run test
 
 docker-ci:
   stage: lint-test
