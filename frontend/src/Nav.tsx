@@ -39,7 +39,7 @@ const SDiv = styled.div`
 const Nav = () => (
   <SNav>
     <SDiv>
-      <SNavLink to="/">Projects</SNavLink>
+      <SNavLink to="/">Open Source</SNavLink>
       <SNavLink to="/blog/">Blog</SNavLink>
       <SNavLink to="/site/">Site</SNavLink>
       <SNavLink to="/talks/">Talks</SNavLink>
