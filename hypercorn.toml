@@ -1,5 +1,5 @@
 bind = "0.0.0.0:8443"
-certfile = "/certs/pgjones.dev.crt"
+certfile = "/cert/pgjones.dev.crt"
 insecure_bind = "0.0.0.0:8080"
-keyfile = "/certs/pgjones.dev.key"
+keyfile = "/cert/pgjones.dev.key"
 worker_class = "trio"
