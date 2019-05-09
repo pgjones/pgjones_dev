@@ -20,7 +20,7 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
         await make_push_promise(push_path)
 
     response = await make_response(await render_template("index.html"))
-    response.headers["Content-Security-Policy"] = "default-src 'self'"
+    response.headers["Content-Security-Policy"] = "default-src 'self'; style-src 'self' 'unsafe-inline'"
     response.headers["Referrer-Policy"] = "no-referrer, strict-origin-when-cross-origin"
     response.headers["Strict-Transport-Security"] = "max-age=63072000"
     response.headers["X-Content-Type-Options"] = "nosniff"
