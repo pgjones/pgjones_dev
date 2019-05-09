@@ -35,6 +35,7 @@ RUN poetry install && poetry cache:clear pypi --all
 COPY --from=frontend /frontend/build/index.html /app/templates/
 COPY --from=frontend /frontend/build/service-worker.js /app/static/js/
 COPY --from=frontend /frontend/build/static/js/* /app/static/js/
+COPY --from=frontend /frontend/build/static/media/* /app/static/media/
 COPY backend/src/backend/ /app/
 
 USER nobody
