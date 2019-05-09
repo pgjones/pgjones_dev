@@ -12,7 +12,7 @@ RUN gzip --keep /frontend/build/static/js/*; \
 
 FROM python:3.7-alpine
 
-EXPOSE 8443
+EXPOSE 8080 8443
 ENTRYPOINT ["dumb-init"]
 CMD ["./app"]
 COPY app hypercorn.toml /app/

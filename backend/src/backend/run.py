@@ -1,12 +1,13 @@
 from pathlib import Path
 from typing import cast, List
 
+from hypercorn.middleware import HTTPToHTTPSRedirectMiddleware
 from quart_trio import QuartTrio
 
 from blueprints.serving import blueprint as serving_blueprint
 
 
-def create_app() -> QuartTrio:
+def create_app(production: bool = True) -> QuartTrio:
     app = QuartTrio(__name__)
 
     @app.before_serving
@@ -20,7 +21,10 @@ def create_app() -> QuartTrio:
 
     app.register_blueprint(serving_blueprint)
 
-    return app
+    if production:
+        return HTTPToHTTPSRedirectMiddleware(app, "pgjones.dev")  # type: ignore
+    else:
+        return app
 
 
 def _extract_paths(static_root: str, subfolder: str) -> List[str]:
@@ -32,5 +36,5 @@ def _extract_paths(static_root: str, subfolder: str) -> List[str]:
 
 
 if __name__ == "__main__":
-    app = create_app()
+    app = create_app(False)
     app.run()
