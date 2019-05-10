@@ -25,7 +25,7 @@ const Projects = () => (
     <Card
       header={
         <>
-          <SImg src={Quart} />
+          <SImg src={Quart} alt="The Quart Logo, a Quart bottle" />
           <SRole>Author</SRole>
         </>
       }
@@ -44,7 +44,7 @@ const Projects = () => (
     <Card
       header={
         <>
-          <SImg src={Hypercorn} />
+          <SImg src={Hypercorn} alt="The Hypercorn Logo, a stylised corn" />
           <SRole>Author</SRole>
         </>
       }
