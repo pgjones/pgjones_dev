@@ -26,7 +26,6 @@
     "analyse": "source-map-explorer \"build/static/js/*.js\""
   },
   "devDependencies": {
-    "@types/highlight.js": "^9.12.3",
     "@types/node": "*",
     "@types/react": "*",
     "@types/react-dom": "*",

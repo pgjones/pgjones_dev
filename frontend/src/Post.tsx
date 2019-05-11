@@ -1,4 +1,6 @@
-import { highlight } from "highlight.js";
+import { highlight, registerLanguage } from "highlight.js/lib/highlight";
+import python from "highlight.js/lib/languages/python";
+import "highlight.js/styles/solarized-light.css";
 import { Marked } from "marked-ts";
 import * as React from "react";
 import styled from "styled-components";
@@ -7,9 +9,12 @@ import Card from "./Card";
 import { ColumnContainer } from "./Containers";
 import { SSkeletonLine } from "./Skeleton";
 
+registerLanguage("python", python);
+
 const SDiv = styled.div`
   & pre {
     background-color: ${props => props.theme.color.grey.light};
+    overflow-x: scroll;
   }
 `;
 
