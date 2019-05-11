@@ -6,6 +6,7 @@ import Blog from "./Blog";
 import { ColumnContainer } from "./Containers";
 import Footer from "./Footer";
 import Header from "./Header";
+import Info from "./Info";
 import Post from "./Post";
 import Projects from "./Projects";
 import Style from "./Style";
@@ -28,6 +29,7 @@ const App = () => (
               <Route exact={true} path="/" component={Projects} />
               <Route exact={true} path="/blog/" component={Blog} />
               <Route exact={true} path="/blog/:id/" component={Post} />
+              <Route exact={true} path="/info/" component={Info} />
               <Route exact={true} path="/talks/" component={Talks} />
             </Switch>
           </SBody>

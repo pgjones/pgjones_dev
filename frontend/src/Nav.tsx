@@ -17,7 +17,6 @@ const SNavLink = styled(NavLink)`
   background-size: 0% 2px;
   color: ${props => props.theme.color.primary.text};
   display: inline-block;
-  flex-basis: 0;
   flex-grow: 1;
   line-height: 32px;
   text-align: center;
@@ -41,9 +40,8 @@ const Nav = () => (
     <SDiv>
       <SNavLink to="/">Open Source</SNavLink>
       <SNavLink to="/blog/">Blog</SNavLink>
-      <SNavLink to="/site/">Site</SNavLink>
       <SNavLink to="/talks/">Talks</SNavLink>
-      <SNavLink to="/bio/">Bio</SNavLink>
+      <SNavLink to="/info/">Info</SNavLink>
     </SDiv>
   </SNav>
 );
