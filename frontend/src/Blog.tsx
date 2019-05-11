@@ -41,6 +41,7 @@ const Blog = () => {
   if (posts.length > 0) {
     cards = posts.map(post => (
       <Card
+        key={post.id}
         header={
           <SH3>
             {post.title}
