@@ -1,0 +1,150 @@
+date = "2019-05-11"
+id = "push-promise-2019"
+summary = "This is a commentrary on my usage of, and experience with, push promises and how I've added support in Quart."
+title = "My experience with Push Promises (Server Push)"
+body = """
+# My experience with Push Promises (Server Push)
+
+##### 2019-05-11
+
+If you are visiting this website with a HTTP/2 capable user agent the
+server has most likely pushed the javascript, css, and media assets to
+you whilst the html response was crafted and sent. If your user agent
+accepts encoding as well you would have had the compressed assets
+pushed instead of the raw assets. This should have contributed towards
+a hopefully very quick load time and hence a pleasant experience.
+
+This functionality has taken me a few years of experimenting to get
+right, yet I'm still not sure it is optimum. In addition as far as I
+can tell there isn't a large corpus of knowledge, or usage, of HTTP/2
+push promises. This article hopes to help by explaining my experience
+developing push promise code for other developers and using server
+push on my sites.
+
+## Making server push possible in Python
+
+I first learnt about server push two years ago, in 2017, at that time
+there was no way to server push directly from Python. Rather the best
+practice was to return a Link header in the response and have nginx
+push the referenced resource. In flask this would require something
+like this,
+
+```python
+@app.route("/")
+def index():
+    body = render_template("index.html")
+    headers = {"Link": "</style.css>; as=style; rel=preload"}
+    return body, headers
+```
+
+with nginx between the client and the Flask server.
+
+Whilst this works, I wanted to be able to push from Python directly as
+I often serve Flask apps with Gunicorn and async workers alone
+i.e. without nginx. I developed Quart in part to solve this problem.
+
+The first implementation of server push in Quart followed the nginx
+logic, by allowing a response to be associated with a set of push
+promises (note that this no longer works with the latest versions of
+Quart),
+
+```python
+@app.route("/")
+async def index():
+    response = await render_template("index.html")
+    response.push_promises.add("/style.css")
+    return response
+```
+
+I then made use of this on [stet.io](https://stet.io) to push the
+large assets, especially the background image.
+
+### Pushing before responding
+
+The issue with the nginx and initial Quart implementation is that the
+server must fully construct and start returning the response before
+the push promises are initiated. Given the purpose of push promises is
+to reduce the load time, waiting till the response is constructed is
+wasteful. As an example consider the following,
+
+```python
+@app.route("/")
+async def index():
+    data = await fetch_from_db()  # Lets say this takes 20ms
+    response = await render_template("index.html", data=data)
+    response.push_promises.add("/style.css")
+    return response
+```
+
+if we assume the style.css file can be sent in 10ms the push promise
+could have been fully delivered whilst the server was waiting for data
+from the database.
+
+To correct for this the most recent Quart API allows push promises to
+be initiated at any time during the request handling, for example,
+
+```python
+@app.route("/")
+async def index():
+    await make_push_promise("/style.css")  # Lets say this takes 10ms
+    data = await fetch_from_db()  # Lets say this takes 20ms
+    response = await render_template("index.html", data=data)
+    return response
+```
+
+this would result in the push promise having been fully received
+before the response has even started sending. Now the user agent can
+use the css instantly after parsing the index.html.
+
+This made things much better, especially for routes that require some
+computation to build the response. A good example of which was an
+application that would execute a complex database query to build a
+page which had itself a complex set of associated javascript as the js
+was pushed whilst the database query completed.
+
+### User agent acceptance
+
+Both of the above APIs were initially implemented poorly, as was the
+initial
+[nginx](https://trac.nginx.org/nginx/changeset/3d2b0b02bd3d9a5c2b1f5d0451b4e6a1c0fef1f4/nginx)
+implementation. The poor implementation manifested in serving
+uncompressed push promises when a normal request would be served
+compressed. This meant my sites would often have worse load times
+using push promises.
+
+To understand this problem it is necessary to consider how push
+promises are understood by the server. In Quart a push promise is
+simply another independent request. This independence resulted in the
+push promise coming with its own set of headers that it no way match
+those of the initiating request. This meant that Quart (and nginx) had
+no way to know what the user agent accepted and hence would return the
+default uncompressed response.
+
+To correct for this most implementations, including Quart, will copy
+the ``Accept-Encoding``, ``Accept-Language``, and ``User-Agent``
+headers from the initiating request to the push promise request.
+
+#### Note on Hypercorn and ASGI
+
+Throughout this article I've referred only to Quart, although since
+2018 Quart split out its serving code in Hypercorn to adopt the ASGI
+standard. Whilst Quart has the developer API, it is actually Hypercorn
+that handles the push promise implementation.
+
+Within ASGI push promises are an
+[extension](https://asgi.readthedocs.io/en/latest/extensions.html#http-2-server-push)
+meaning that servers are not obliged to implement any support. So far
+only Hypercorn has.
+
+### Conclusion
+
+It has taken me a few years, but I have an implementation of push
+promises that works well. It works so well that it is the default for
+my work, and I find it makes a noticeable positive difference to the
+page load time.
+
+The community as a whole, as far as I can tell, doesn't use push
+promises though. This is something I don't understand and I'd like to
+learn why - please tweet me at @pdgjones.
+
+"""
