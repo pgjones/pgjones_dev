@@ -1,24 +1,28 @@
 from pathlib import Path
 from typing import cast, List
 
+import toml
 from hypercorn.middleware import HTTPToHTTPSRedirectMiddleware
-from quart_trio import QuartTrio
 
+from blueprints.blogs import blueprint as blogs_blueprint
 from blueprints.serving import blueprint as serving_blueprint
+from lib.json_quart import JSONQuart
 
 
-def create_app(production: bool = True) -> QuartTrio:
-    app = QuartTrio(__name__)
+def create_app(production: bool = True) -> JSONQuart:
+    app = JSONQuart(__name__)
 
     @app.before_serving
     async def startup() -> None:
         static_root = app.static_folder
         static_root = cast(str, static_root)
-        app.push_promise_paths = ["/service-worker.js"]  # type: ignore
-        app.push_promise_paths.extend(_extract_paths(static_root, "css"))  # type: ignore
-        app.push_promise_paths.extend(_extract_paths(static_root, "js"))  # type: ignore
-        app.push_promise_paths.extend(_extract_paths(static_root, "media"))  # type: ignore
+        app.push_promise_paths = ["/service-worker.js"]
+        app.push_promise_paths.extend(_extract_paths(static_root, "css"))
+        app.push_promise_paths.extend(_extract_paths(static_root, "js"))
+        app.push_promise_paths.extend(_extract_paths(static_root, "media"))
+        app.blogs = _extract_blogs(app.root_path / app.template_folder)
 
+    app.register_blueprint(blogs_blueprint)
     app.register_blueprint(serving_blueprint)
 
     if production:
@@ -33,6 +37,14 @@ def _extract_paths(static_root: str, subfolder: str) -> List[str]:
         return [f"/static/{subfolder}/{path.name}" for path in static_path.iterdir()]
     else:
         return []
+
+
+def _extract_blogs(template_root: Path) -> List[dict]:
+    blogs: List[dict] = []
+    path = template_root / "blogs"
+    for blog in path.glob("*.toml"):
+        blogs.append(toml.loads(blog.read_text()))
+    return blogs
 
 
 if __name__ == "__main__":

@@ -219,6 +219,7 @@ wsproto = ">=0.14.0"
 reference = "9c72ecc60d6a728c98d420d2265685cf2fffc731"
 type = "git"
 url = "https://gitlab.com/pgjones/hypercorn.git"
+
 [[package]]
 category = "main"
 description = "HTTP/2 framing layer for Python"
@@ -567,7 +568,7 @@ version = "0.14.0"
 h11 = ">=0.8.0,<0.9.0"
 
 [metadata]
-content-hash = "faf77f2405e124ae3cff51b61104ced1b98bda48fcb2ab801101f3fae0bbf316"
+content-hash = "41654742390b3df4655bcc6a6a3a5fce8c89c659b7cd27428503fa046a19e7e3"
 python-versions = "^3.7"
 
 [metadata.hashes]
