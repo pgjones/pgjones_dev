@@ -10,8 +10,12 @@ const SCard = styled.div`
   flex-basis: 0;
   flex-direction: column;
   flex-grow: 1;
-  margin: 1em;
+  margin: 1em 1em 0 1em;
   min-width: 300px;
+
+  &:last-child {
+    margin-bottom: 1em;
+  }
 `;
 
 const SCardHeader = styled.div`
