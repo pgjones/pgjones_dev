@@ -1,6 +1,7 @@
-import styled from "styled-components";
+import { Link } from "react-router-dom";
+import styled, { css } from "styled-components";
 
-export const SA = styled.a`
+const linkCss = css`
   background-image: linear-gradient(
     ${props => props.theme.color.secondary.dark},
     ${props => props.theme.color.secondary.dark}
@@ -18,4 +19,12 @@ export const SA = styled.a`
     background-size: 100% 2px;
     color: ${props => props.theme.color.secondary.dark};
   }
+`;
+
+export const SA = styled.a`
+  ${linkCss};
+`;
+
+export const SLink = styled(Link)`
+  ${linkCss};
 `;

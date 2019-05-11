@@ -34,14 +34,14 @@ const SCardFooter = styled.div`
 interface IProps {
   body: React.ReactNode;
   footer?: React.ReactNode;
-  header: React.ReactNode;
+  header?: React.ReactNode;
 }
 
 const Card = ({ body, footer, header }: IProps) => (
   <SCard>
-    <SCardHeader>{header}</SCardHeader>
+    {header && <SCardHeader>{header}</SCardHeader>}
     <SCardBody>{body}</SCardBody>
-    <SCardFooter>{footer}</SCardFooter>
+    {footer && <SCardFooter>{footer}</SCardFooter>}
   </SCard>
 );
 
