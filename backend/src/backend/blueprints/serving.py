@@ -35,3 +35,9 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
 async def service_worker() -> ResponseReturnValue:
     path = safe_join(current_app.static_folder, "js", "service-worker.js")
     return await send_file(path)
+
+
+@blueprint.route("/manifest.json")
+async def manifest() -> ResponseReturnValue:
+    path = safe_join(current_app.static_folder, "manifest.json")
+    return await send_file(path)
