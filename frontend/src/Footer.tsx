@@ -4,6 +4,7 @@ import styled from "styled-components";
 import Github from "./Github";
 import Gitlab from "./Gitlab";
 import Medium from "./Medium";
+import Stackoverflow from "./Stackoverflow";
 import Twitter from "./Twitter";
 import { SA } from "./Typography";
 
@@ -33,6 +34,9 @@ const Footer = () => (
     </SLink>
     <SLink href="https://twitter.com/pdgjones">
       <Twitter />
+    </SLink>
+    <SLink href="https://stackoverflow.com/users/9231401/pgjones">
+      <Stackoverflow />
     </SLink>
   </SFooter>
 );
