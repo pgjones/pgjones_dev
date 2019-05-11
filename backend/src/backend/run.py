@@ -20,7 +20,7 @@ def create_app(production: bool = True) -> JSONQuart:
         app.push_promise_paths.extend(_extract_paths(static_root, "css"))
         app.push_promise_paths.extend(_extract_paths(static_root, "js"))
         app.push_promise_paths.extend(_extract_paths(static_root, "media"))
-        app.blogs = _extract_blogs(app.root_path / app.template_folder)
+        app.blogs = _extract_blogs(app.root_path / app.template_folder)  # type: ignore
 
     app.register_blueprint(blogs_blueprint)
     app.register_blueprint(serving_blueprint)
@@ -43,7 +43,7 @@ def _extract_blogs(template_root: Path) -> List[dict]:
     blogs: List[dict] = []
     path = template_root / "blogs"
     for blog in path.glob("*.toml"):
-        blogs.append(toml.loads(blog.read_text()))
+        blogs.append(toml.loads(blog.read_text()))  # type: ignore
     return blogs
 
 
