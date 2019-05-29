@@ -19,6 +19,35 @@ const Talks = () => (
       header={
         <>
           <SH3>
+            Async web servers; design and implementation
+            <br />
+            <small>London Python 2019</small>
+          </SH3>
+        </>
+      }
+      body={
+        <>
+          <SP>
+            In this talk I'll describe an idealised process I've gone through
+            developing Hypercorn. I'll define the aims of a modern async web
+            server, overview the tooling used to be async, and finally the
+            constraints imposed by the event loop choice.
+          </SP>
+        </>
+      }
+      footer={
+        <>
+          <SA href="https://docs.google.com/presentation/d/1xoAe5TWfzjt1JsqF5701hYjLaRi3S27M6MHrqGfTKPw/">
+            Slides
+          </SA>
+        </>
+      }
+    />
+
+    <Card
+      header={
+        <>
+          <SH3>
             Quart; an ASGI alternative to Flask
             <br />
             <small>EuroPython 2018</small>
