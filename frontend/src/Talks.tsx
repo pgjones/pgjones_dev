@@ -19,6 +19,36 @@ const Talks = () => (
       header={
         <>
           <SH3>
+            An introduction to ASGI, Asynchronous Server Gateway Interface
+            <br />
+            <small>PyLondinium 2019</small>
+          </SH3>
+        </>
+      }
+      body={
+        <>
+          <SP>
+            WSGI has been a huge success, allowing for an ecosystem of servers
+            and frameworks to exist and develop independently, however, WSGI is
+            unable to support websockets or the new async/await syntax. ASGI is
+            the asynchronous spiritual successor to WSGI, with websockets and
+            async support built in.
+          </SP>
+        </>
+      }
+      footer={
+        <>
+          <SA href="https://docs.google.com/presentation/d/1lanW471hjyVGk06qi3oGCecJydBVZpYMdaM8bvptIu0/">
+            Slides
+          </SA>
+        </>
+      }
+    />
+
+    <Card
+      header={
+        <>
+          <SH3>
             Async web servers; design and implementation
             <br />
             <small>London Python 2019</small>
