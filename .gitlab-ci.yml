@@ -48,7 +48,7 @@ ecr-push:
 
   before_script:
     - apk add --no-cache curl jq python py-pip
-    - pip install awscli
+    - pip install docutils==0.14 awscli
 
   script:
     - $(aws ecr get-login --no-include-email --region eu-west-1)
