@@ -24,7 +24,7 @@ authors = ["pgjones <philip.graham.jones@googlemail.com>"]
 python = "^3.7"
 hypercorn = { git = "https://gitlab.com/pgjones/hypercorn.git", branch = "master" }
 quart-trio = "*"
-toml = "^0.10.0"
+toml = "*"
 
 [tool.poetry.dev-dependencies]
 black = { version = "*", allows-prereleases = true }
