@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Helmet } from "react-helmet";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 
@@ -20,6 +21,13 @@ const SBody = styled.main`
 const App = () => (
   <ThemeProvider theme={theme}>
     <>
+      <Helmet>
+        <title>PGJones personal website</title>
+        <meta
+          name="description"
+          content="Information about software engineering, specifically web systems in Python and Typescript."
+        />
+      </Helmet>
       <Style />
       <BrowserRouter>
         <ColumnContainer>

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Helmet } from "react-helmet";
 import styled from "styled-components";
 
 import Card from "./Card";
@@ -21,89 +22,99 @@ const SRole = styled.label`
 `;
 
 const Projects = () => (
-  <MixedContainer>
-    <Card
-      header={
-        <>
-          <SImg src={Quart} alt="The Quart Logo, a Quart bottle" />
-          <SRole>Author</SRole>
-        </>
-      }
-      body="Quart is a Python ASGI web microframework, that allows websites to be
+  <>
+    <Helmet>
+      <title>Open source | PGJones</title>
+      <meta
+        name="description"
+        content="The open source projects I help maintain."
+      />
+    </Helmet>
+    <MixedContainer>
+      <Card
+        header={
+          <>
+            <SImg src={Quart} alt="The Quart Logo, a Quart bottle" />
+            <SRole>Author</SRole>
+          </>
+        }
+        body="Quart is a Python ASGI web microframework, that allows websites to be
             written utilising the async await syntax and the familiar
             Flask API. This is possible as Quart is a
             re-implementation of the Flask API using async/await and
             ASGI."
-      footer={
-        <>
-          <SA href="https://gitlab.com/pgjones/quart">Source code</SA>&nbsp;
-          <SA href="https://pgjones.gitlab.io/quart/">Documentation</SA>
-        </>
-      }
-    />
-    <Card
-      header={
-        <>
-          <SImg src={Hypercorn} alt="The Hypercorn Logo, a stylised corn" />
-          <SRole>Author</SRole>
-        </>
-      }
-      body="Hypercorn is a Python ASGI server, capable of serving HTTP/1, HTTP/2
+        footer={
+          <>
+            <SA href="https://gitlab.com/pgjones/quart">Source code</SA>&nbsp;
+            <SA href="https://pgjones.gitlab.io/quart/">Documentation</SA>
+          </>
+        }
+      />
+      <Card
+        header={
+          <>
+            <SImg src={Hypercorn} alt="The Hypercorn Logo, a stylised corn" />
+            <SRole>Author</SRole>
+          </>
+        }
+        body="Hypercorn is a Python ASGI server, capable of serving HTTP/1, HTTP/2
             request and WebSockets over both HTTP 1 and HTTP/2. In
             addition it supports asyncio and Trio event loop workers."
-      footer={
-        <>
-          <SA href="https://gitlab.com/pgjones/hypercorn">Source code</SA>&nbsp;
-          <SA href="https://pgjones.gitlab.io/hypercorn/">Documentation</SA>
-        </>
-      }
-    />
-    <Card
-      header={
-        <>
-          <h3>Quart-Trio</h3>
-          <SRole>Author</SRole>
-        </>
-      }
-      body="Quart-Trio is a Quart extension that supports the Trio event loop
+        footer={
+          <>
+            <SA href="https://gitlab.com/pgjones/hypercorn">Source code</SA>
+            &nbsp;
+            <SA href="https://pgjones.gitlab.io/hypercorn/">Documentation</SA>
+          </>
+        }
+      />
+      <Card
+        header={
+          <>
+            <h3>Quart-Trio</h3>
+            <SRole>Author</SRole>
+          </>
+        }
+        body="Quart-Trio is a Quart extension that supports the Trio event loop
             (rather than asyncio)."
-      footer={
-        <>
-          <SA href="https://gitlab.com/pgjones/quart-trio">Source code</SA>
-        </>
-      }
-    />
-    <Card
-      header={
-        <>
-          <h3>Quart-CORS</h3>
-          <SRole>Author</SRole>
-        </>
-      }
-      body="Quart-CORS is a Quart extension that adds relevant Cross Origin
+        footer={
+          <>
+            <SA href="https://gitlab.com/pgjones/quart-trio">Source code</SA>
+          </>
+        }
+      />
+      <Card
+        header={
+          <>
+            <h3>Quart-CORS</h3>
+            <SRole>Author</SRole>
+          </>
+        }
+        body="Quart-CORS is a Quart extension that adds relevant Cross Origin
             Resource Sharing headers"
-      footer={
-        <>
-          <SA href="https://gitlab.com/pgjones/quart-cors">Source code</SA>
-        </>
-      }
-    />
-    <Card
-      header={
-        <>
-          <h3>wsproto</h3>
-          <SRole>Maintainer</SRole>
-        </>
-      }
-      body="wsproto is a Sans-IO implementation of the WebSocket protocol. It
+        footer={
+          <>
+            <SA href="https://gitlab.com/pgjones/quart-cors">Source code</SA>
+          </>
+        }
+      />
+      <Card
+        header={
+          <>
+            <h3>wsproto</h3>
+            <SRole>Maintainer</SRole>
+          </>
+        }
+        body="wsproto is a Sans-IO implementation of the WebSocket protocol. It
             supports both HTTP/1 and HTTP/2 WebSockets."
-      footer={
-        <>
-          <SA href="https://github.com/python-hyper/wsproto">Source code</SA>
-        </>
-      }
-    />
-  </MixedContainer>
+        footer={
+          <>
+            <SA href="https://github.com/python-hyper/wsproto">Source code</SA>
+          </>
+        }
+      />
+    </MixedContainer>
+  </>
 );
 
 export default Projects;

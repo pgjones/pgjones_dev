@@ -8,6 +8,7 @@
     "marked-ts": "^1.0.0-beta.4",
     "react": "*",
     "react-dom": "*",
+    "react-helmet": "*",
     "react-router-dom": "*",
     "react-scripts-ts": "*",
     "styled-components": "*"
@@ -29,6 +30,7 @@
     "@types/node": "*",
     "@types/react": "*",
     "@types/react-dom": "*",
+    "@types/react-helmet": "*",
     "@types/react-router-dom": "*",
     "@types/styled-components": "*",
     "enzyme": "*",
