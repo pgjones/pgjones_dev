@@ -25,7 +25,7 @@ ENV PATH=/ve/bin:${PATH}
 # hadolint ignore=DL3013
 RUN pip install --no-cache-dir dumb-init poetry
 
-RUN mkdir -p /app/templates /app/static/css /app/static/js /app/static/media /root/.config/pypoetry
+RUN mkdir -p /app/templates /app/static/css /app/static/icons /app/static/js /app/static/media /root/.config/pypoetry
 
 COPY poetry_config.toml /root/.config/pypoetry/config.toml
 COPY backend/poetry.lock backend/pyproject.toml /app/
@@ -36,6 +36,7 @@ COPY --from=frontend /frontend/build/index.html /app/templates/
 COPY --from=frontend /frontend/build/manifest.json /app/static/
 COPY --from=frontend /frontend/build/service-worker.js /app/static/js/
 COPY --from=frontend /frontend/build/static/css/* /app/static/css/
+COPY --from=frontend /frontend/build/icons/* /app/static/icons/
 COPY --from=frontend /frontend/build/static/js/* /app/static/js/
 COPY --from=frontend /frontend/build/static/media/* /app/static/media/
 COPY backend/src/backend/ /app/
