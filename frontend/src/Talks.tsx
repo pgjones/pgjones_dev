@@ -47,6 +47,7 @@ const Talks = () => (
         }
         footer={
           <>
+            <SA href="https://youtu.be/t3gCK9QqXWU">Video</SA>&nbsp;
             <SA href="https://docs.google.com/presentation/d/1lanW471hjyVGk06qi3oGCecJydBVZpYMdaM8bvptIu0/">
               Slides
             </SA>
