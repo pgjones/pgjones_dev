@@ -1,5 +1,5 @@
 date = "2019-08-01"
-id = "spa-corse-2019"
+id = "spa-cors-2019"
 summary = """
 Modern Single Page Apps have a increasingly common architecture
 whereby the frontend is served on a different domain to the backend
