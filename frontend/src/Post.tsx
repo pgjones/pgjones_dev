@@ -1,4 +1,5 @@
 import { highlight, registerLanguage } from "highlight.js/lib/highlight";
+import javascript from "highlight.js/lib/languages/javascript";
 import python from "highlight.js/lib/languages/python";
 import "highlight.js/styles/solarized-light.css";
 import { Marked } from "marked-ts";
@@ -11,6 +12,7 @@ import { ColumnContainer } from "./Containers";
 import { SSkeletonLine } from "./Skeleton";
 
 registerLanguage("python", python);
+registerLanguage("javascript", javascript);
 
 const SDiv = styled.div`
   & pre {

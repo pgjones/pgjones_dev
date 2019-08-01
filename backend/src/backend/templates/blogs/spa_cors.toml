@@ -1,0 +1,270 @@
+date = "2019-08-01"
+id = "spa-corse-2019"
+summary = """
+Modern Single Page Apps have a increasingly common architecture
+whereby the frontend is served on a different domain to the backend
+necessitating the use of CORS. This article shows how to make CORS
+work in this architecture.
+"""
+
+title = "How to setup CORS for a Single Page App"
+body = """
+# How to setup CORS for a Single Page App
+
+##### 2019-09-01
+
+# CORS explained
+
+Single Page Apps have changed how we architect web services, rather
+than having a single backend that collates data and renders a page to
+the user the client now renders the page with data fetched from a
+seperate backend. This is often architected using multiple domains
+with the frontend served from say `example.com` and the backend from
+`api.example.com`. This multiple domain architecture requires that
+CORS, Cross Origin Resource Sharing, be used and understood.
+
+## Why is CORS needed?
+
+Browsers implement a number of policies to protect the security of the
+user, one of which is the same-origin policy. The same-origin policy
+insists that requests made when visiting a page are only made to the
+same-origin as the page visited. This prevents a malicious page from
+acting as the user on an entirely different website. For example if
+there was a malicious page with code such as,
+
+```javascript
+const balance = await fetch("https://mybank.com/balance");
+// Move the balance to another account
+await fetch(
+  "https://mybank.com/payment", {
+    method: "POST",
+    body: JSON.stringify({
+      "target": 1231231,
+      "amount": balance,
+    }),
+  }
+)
+```
+
+without the same-origin policy the browser would be instructed to send
+these requests as if the user had made them.
+
+Whilst the same-origin policy is great for the user, it poses problems
+for our SPA setup as it will block the SPA from fetching data from the
+api subdomain. CORS provides a solution by allowing our backend server
+to tell the browser that it can, in fact, access this data.
+
+## Allowing data to be fetched
+
+The first useful thing to do is to fetch (GET) data from the
+backend. This requires the backend to return CORS (access-control)
+headers with the response which state that the `example.com` origin
+may read the body. Specifically in our case we need to add the header,
+`Access-Control-Allow-Origin: https://example.com`.
+
+If you are using [Quart-CORS](https://gitlab.com/pgjones/quart-cors)
+you can add this header to all the backend routes at once,
+
+```python
+from quart import Quart
+from quart_cors import cors
+
+app = Quart(__name__)
+app = cors(app, allow_origin="https://example.com")
+```
+
+It is also a good idea to specify the `cors` mode when executing the
+fetch. This is likely the default but browser vendors and versions are
+not always consistent.
+
+```javascript
+await fetch("https://api.example.com/something", { mode: "cors" });
+```
+
+## Authenticating with cookies
+
+If the data being fetched is private you will need to authenticate the
+request made to the backend. If your authentication system is cookie
+based this is enabled by including credentials with the request,
+
+```javascript
+await fetch(
+  "https://api.example.com/something", {
+    credentials: "include",
+    mode: "cors",
+  }
+);
+```
+
+however if your authentication system is not cookie based and instead
+uses a header, things are more complex. This is because browsers make
+a distinction between ["simple" cors
+requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#Simple_requests)
+and regular cors requests. As the above examples are about the only
+cases that are considered simple requests, I would advise that you
+consider all cors requests to be regular.
+
+### Aside on preflight requests
+
+In order for the browser to know what requests it is allowed to make
+it must ask the server. To ask server the browser will send a
+preflight request, which is an OPTIONS request to the resource. The
+response to this request should include `Access-Control` headers such
+as the `Access-Control-Allow-Origin` header we've already discussed.
+
+## Authenticating with headers
+
+To authenticate with headers the server must inform the browser that
+it is allowed to send the specific header to it. For example if in our
+case we use an `Authorization` header (as with JWT) we need the server
+to return `Access-Control-Allow-Headers: Authorization` in the
+response to the preflight request. If you are using Quart-CORS you
+can add this header to all the backend routes via,
+
+```python
+from quart import Quart
+from quart_cors import cors
+
+app = Quart(__name__)
+app = cors(
+    app,
+    allow_origin="https://example.com",
+    allow_headers=["Authorization"],
+)
+```
+
+you will then be able to send the header,
+
+
+```javascript
+await fetch(
+  "https://api.example.com/something", {
+    headers: {"Authorization": `Bearer ${token}`},
+    mode: "cors",
+  }
+);
+```
+
+## Allowing data to be sent
+
+So far we've only allowed GET requests, eventually though we are going
+to need to send data and/or DELETE, PATCH, PUT... Much like when
+fetching the same-origin policy blocks these requests, unless the
+server responds to the preflight request with an Access-Control header
+to allow them. To send a POST request the header required is
+`Access-Control-Allow-Methods: POST`. To send JSON data though we also
+need to allow the browser to send a Content-Type header using
+`Access-Control-Allow-Headers: Content-Type`. Putting this together
+and using Quart-CORS gives,
+
+```python
+from quart import Quart
+from quart_cors import route_cors
+
+app = Quart(__name__)
+
+@app.route("/", methods=["POST"])
+@route_cors(
+    allow_origin="https://example.com",
+    allow_headers=["Authorization", "Content-Type"],
+    allow_methods=["POST"],
+)
+async def receive_data():
+    ...
+```
+
+and
+
+```javascript
+await fetch(
+  "https://api.example.com/something", {
+    body: JSON.stringify(data),
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    mode: "cors",
+  }
+);
+```
+
+## Logging in with cookies
+
+The ability to send data to the server allows the SPA to enable
+logins, where the username and password (or otherwise) is sent. If
+your authentication system uses cookies this login request should set
+cookies in the browser. As you probably expect by now, this requires
+an Access-Control header in the preflight response to work,
+specifically, `Access-Control-Allow-Credentials: true`. Using
+Quart-CORS this can be done as follows,
+
+```python
+from quart import Quart
+from quart_cors import route_cors
+
+app = Quart(__name__)
+
+@app.route("/", methods=["POST"])
+@route_cors(
+    allow_origin="https://example.com",
+    allow_credentials=True,
+    allow_headers=["Content-Type"],
+    allow_methods=["POST"],
+)
+async def login():
+    ...
+```
+
+## Reading response headers
+
+If the server returns something in a header that you wish to read in
+the SPA, the server must inform the browser that this is allowed. It
+does so via the `Access-Control-Expose-Headers` header. If our backend
+returns an authorization token in an `Authorization` header then we
+would need `Access-Control-Expose-Headers: Authorization` header
+present in the preflight response. Using Quart-CORS this can be done
+as follows,
+
+```python
+from quart import Quart
+from quart_cors import route_cors
+
+app = Quart(__name__)
+
+
+@app.route("/", methods=["POST"])
+@route_cors(
+    allow_origin="https://example.com",
+    allow_credentials=True,
+    allow_headers=["Content-Type"],
+    allow_methods=["POST"],
+    expose_headers=["Authorization"],
+)
+async def login():
+    ...
+    return body, {"Authorization": token}
+```
+
+and
+
+```javascript
+const response = await fetch(
+  "https://api.example.com/something", {
+    body: JSON.stringify(data),
+    mode: "cors",
+  }
+);
+const token = response.headers.get("Authorization")
+```
+
+## Conclusion
+
+With these headers in place on the backend we should no longer see any
+cors errors in the frontend in production. In development however we
+need to remember to allow a `http://localhost:3000` (assuming you are
+using the default cra port) origin rather than `https://example.com`.
+
+CORS can be quite confusing at first, but I've found thinking about it
+only in terms of regular requests and then considering what it is you
+want to allow the browser to do really helps.
+"""
