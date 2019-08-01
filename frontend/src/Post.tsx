@@ -16,6 +16,11 @@ const SDiv = styled.div`
   & pre {
     background-color: ${props => props.theme.color.grey.light};
     overflow-x: scroll;
+    padding: 1rem;
+  }
+
+  & p code {
+    color: ${props => props.theme.color.secondary.dark};
   }
 `;
 

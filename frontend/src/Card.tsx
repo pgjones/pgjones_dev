@@ -25,7 +25,6 @@ const SCardHeader = styled.div`
 const SCardBody = styled.div`
   color: ${props => props.theme.color.primary.dark};
   flex-grow: 1;
-  font-size: smaller;
   padding: 16px;
   text-align: justify;
 `;
