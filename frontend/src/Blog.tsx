@@ -25,7 +25,11 @@ const Blog = () => {
       const response = await fetch("/v0/blogs/");
       const data = await response.json();
 
-      setPosts(data.posts);
+      setPosts(
+        data.posts.sort(
+          (a: IPost, b: IPost) => +new Date(b.date) - +new Date(a.date),
+        ),
+      );
     };
     fetchData();
   }, []);
