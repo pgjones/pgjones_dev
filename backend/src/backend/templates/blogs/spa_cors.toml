@@ -13,8 +13,6 @@ body = """
 
 ##### 2019-09-01
 
-# CORS explained
-
 Single Page Apps have changed how we architect web services, rather
 than having a single backend that collates data and renders a page to
 the user the client now renders the page with data fetched from a
