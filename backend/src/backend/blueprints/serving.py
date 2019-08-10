@@ -41,3 +41,8 @@ async def service_worker() -> ResponseReturnValue:
 async def manifest() -> ResponseReturnValue:
     path = safe_join(current_app.static_folder, "manifest.json")
     return await send_file(path)
+
+
+@blueprint.route("/robots.txt")
+async def robots() -> ResponseReturnValue:
+    return await render_template("robots.txt")
