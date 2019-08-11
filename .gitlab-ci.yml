@@ -22,7 +22,7 @@ backend-ci:
   image: python:3.7-alpine
 
   before_script:
-  - apk --update add alpine-sdk libffi-dev
+  - apk --update add alpine-sdk libffi-dev openssl openssl-dev bsd-compat-headers
   - pip install poetry
   - cd backend && poetry install
 
