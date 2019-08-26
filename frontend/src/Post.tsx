@@ -22,7 +22,10 @@ const SDiv = styled.div`
   }
 
   & p code {
+    background-color: ${props => props.theme.color.grey.light};
     color: ${props => props.theme.color.secondary.dark};
+    padding: 2px;
+    vertical-align: bottom;
   }
 `;
 
