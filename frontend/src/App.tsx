@@ -4,7 +4,6 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 
 import Blog from "./Blog";
-import { ColumnContainer } from "./Containers";
 import Footer from "./Footer";
 import Header from "./Header";
 import Info from "./Info";
@@ -30,7 +29,7 @@ const App = () => (
       </Helmet>
       <Style />
       <BrowserRouter>
-        <ColumnContainer>
+        <div>
           <Header />
           <SBody>
             <Switch>
@@ -42,7 +41,7 @@ const App = () => (
             </Switch>
           </SBody>
           <Footer />
-        </ColumnContainer>
+        </div>
       </BrowserRouter>
     </>
   </ThemeProvider>
