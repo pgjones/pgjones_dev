@@ -56,10 +56,11 @@ def _create_feeds(blogs: List[dict]) -> Tuple[bytes, bytes]:
     feed.author({"name": "PGJones", "email": "philip.graham.jones@googlemail.com"})
     feed.logo("https://pgjones.dev/static/media/MeSudbury.bd83a6a4.jpeg")
     feed.link(href="https://pgjones.dev/blog/", rel="alternate")
-    feed.link(href="https://pgjones.dev/blog/feed.atom", rel="self")
+    feed.link(href="https://pgjones.dev/blog/atom.xml", rel="self")
     feed.language("en")
     feed.id("https://pgjones.dev/blog/")
     feed.description("Blog posts from PGJones")
+    last_updated = datetime(2019, 1, 1).astimezone(timezone.utc)
     for blog in blogs:
         entry = feed.add_entry()
         entry.id(f"https://pgjones.dev/blog/{blog['id']}/")
@@ -67,7 +68,10 @@ def _create_feeds(blogs: List[dict]) -> Tuple[bytes, bytes]:
         entry.title(blog["title"])
         entry.summary(blog["summary"])
         published = datetime.combine(date.fromisoformat(blog["date"]), datetime.min.time())
-        entry.published(published.astimezone(timezone.utc))
+        published = published.astimezone(timezone.utc)
+        entry.published(published)
+        last_updated = max(last_updated, published)
+    feed.updated(last_updated)
     return feed.rss_str(), feed.atom_str()
 
 
