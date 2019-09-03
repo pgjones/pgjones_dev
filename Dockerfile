@@ -18,7 +18,7 @@ CMD ["./app"]
 COPY app hypercorn.toml /app/
 
 # hadolint ignore=DL3018
-RUN apk --no-cache add build-base git libffi-dev openssl openssl-dev bsd-compat-headers
+RUN apk --no-cache add build-base git libffi-dev libxml2-dev openssl openssl-dev bsd-compat-headers
 
 RUN python -m venv /ve
 ENV PATH=/ve/bin:${PATH}
