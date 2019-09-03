@@ -81,6 +81,16 @@ const Blog = () => {
         }
         footer={<SA href="https://stet.io/blog">Stet.io blog</SA>}
       />
+      <Card
+        header={<SH3>Feeds</SH3>}
+        body={<p>This blog is available via an Atom or a RSS feed.</p>}
+        footer={
+          <>
+            <SA href="https://pgjones.dev/blog/atom.xml">Atom</SA>{" "}
+            <SA href="https://pgjones.dev/blog/rss20.xml">RSS</SA>
+          </>
+        }
+      />
     </ColumnContainer>
   );
 };
