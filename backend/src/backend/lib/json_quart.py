@@ -1,5 +1,5 @@
 import mimetypes
-from typing import List, Union
+from typing import List, Tuple, Union
 
 from quart import jsonify, request, Response, ResponseReturnValue, safe_join, send_file
 from quart.exceptions import NotFound
@@ -10,6 +10,7 @@ from .typing import JSONReturnValue
 
 class JSONQuart(QuartTrio):
     blogs: List[dict]
+    feeds: Tuple[bytes, bytes]
     push_promise_paths: List[str]
 
     async def make_response(self, result: Union[JSONReturnValue, ResponseReturnValue]) -> Response:

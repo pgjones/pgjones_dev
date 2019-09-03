@@ -31,6 +31,16 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
     return response
 
 
+@blueprint.route("/blog/atom.xml")
+async def atom_feed() -> ResponseReturnValue:
+    return current_app.feeds[1], {"Content-Type": "text/xml"}
+
+
+@blueprint.route("/blog/rss20.xml")
+async def rss_feed() -> ResponseReturnValue:
+    return current_app.feeds[0], {"Content-Type": "text/xml"}
+
+
 @blueprint.route("/service-worker.js")
 async def service_worker() -> ResponseReturnValue:
     path = safe_join(current_app.static_folder, "js", "service-worker.js")

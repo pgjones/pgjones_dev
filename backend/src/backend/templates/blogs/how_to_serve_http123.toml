@@ -7,7 +7,7 @@ Hypercorn and how Hypercorn uses three great Sans-IO libraries to
 work.
 """
 
-title = "How to serve HTTP 1, 2, & 3 in Python"
+title = "How to serve HTTP 1, 2, and 3 in Python"
 body = """
 # How to serve HTTP 1, 2, & 3 in Python
 
