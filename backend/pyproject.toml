@@ -22,7 +22,7 @@ authors = ["pgjones <philip.graham.jones@googlemail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-hypercorn = { extras = ["h3"], git = "https://gitlab.com/pgjones/hypercorn.git", branch = "master" }
+hypercorn = { extras = ["h3"], version = "*" }
 quart-trio = "*"
 toml = "*"
 feedgen = "*"
