@@ -29,6 +29,10 @@ const SDiv = styled.div`
     padding: 2px;
     vertical-align: bottom;
   }
+
+  & img {
+    max-width: 100%;
+  }
 `;
 
 interface IPost {
