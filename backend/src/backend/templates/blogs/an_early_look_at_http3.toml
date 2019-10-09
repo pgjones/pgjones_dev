@@ -44,15 +44,15 @@ push when I recorded these),
 
 ### HTTP/1.1
 
-![This site served over HTTP/1.1](http://localhost:5000/static/img/h11.png)
+![This site served over HTTP/1.1](https://pgjones.dev/static/img/h11.png)
 
 ### HTTP/2
 
-![This site served over HTTP/2](http://localhost:5000/static/img/h2.png)
+![This site served over HTTP/2](https://pgjones.dev/static/img/h2.png)
 
 ### HTTP/3
 
-![This site served over HTTP/3](http://localhost:5000/static/img/h3.png)
+![This site served over HTTP/3](https://pgjones.dev/static/img/h3.png)
 
 ## In comparison
 
