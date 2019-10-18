@@ -1,0 +1,44 @@
+date = "2019-10-18"
+id = "http2-prioritisation-2019"
+summary = """
+Hypercorn 0.8.0 introduced support for HTTP/2 prioritisation the
+verification of which is demonstrated via a simple webpage.
+"""
+
+title = "Verifying HTTP/2 Prioritisation in Hypercorn"
+body = """
+# Verifying HTTP/2 Prioritisation in Hypercorn
+
+##### 2019-10-18
+
+HTTP/2 prioritisation allows a client to specify that certain streams
+(requests) are more important than others. The server should then
+deliver streams as prioritised. An example benefit of prioritisation
+is to allow a browser to prioritise the visible assets thereby
+improving the user experience.
+
+Hypercorn 0.8.0 finally introduced prioritisation, it took quite some
+time as HTTP/2 prioritisation is not a simple topic. As this
+[article](https://github.com/andydavies/http2-prioritization-issues)
+points out not all servers implement prioritisation, in fact there is
+a [draft
+RFC](https://tools.ietf.org/html/draft-lassey-priority-setting-00) to
+allow for prioritisation to be disabled via the settings. Furthermore
+at the time of writing priorisation is not part of the HTTP/3
+specification.
+
+I've chosen to implement and support priorisation in Hypercorn, so it
+is key to verify that it works correctly. Thankfully there is a simple
+[test](https://github.com/pmeenan/http2priorities/tree/master/stand-alone)
+that can be used (the test page itself is
+[here](https://www.webpagetest.org/http2priorities.html?image=https%3A%2F%2Fpgjones.dev%2Fstatic%2Fimg%2Fh11.png)).
+
+The test works by requesting an image many times, then requesting the
+image twice more. The final two requests are for images that will be
+displayed in the browser, therefore the browser is expected to
+prioritise these requests over all the previous ones. As you can see
+it does and Hypercorn serves them before the previous ones :).
+
+![Prioritisation test page request timings](https://pgjones.dev/static/img/h2_prioritisation.png)
+
+"""
