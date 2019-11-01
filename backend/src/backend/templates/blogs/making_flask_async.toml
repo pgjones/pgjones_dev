@@ -1,0 +1,239 @@
+date = "2019-10-18"
+id = "flask-async-quart-sync-2019"
+summary = """
+I've proposed a change to Flask to support async(io) view functions
+following on from a recent change to Quart to support (non-blocking)
+sync view functions. This article explains this approach and why Flask
+and Quart are necessarily complimentrary projets.
+"""
+
+title = "Making Flask async and Quart sync"
+body = """
+# Making Flask async and Quart sync
+
+##### 2019-10-18
+
+Web frameworks such as Flask are a perfect use case for asynchronous
+programming techniques as their purpose is to handle independent
+stateless requests. In addition web frameworks are typically dominated
+by IO rather than CPU work making them an obvious use case for
+asynchronous event loops. (If the distinction here isn't clear,
+[this](https://www.youtube.com/watch?v=9zinZmE3Ogk) talk should help).
+
+It is common therefore for Flask to be used with threads or event
+loops. Specifically the non async-await event loop implementations,
+eventlet, gevent, and meinheld. This choice between asynchronous
+solutions helpfully has a very minimal impact on the Flask code. For
+example,
+
+```python
+@app.route("/")
+def index():
+    response = requests.get(...)
+    return response.json()
+```
+
+will work concurrently with either threads or any of the non
+async-await event loops without any changes. In case of threads this
+is because each request is handled in its own thread. Whereas for the
+event loops it is because the code has been monkey patched to
+interface with the event loop (look for code such as `from gevent
+import monkey; monkey.patch_all()`).
+
+Flask is therefore and has been async since its inception and a very
+large number of companies successfully run it in production this
+way. Yet Python has evolved and formalised an async-await based event
+loop in the standard library, asyncio, with the community adding
+another two Curio, and Trio. These async-await based event loops,
+require changes to the code to interface with the event loop
+(introduction of the `async` and `await` keywords). For example the
+following is possible with Flask,
+
+```python
+async def async_work():
+    response = await httpx.get(...)
+    return response.json()
+
+@app.route("/")
+def index():
+    return asyncio.run(async_work())
+```
+
+however this pattern is only asynchronous within the `async_work`
+coroutine and as `asyncio.run` is not monkey patched by the non
+async-await event loops it is best used with a thread per request.
+
+Given the successes of non async-await event loops and Flask it is
+safe to say that Flask does not need to adopt async-await event loop
+support. Yet the community has shown great interest, as the syntax is
+very expressive and there have been impressive performance gains with
+third party asyncio libraries - a good example of which is
+[asyncpg](https://github.com/MagicStack/asyncpg#performance).
+
+## Why Flask cannot be async-await based
+
+An ideal solution is for Flask to support both async-await and
+non-async-await based event loops, thereby keeping compatibility with
+the numerous existing usages whilst supporting new ones. Specifically
+it would be great if Flask could be both a WSGI and a ASGI
+framework. Sadly in my view this is not a possiblity. To show why this
+isn't possible, lets consider the `Flask` class (simplified for this),
+
+```python
+class Flask:
+    def wsgi_app(self, environ, start_response):
+        with self.request_context(environ):
+            response = self.full_dispatch_request()
+            return response(environ, start_response)
+```
+
+a potential async-await based version could look like this,
+
+```python
+class Flask:
+    async def asgi_app(self, scope, receive, send):
+        # ASGI Invocation
+        async with self.request_context(scope, receive):
+            response = await self.full_dispatch_request()
+            await send(response)
+```
+
+note though that everything has now gained either the `async` or
+`await` keyword, and that this is viral in that any functions called
+must also be `async` if `await` is to be used by it or any of the
+functions directly or indirectly called.
+
+In my view the only solution to this virality is to make everything
+`async` which breaks backwards compatibility, for example it is common
+for Flask extensions to override `Flask` class methods, such as,
+
+```python
+class FlaskExtension(Flask):
+    def full_dispatch_request(self):
+        # Overridden method for the extension.
+        ...
+
+# Proposed new Flask
+class Flask:
+    async def full_dispatch_request(self):
+        ...
+
+    async def ...():
+        # In some method
+        await self.full_dispatch_request()
+```
+
+which will fail now as the function cannot be awaited, hence breaking
+the extension and backwards compatibility.
+
+It is my view then that if a async-await based Flask is desired it
+would be a breaking change, ideally requiring a fork. This is what
+I've come to see Quart as (although it isn't strictly speaking a
+fork). Quart is the Flask API reimplemented using `async` and `await`.
+
+## Utilising async-await in Flask
+
+Accepting that Flask cannot be async-await based doesn't mean that
+`async` and `await` cannot be utilised in Flask. As the second snippet
+in this article shows it is possible to use asyncio with threads. The
+snippet though is not a pleasant syntax, nor does it ensure that threads
+are used. Ideally it would be nice to write something like this,
+
+```python
+@app.route("/")
+async def index():
+    response = await httpx.get(...)
+    return response.json()
+```
+
+which will be possible if ??? is merged into Flask. This works by
+wrapping any coroutine with a synchronous wrapper that runs the
+coroutine on another thread. The key function is shown below, it is
+based on code in the asgiref repository that is being used to support
+`async` and `await` in Django.
+
+```python
+def run_async(func):
+    @wraps(func)
+    def _wrapper(*args, **kwargs):
+        call_result = Future()
+        def _run():
+            loop = asyncio.new_event_loop()
+            try:
+                result = loop.run_until_complete(func(*args, **kwargs))
+            except Exception as error:
+                call_result.set_exception(error)
+            else:
+                call_result.set_result(result)
+            finally:
+                loop.close()
+
+        loop_executor = ThreadPoolExecutor(max_workers=1)
+        if has_request_context():
+            _run = copy_current_request_context(_run)
+        loop_future = loop_executor.submit(_run)
+        loop_future.result()
+        return call_result.result()
+
+    return _wrapper
+```
+
+This should interface with the non async-await event loops (as they
+monkeypatch threading) but it cannot be as performant as async-await
+directly - hence this solution is best considered as a way to enable
+async based library usage in Flask.
+
+## Utilising sync code in Quart
+
+If you've followed my thoughts so far (thanks :D) you are probably
+wondering what happens in the inverse situation, i.e. a snippet like
+this in Quart,
+
+```python
+@app.route("/")
+async def index() -> ResponseReturnValue:
+    response = requests.get(...)
+    return response.json()
+```
+
+as the `requests.get` call does not interface with the event loop it
+will block the event loop rendering this asynchronous code synchronous
+in practice. Once again it is feasible to run this code in a thread,
+which is done by this key function,
+
+```python
+def run_sync(func: Callable[..., Any]) -> Callable[..., Coroutine[Any, None, None]]:
+    @wraps(func)
+    async def _wrapper(*args: Any, **kwargs: Any) -> Any:
+        loop = asyncio.get_running_loop()
+        result = await loop.run_in_executor(
+            None, copy_context().run, partial(func, *args, **kwargs)
+        )
+        return result
+
+    return _wrapper
+```
+
+which will be released in the next version of Quart 0.10.0 assuming
+there are no API changes prompted by the review of the Flask change
+???.
+
+## Conclusion
+
+I am of the opinion that Flask and Quart are complimentrary projects,
+and that users should decide if they intend to mostly write and use
+async-await based libraries and code or not. If they intend to be
+mostly async-await based they should use Quart, if not they should
+stick with Flask. Therefore ??? is in my view a positive addition
+to Flask that I hope is merged.
+
+### Footnotes
+
+I have neglected to discuss other solutions to the virality problem,
+such as nested event loops and the inherent `async_to_sync` wrappers
+required. I have done this as the nested event loops are a real pain
+to use and maintain (see the Flask-Patch system in Quart) and that the
+`async_to_sync` wrapper remains a backwards incompatible blocker to
+Flask extensions.
+
+"""
