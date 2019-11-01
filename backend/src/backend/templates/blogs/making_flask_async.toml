@@ -146,11 +146,12 @@ async def index():
     return response.json()
 ```
 
-which will be possible if ??? is merged into Flask. This works by
-wrapping any coroutine with a synchronous wrapper that runs the
-coroutine on another thread. The key function is shown below, it is
-based on code in the asgiref repository that is being used to support
-`async` and `await` in Django.
+which will be possible if
+[3412](https://github.com/pallets/flask/pull/3412) is merged into
+Flask. This works by wrapping any coroutine with a synchronous wrapper
+that runs the coroutine on another thread. The key function is shown
+below, it is based on code in the asgiref repository that is being
+used to support `async` and `await` in Django.
 
 ```python
 def run_async(func):
@@ -216,7 +217,7 @@ def run_sync(func: Callable[..., Any]) -> Callable[..., Coroutine[Any, None, Non
 
 which will be released in the next version of Quart 0.10.0 assuming
 there are no API changes prompted by the review of the Flask change
-???.
+[3412](https://github.com/pallets/flask/pull/3412).
 
 ## Conclusion
 
@@ -224,8 +225,9 @@ I am of the opinion that Flask and Quart are complimentrary projects,
 and that users should decide if they intend to mostly write and use
 async-await based libraries and code or not. If they intend to be
 mostly async-await based they should use Quart, if not they should
-stick with Flask. Therefore ??? is in my view a positive addition
-to Flask that I hope is merged.
+stick with Flask. Therefore
+[3412](https://github.com/pallets/flask/pull/3412) is in my view a
+positive addition to Flask that I hope is merged.
 
 ### Footnotes
 
