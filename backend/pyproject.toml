@@ -1,6 +1,6 @@
 [tool.black]
 line-length = 100
-target-version = ["py37"]
+target-version = ["py38"]
 
 [tool.isort]
 dont-skip = ["__init__.py"]
@@ -21,14 +21,14 @@ description = ""
 authors = ["pgjones <philip.graham.jones@googlemail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 hypercorn = { extras = ["h3"], version = "*" }
 quart-trio = "*"
 toml = "*"
 feedgen = "*"
 
 [tool.poetry.dev-dependencies]
-black = { version = "*", allows-prereleases = true }
+black = { version = "*", allow-prereleases = true }
 pytest = "*"
 isort = "*"
 flake8 = "*"

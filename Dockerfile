@@ -10,7 +10,7 @@ RUN yarn install && yarn build
 RUN gzip --keep /frontend/build/static/js/*; \
     gzip --keep /frontend/build/static/media/*
 
-FROM python:3.7-alpine
+FROM python:3.8-alpine
 
 EXPOSE 8080 8443
 ENTRYPOINT ["dumb-init"]
@@ -27,10 +27,11 @@ RUN pip install --no-cache-dir dumb-init poetry
 
 RUN mkdir -p /app/templates /app/static/css /app/static/icons /app/static/js /app/static/media /root/.config/pypoetry
 
-COPY poetry_config.toml /root/.config/pypoetry/config.toml
 COPY backend/poetry.lock backend/pyproject.toml /app/
 WORKDIR /app
-RUN poetry install && poetry cache:clear pypi --all
+RUN poetry config virtualenvs.create false \
+    && poetry install \
+    && poetry cache clear pypi --all --no-interaction
 
 COPY backend/src/backend/ /app/
 COPY --from=frontend /frontend/build/index.html /app/templates/
