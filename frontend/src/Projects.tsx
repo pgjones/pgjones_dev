@@ -17,8 +17,12 @@ const SImg = styled.img`
 
 const SRole = styled.label`
   display: block;
-  font-size: x-small;
+  font-size: small;
   text-align: right;
+`;
+
+const SH3 = styled.h3`
+  margin-top: 0;
 `;
 
 const Projects = () => (
@@ -71,7 +75,7 @@ const Projects = () => (
       <Card
         header={
           <>
-            <h3>Quart-Trio</h3>
+            <SH3>Quart-Trio</SH3>
             <SRole>Author</SRole>
           </>
         }
@@ -86,7 +90,7 @@ const Projects = () => (
       <Card
         header={
           <>
-            <h3>Quart-CORS</h3>
+            <SH3>Quart-CORS</SH3>
             <SRole>Author</SRole>
           </>
         }
@@ -101,7 +105,25 @@ const Projects = () => (
       <Card
         header={
           <>
-            <h3>wsproto</h3>
+            <SH3>Quart-Rate-Limiter</SH3>
+            <SRole>Author</SRole>
+          </>
+        }
+        body="Quart-Rate-Limiter is an extension for Quart to allow for rate limits to be
+          defined and enforced on a per route basis. It is interesting in that it utilises
+          the GCRA, rather than a leaky bucket approach."
+        footer={
+          <>
+            <SA href="https://gitlab.com/pgjones/quart-rate-limiter">
+              Source code
+            </SA>
+          </>
+        }
+      />
+      <Card
+        header={
+          <>
+            <SH3>wsproto</SH3>
             <SRole>Maintainer</SRole>
           </>
         }
@@ -110,6 +132,34 @@ const Projects = () => (
         footer={
           <>
             <SA href="https://github.com/python-hyper/wsproto">Source code</SA>
+          </>
+        }
+      />
+      <Card
+        header={
+          <>
+            <SH3>Hyper-h2</SH3>
+            <SRole>Maintainer</SRole>
+          </>
+        }
+        body="HTTP/2 State-Machine based protocol implementation"
+        footer={
+          <>
+            <SA href="https://github.com/python-hyper/hyper-h2">Source code</SA>
+          </>
+        }
+      />
+      <Card
+        header={
+          <>
+            <SH3>Werkzeug</SH3>
+            <SRole>Maintainer</SRole>
+          </>
+        }
+        body="Werkzeug is a comprehensive WSGI web application library, my effort is to make it a ASGI web application library as well."
+        footer={
+          <>
+            <SA href="https://github.com/pallets/werkzeug">Source code</SA>
           </>
         }
       />

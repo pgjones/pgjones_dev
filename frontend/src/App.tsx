@@ -15,6 +15,7 @@ import theme from "./theme";
 
 const SBody = styled.main`
   flex-grow: 1;
+  margin-bottom: 16px;
 `;
 
 const App = () => (
