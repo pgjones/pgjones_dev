@@ -33,6 +33,10 @@ const SDiv = styled.div`
   & img {
     max-width: 100%;
   }
+
+  & h1 {
+    margin-top: 0;
+  }
 `;
 
 interface IPost {

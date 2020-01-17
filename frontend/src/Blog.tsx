@@ -8,6 +8,7 @@ import { SA, SLink } from "./Typography";
 
 const SH3 = styled.h3`
   margin-bottom: 0;
+  margin-top: 0;
 `;
 
 interface IPost {
