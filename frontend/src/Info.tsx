@@ -44,9 +44,11 @@ const Info = () => (
               I'm a software engineer living in London, previously I was a
               particle physicist working on the SNO+ experiment. I completed my
               DPhil at Oxford (Lincoln College) in 2011, then worked as a
-              postdoc at QMUL before switching to industry. I'm now Head of
-              Engineering at Octopus Wealth, having previously been VP
-              Engineering at Smarkets.
+              postdoc at QMUL before switching to industry. I'm now Co-Founder
+              of <a href="https://moneyed.co.uk">Moneyed</a> a financial
+              planning app. Previously I was Head of Engineering at{" "}
+              <a href="https://octopuswealth.com/">Octopus Wealth</a>, and VP
+              Engineering at <a href="https://smarkets.com/">Smarkets</a>.
             </p>
 
             <p>
