@@ -115,7 +115,7 @@ const Blog = () => {
                   </h5>
                   <p className="card-text">
                     Before I made this site I blogged on medium.com under the
-                    handle @pgjones. I still do for artciles that are related to
+                    handle @pgjones. I still do for articles that are related to
                     my employment.
                   </p>
                   <p className="mb-0">
