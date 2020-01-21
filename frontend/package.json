@@ -4,6 +4,10 @@
   "private": true,
   "license": "UNLICENSED",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "*",
+    "@fortawesome/free-solid-svg-icons": "*",
+    "@fortawesome/react-fontawesome": "*",
+    "bootstrap": "*",
     "highlight.js": "^9.15.6",
     "marked-ts": "^1.0.0-beta.4",
     "react": "*",
@@ -11,7 +15,7 @@
     "react-helmet": "*",
     "react-router-dom": "*",
     "react-scripts-ts": "*",
-    "styled-components": "*"
+    "typeface-roboto": "*"
   },
   "proxy": "http://localhost:5000",
   "scripts": {
@@ -32,16 +36,13 @@
     "@types/react-dom": "*",
     "@types/react-helmet": "*",
     "@types/react-router-dom": "*",
-    "@types/styled-components": "*",
     "enzyme": "*",
     "enzyme-adapter-react-16": "*",
     "prettier": "*",
     "source-map-explorer": "*",
     "stylelint": "*",
     "stylelint-config-standard": "*",
-    "stylelint-config-styled-components": "*",
     "stylelint-order": "*",
-    "stylelint-processor-styled-components": "*",
     "typescript": "*"
   }
 }

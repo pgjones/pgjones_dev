@@ -6,38 +6,10 @@ import "highlight.js/styles/solarized-light.css";
 import { Marked } from "marked-ts";
 import * as React from "react";
 import { Helmet } from "react-helmet";
-import styled from "styled-components";
-
-import Card from "./Card";
-import { ColumnContainer } from "./Containers";
-import { SSkeletonLine } from "./Skeleton";
 
 registerLanguage("python", python);
 registerLanguage("javascript", javascript);
 registerLanguage("shell", shell);
-
-const SDiv = styled.div`
-  & pre {
-    background-color: ${props => props.theme.color.grey.light};
-    overflow-x: scroll;
-    padding: 1rem;
-  }
-
-  & p code {
-    background-color: ${props => props.theme.color.grey.light};
-    color: ${props => props.theme.color.secondary.dark};
-    padding: 2px;
-    vertical-align: bottom;
-  }
-
-  & img {
-    max-width: 100%;
-  }
-
-  & h1 {
-    margin-top: 0;
-  }
-`;
 
 interface IPost {
   body: string;
@@ -72,9 +44,12 @@ const Post = ({ match }: IProps) => {
   }, []);
 
   const body = post ? (
-    <SDiv dangerouslySetInnerHTML={{ __html: Marked.parse(post.body) }} />
+    <div
+      className="blog-post-body"
+      dangerouslySetInnerHTML={{ __html: Marked.parse(post.body) }}
+    />
   ) : (
-    <SSkeletonLine />
+    <div className="skeleton skeleton-line" />
   );
 
   return (
@@ -94,9 +69,12 @@ const Post = ({ match }: IProps) => {
         <meta property="og:url" content={window.location.href} />
         <meta property="og:article:tag" content="Programming" />
       </Helmet>
-      <ColumnContainer>
-        <Card body={body} />
-      </ColumnContainer>
+
+      <article className="blog-post px-3 py-5 p-md-5">
+        <div className="container single-col-max-width">
+          <div className="blog-post-body">{body}</div>
+        </div>
+      </article>
     </>
   );
 };
