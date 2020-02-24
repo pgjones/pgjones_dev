@@ -1,5 +1,5 @@
 accesslog = "-"
-alt_svc_headers = ["h3-23=\":443\"; ma=3600"]
+alt_svc_headers = ["h3-27=\":443\"; ma=3600", "h3-26=\":443\"; ma=3600"]
 bind = "0.0.0.0:8443"
 certfile = "/cert/pgjones.dev.crt"
 errorlog = "-"
