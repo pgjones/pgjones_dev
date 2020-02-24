@@ -44,7 +44,7 @@ ecr-push:
   image: docker:latest
 
   services:
-    - docker:dind
+    - docker:19.03.5-dind
 
   before_script:
     - apk add --no-cache curl jq python py-pip
