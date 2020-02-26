@@ -1,0 +1,110 @@
+date = "2020-02-26"
+id = "cost-of-type-hints-2020"
+summary = """
+Type hints in Python 3 are executed at import time at a computational
+cost. This cost can removed in Python >= 3.7 via from __future__
+import annotations, see PEP-563. The startup time when importing quart
+is measured both with and without the future import with no difference
+observed.
+"""
+
+title = "Is there a startup time cost to type hinting?"
+body = """
+# Is there a startup time cost to type hinting?
+
+##### 2020-02-26
+
+Type hints in Python 3 are executed at import time, meaning that the
+usage of type hints is not computationally free. This could manifest
+as degraded startup time and/or increased memory usage. This concern
+partially motivated [PEP
+536](https://www.python.org/dev/peps/pep-0563/) which defers the
+execution of type hints until they are used. PEP-563 will become the
+default in Python 4, but you can opt in if `from __future__ import
+annotations` is used.
+
+Sadly the future import is only available in Python >= 3.7, meaning
+that any codebase that supports Python 3.6 is potentially at risk of
+performance costs if type hints are used. This is a
+[concern](https://github.com/pallets/flask/issues/2688#issuecomment-581516924)
+to the pallets projects (Flask, Werkzeug) that I help maintain and that
+I'd like to type hint.
+
+Fortunately I am in a good position to investigate what, if any,
+performance costs manifest for a typed codebase similar to Flask. This
+is thanks to Quart, which is a fully type hinted re-implementation of
+Flask using the `async`-`await` keywords. Hence whatever results I see
+for Quart likely translate directly to Flask.
+
+#### Annotations in Quart
+
+Quart was already fully type hinted, but didn't use the future
+import. Fortunately Quart only supports Python >= 3.7, which allowed
+the future import to be added throughout. This was done in
+[b9e7935a](https://gitlab.com/pgjones/quart/-/commit/b9e7935a936de2c395056cb89274380cc7e5d6c7)
+which follows
+[d96bb2c4](https://gitlab.com/pgjones/quart/-/commit/d96bb2c4f4374fee14bda0d94ee6c4b4fd1c9253).
+
+### Methodology
+
+Taking the snippet from [this stack overflow
+answer](https://stackoverflow.com/questions/43989235/accurate-timing-for-imports-in-python)
+and adjusting it gives,
+
+```python
+import statistics
+import subprocess
+import time
+
+tries = 100
+python_load_times = []
+quart_load_times = []
+
+for _ in range(tries):
+    startup_time = time.time()
+    subprocess.call(["python", "-c", "import quart"])
+    quart_load_times.append(time.time() - startup_time)
+
+    startup_time = time.time()
+    subprocess.call(["python", "-c", "pass"])
+    python_load_times.append(time.time() - startup_time)
+
+print(f"Python load time {statistics.mean(python_load_times)} +/- {statistics.stdev(python_load_times)}")
+print(f"Quart load time {statistics.mean(quart_load_times)} +/- {statistics.stdev(quart_load_times)}")
+```
+
+which will time how long it takes to load python and then time how
+long it takes to load python and import Quart. The difference between
+the average of these two values can then be attributed to importing
+Quart itself.
+
+### Results
+
+The measured timings to load python and import quart **without the
+future import**, i.e. d96bb2c4, are,
+
+| Start time   | Mean / s | Stdev / s |
+|--------------|----------|-----------|
+| Just python  | 0.024    | 0.02      |
+| import quart | 0.34     | 0.12      |
+
+The measured timings to load python and import quart **with the future
+import**, i.e. b9e7935a, are,
+
+| Start time   | Mean / s | Stdev / s |
+|--------------|----------|-----------|
+| Just python  | 0.023    | 0.04      |
+| import quart | 0.33     | 0.16      |
+
+Note the python load times are consistent in both tests.
+
+### Conclusion
+
+I see no change in the startup time required to import Quart between
+the version with the future annotation and without. This indicates
+that any performance increase caused by executing the type hints is
+minor compared with the overall cost of importing the quart code. This
+result is likely to apply to the Flask codebase given the strong
+similarity between Quart and Flask.
+
+"""
