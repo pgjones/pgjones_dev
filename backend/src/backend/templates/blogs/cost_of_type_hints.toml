@@ -18,7 +18,7 @@ Type hints in Python 3 are executed at import time, meaning that the
 usage of type hints is not computationally free. This could manifest
 as degraded startup time and/or increased memory usage. This concern
 partially motivated [PEP
-536](https://www.python.org/dev/peps/pep-0563/) which defers the
+563](https://www.python.org/dev/peps/pep-0563/) which defers the
 execution of type hints until they are used. PEP-563 will become the
 default in Python 4, but you can opt in if `from __future__ import
 annotations` is used.
