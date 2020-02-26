@@ -1157,6 +1157,15 @@ a.resume-link:hover {
   max-width: 100%;
 }
 
+.blog-post-body table {
+  margin-bottom: 16px;
+}
+
+.blog-post-body td,
+.blog-post-body th{
+  padding: 4px;
+}
+
 .blog-post .image-caption {
   color: #8f8f8f;
   font-size: 0.875rem
