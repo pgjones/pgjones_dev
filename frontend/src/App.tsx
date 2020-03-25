@@ -17,6 +17,8 @@ const App = () => (
         name="description"
         content="Information about software engineering, specifically web systems in Python and Typescript."
       />
+      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:site" content="pdgjones" />
     </Helmet>
     <BrowserRouter>
       <>
