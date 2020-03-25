@@ -34,7 +34,7 @@ const Nav = () => {
             type="button"
             aria-controls="navigation"
             aria-label="Toggle navigation"
-            onClick={() => setExpand(value => !value)}
+            onClick={() => setExpand((value) => !value)}
           >
             <span className="navbar-toggler-icon" />
           </button>

@@ -48,7 +48,7 @@ const Blog = () => {
   ];
 
   if (posts.length > 0) {
-    cards = posts.map(post => (
+    cards = posts.map((post) => (
       <div className="col-md-6 mb-3" key={post.id}>
         <div className="card blog-post-card">
           <div className="card-body">

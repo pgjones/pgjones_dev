@@ -21,8 +21,8 @@
   "scripts": {
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
-    "format": "yarn run prettier:base -- --list-different \"src/**/*.{ts,tsx}\"",
-    "reformat": "yarn run prettier:base -- --write \"src/**/*.{ts,tsx}\"",
+    "format": "yarn run prettier:base --list-different \"src/**/*.{ts,tsx}\"",
+    "reformat": "yarn run prettier:base --write \"src/**/*.{ts,tsx}\"",
     "lint": "yarn run lint:ts; yarn run lint:css",
     "lint:ts": "yarn run tslint \"src/**/*.{ts,tsx}\"",
     "lint:css": "stylelint \"./src/**/*.{ts,tsx}\"",
