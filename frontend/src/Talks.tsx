@@ -15,6 +15,39 @@ const Talks = () => {
             <div className="col-md-12 mb-3">
               <div className="card blog-post-card">
                 <div className="card-body">
+                  <h5 className="card-title">Web development with Trio</h5>
+                  <p className="card-text">
+                    The introduction of asyncio to the Python stdlib led to a
+                    flurry of new web frameworks. Lesser known though are the
+                    async/await based event loop alternatives to asyncio, curio,
+                    and trio. Yet the development of asyncio has been and
+                    continues to be, heavily influenced by these two projects.
+                  </p>
+                  <p className="card-text">
+                    This talk will introduce Trio and motivate why I think it is
+                    a great choice for web development. I'll talk about the
+                    advantages trio brings and the ecosystem available to
+                    developers. As a practical example I'll show my own site
+                    (frontend React + backend Quart-Trio).
+                  </p>
+                  <p className="mb-0">
+                    <a
+                      href="https://docs.google.com/presentation/d/1Nm7ojmwtxt-AP5sou6uXwDdCe2KYuy7HtqXI9-Ha9Z4/edit?usp=sharing"
+                      className="more-link"
+                    >
+                      Read Slides →
+                    </a>
+                  </p>
+                </div>
+                <div className="card-footer">
+                  <small className="text-muted">London Python 2020</small>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-12 mb-3">
+              <div className="card blog-post-card">
+                <div className="card-body">
                   <h5 className="card-title">
                     An introduction to ASGI, Asynchronous Server Gateway
                     Interface

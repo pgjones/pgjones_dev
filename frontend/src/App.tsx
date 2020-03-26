@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import Blog from "src/Blog";
+import Chat from "src/Chat";
 import Info from "src/Info";
 import Nav from "src/Nav";
 import Post from "src/Post";
@@ -28,6 +29,7 @@ const App = () => (
             <Route exact={true} path="/" component={Projects} />
             <Route exact={true} path="/blog/" component={Blog} />
             <Route exact={true} path="/blog/:id/" component={Post} />
+            <Route exact={true} path="/chat/" component={Chat} />
             <Route exact={true} path="/info/" component={Info} />
             <Route exact={true} path="/talks/" component={Talks} />
           </Switch>
