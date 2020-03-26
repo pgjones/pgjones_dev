@@ -5,11 +5,13 @@ from quart import jsonify, request, Response, ResponseReturnValue, safe_join, se
 from quart.exceptions import NotFound
 from quart_trio import QuartTrio
 
+from .chat import Chat
 from .typing import JSONReturnValue
 
 
 class JSONQuart(QuartTrio):
     blogs: List[dict]
+    chat: Chat
     feeds: Tuple[bytes, bytes]
     push_promise_paths: List[str]
 

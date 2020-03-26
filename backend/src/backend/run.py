@@ -7,7 +7,9 @@ from feedgen.feed import FeedGenerator
 from hypercorn.middleware import HTTPToHTTPSRedirectMiddleware
 
 from blueprints.blogs import blueprint as blogs_blueprint
+from blueprints.chat import blueprint as chat_blueprint
 from blueprints.serving import blueprint as serving_blueprint
+from lib.chat import Chat
 from lib.json_quart import JSONQuart
 
 
@@ -23,9 +25,12 @@ def create_app(production: bool = True) -> JSONQuart:
         app.push_promise_paths.extend(_extract_paths(static_root, "js"))
         app.push_promise_paths.extend(_extract_paths(static_root, "media"))
         app.blogs = _extract_blogs(app.root_path / app.template_folder)  # type: ignore
+        app.chat = Chat()
+        app.nursery.start_soon(app.chat.broadcast)  # type: ignore
         app.feeds = _create_feeds(app.blogs)
 
     app.register_blueprint(blogs_blueprint)
+    app.register_blueprint(chat_blueprint)
     app.register_blueprint(serving_blueprint)
 
     if production:
