@@ -1,7 +1,9 @@
+import os
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import cast, List, Tuple
 
+import sentry_sdk
 import toml
 from feedgen.feed import FeedGenerator
 from hypercorn.middleware import HTTPToHTTPSRedirectMiddleware
@@ -11,9 +13,16 @@ from blueprints.chat import blueprint as chat_blueprint
 from blueprints.serving import blueprint as serving_blueprint
 from lib.chat import Chat
 from lib.json_quart import JSONQuart
+from lib.sentry import QuartIntegration
 
 
 def create_app(production: bool = True) -> JSONQuart:
+    if os.environ.get("SENTRY_DSN") is not None:
+        # Needs to be pre app creation
+        sentry_sdk.init(
+            dsn=os.environ["SENTRY_DSN"], integrations=[QuartIntegration()],
+        )
+
     app = JSONQuart(__name__)
 
     @app.before_serving

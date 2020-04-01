@@ -26,6 +26,7 @@ hypercorn = { extras = ["h3"], version = "*" }
 quart-trio = "*"
 toml = "*"
 feedgen = "*"
+sentry-sdk = "*"
 
 [tool.poetry.dev-dependencies]
 black = { version = "*", allow-prereleases = true }
