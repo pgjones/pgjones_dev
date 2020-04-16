@@ -7,6 +7,7 @@ import sentry_sdk
 import toml
 from feedgen.feed import FeedGenerator
 from hypercorn.middleware import HTTPToHTTPSRedirectMiddleware
+from quart import Response
 
 from blueprints.blogs import blueprint as blogs_blueprint
 from blueprints.chat import blueprint as chat_blueprint
@@ -38,6 +39,7 @@ def create_app(production: bool = True) -> JSONQuart:
         app.nursery.start_soon(app.chat.broadcast)  # type: ignore
         app.feeds = _create_feeds(app.blogs)
 
+    app.after_request(_add_secure_headers)
     app.register_blueprint(blogs_blueprint)
     app.register_blueprint(chat_blueprint)
     app.register_blueprint(serving_blueprint)
@@ -46,6 +48,12 @@ def create_app(production: bool = True) -> JSONQuart:
         return HTTPToHTTPSRedirectMiddleware(app, "pgjones.dev")  # type: ignore
     else:
         return app
+
+
+def _add_secure_headers(response: Response) -> Response:
+    response.headers["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains; preload"
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    return response
 
 
 def _extract_paths(static_root: str, subfolder: str) -> List[str]:

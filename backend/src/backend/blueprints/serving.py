@@ -29,8 +29,6 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
     response.content_security_policy.style_src = "'self' 'unsafe-inline'"
 
     response.headers["Referrer-Policy"] = "no-referrer, strict-origin-when-cross-origin"
-    response.headers["Strict-Transport-Security"] = "max-age=63072000"
-    response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
     response.headers["X-XSS-Protection"] = "1; mode=block"
     return response
