@@ -1,12 +1,11 @@
 import mimetypes
-from typing import List, Tuple, Union
+from typing import List, Tuple
 
-from quart import jsonify, request, Response, ResponseReturnValue, safe_join, send_file
+from quart import request, Response, safe_join, send_file
 from quart.exceptions import NotFound
 from quart_trio import QuartTrio
 
 from .chat import Chat
-from .typing import JSONReturnValue
 
 
 class JSONQuart(QuartTrio):
@@ -14,21 +13,6 @@ class JSONQuart(QuartTrio):
     chat: Chat
     feeds: Tuple[bytes, bytes]
     push_promise_paths: List[str]
-
-    async def make_response(self, result: Union[JSONReturnValue, ResponseReturnValue]) -> Response:
-        """Turn the result into a full response.
-
-        PortalQuart allows for the ResponseValue to be a dictionary
-        which indicates that the response should be JSON.
-        """
-        if isinstance(result, dict):
-            new_result = jsonify(result)
-        elif isinstance(result, tuple) and isinstance(result[0], dict):
-            new_result = (jsonify(result[0]), *result[1:])  # type: ignore
-        else:
-            new_result = result  # type: ignore
-
-        return await super().make_response(new_result)
 
     async def send_static_file(self, filename: str) -> Response:
         path = safe_join(self.static_folder, filename)  # type: ignore
