@@ -1,0 +1,230 @@
+date = "2020-04-19"
+id = "packaging-without-setup-py-2020"
+summary = """
+I've recently started packaging without setup.py by using poetry and
+pyproject.toml. This explains why and how I have done so.
+"""
+
+title = "Packaging without setup.py"
+body = """
+# Packaging without setup.py
+
+##### 2020-04-19
+
+I author a number of [open source projects](https://pgjones.dev/blog/)
+which I make available to others via PyPI. To do so I need to build a
+source distribution (sdist) and optionally a wheel from the project
+and upload both to PyPI. Finally the sdist and wheel must then be
+installable via pip for others to use it.
+
+Most of my projects use setuptools (via a setup.py) for packaging as
+it was historically the (only) way to do this, however two recent
+PEPs, [517](https://www.python.org/dev/peps/pep-0517/), and
+[518](https://www.python.org/dev/peps/pep-0518/) have allowed for new
+tools to be developed. Most notably these new tools utilise a
+`pyproject.toml` file, which you can learn more about in this
+[article](https://snarky.ca/what-the-heck-is-pyproject-toml/).
+
+I've been using one of the new tools,
+[Poetry](https://github.com/python-poetry/poetry), for a while now to
+manage my applications. Originally this was motivated by Poetry's
+lockfile support which is superior to the
+[`requirements-to-freeze`](https://kenreitz.org/essays/a-better-pip-workflow)
+system I used before. It is also as poetry allows for scripts, such as
+`poetry run test` as I've explained in this
+[article](https://medium.com/octopus-wealth/python-scripts-26e3d0bd5277).
+
+As I'm a happy user of Poetry for my applications I thought I'd try it
+out on one of my libraries,
+[Quart-Auth](https://gitlab.com/pgjones/quart-auth), which is a
+authentication management extension to Quart. This is something I'm
+experimenting with, but already I'm happy with the setup I explain
+below.
+
+### Setup.py setup
+
+As my projects are pure python (no c to compile) building is much
+simpler with the only complication being that I wish to include a
+`py.typed` file as per [PEP
+561](https://www.python.org/dev/peps/pep-0561/). My setup requires a
+`MANIFEST.in`, a `setup.py`, and crucially the usage of the
+[`check-manifest`](https://github.com/mgedmin/check-manifest) tool and
+`python setup.py check` to ensure that everything is correct.
+
+An example setup.py file from
+[Quart-Rate-Limiter](https://gitlab.com/pgjones/quart-rate-limiter)
+(shortened to the key parts) is,
+
+```python
+import os
+from setuptools import setup, find_packages
+
+PROJECT_ROOT = os.path.dirname(__file__)
+
+with open(os.path.join(PROJECT_ROOT, "README.rst")) as file_:
+    long_description = file_.read()
+
+INSTALL_REQUIRES = [
+    "Quart>=0.11",
+]
+
+setup(
+    name="Quart-Rate-Limiter",
+    version="0.4.0",
+    python_requires=">=3.7.0",
+    description="A Quart extension to provide rate limiting support.",
+    long_description=long_description,
+    url="https://gitlab.com/pgjones/quart-rate-limiter/",
+    author="P G Jones",
+    author_email="philip.graham.jones@googlemail.com",
+    license="MIT",
+    classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Environment :: Web Environment",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+    ],
+    packages=find_packages("src"),
+    package_dir={"": "src"},
+    py_modules=["quart_rate_limiter"],
+    install_requires=INSTALL_REQUIRES,
+    tests_require=INSTALL_REQUIRES + [
+        "pytest",
+        "pytest-asyncio",
+    ],
+    include_package_data=True,
+)
+
+```
+
+The MANIFEST.in file (again shortened) is,
+
+```python
+include src/quart_rate_limiter/py.typed
+recursive-include src/quart_limiter *.py
+recursive-include tests *.py
+```
+
+### Setup.py release process
+
+To build the sdist, wheel, and push to PyPI an environment with
+setuptools, wheel, and twine is required. Then the following commands
+can be used to build and upload,
+
+```shell
+rm -rf dist/ build/
+python setup.py sdist
+python setup.py bdist_wheel
+twine upload dist/*
+```
+
+### Poetry setup
+
+Poetry includes a handly command to setup a project either from
+scratch, `poetry new`, or in an existing project, `poetry init`. This
+creates the `pyproject.toml` file with enough information to get
+going. For Quart-Auth I've added a list of classifiers, the repository
+url, the dependencies (including tox for development), and noted that
+the `py.typed` file should be in the build,
+[giving](https://gitlab.com/pgjones/quart-auth/-/blob/master/pyproject.toml),
+
+```python
+[tool.poetry]
+name = "quart-auth"
+version = "0.3.0"
+description = "A Quart extension to provide secure cookie authentication"
+authors = ["pgjones <philip.graham.jones@googlemail.com>"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Web Environment",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+include = ["src/quart_auth/py.typed"]
+license = "MIT"
+readme = "README.rst"
+repository = "https://gitlab.com/pgjones/quart-auth/"
+
+[tool.poetry.dependencies]
+python = ">=3.7"
+quart = ">=0.11"
+
+[tool.poetry.dev-dependencies]
+tox = "*"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+```
+
+This, as far as I can tell is everything that needs to be
+setup. Quart-Auth can now be built with poetry.
+
+### Poetry release
+
+To build the sdist, wheel, and push to PyPI an environment with
+poetry, and wheel is required. Then the following commands can be used
+to build and upload,
+
+```shell
+rm -rf dist/ build/
+poetry build
+poetry publish
+```
+
+#### Extra: Package version usage
+
+It is often the case, e.g. in Quart & Flask, that the version is
+stored in the source code and that code is loaded or parsed in the
+`setup.py`,
+
+```python
+with open(os.path.join(PROJECT_ROOT, "src", "quart", "__about__.py")) as file_:
+    exec(file_.read(), about)
+
+with open("src/flask/__init__.py", encoding="utf8") as f:
+    version = re.search(r'__version__ = "(.*?)"', f.read()).group(1)
+```
+
+as this allows users of the library to programatically query the
+version (`quart.__about__.__version__` for example). This is clearly
+not possible with the poetry setup, however there is a preferred
+solution with Python3.8 onwards,
+
+```python
+from importlib.metadata import version
+version("quart-auth")
+```
+
+An example usage is when building the [Quart-Auth
+docs](https://gitlab.com/pgjones/quart-auth/-/blob/master/docs/conf.py#L29).
+
+## Conclusion
+
+There is an important downside to just using pyproject and poetry over
+setuptools, which is that editable installs e.g. `pip install -e ..`
+are not possible without a shim, see this
+[discussion](https://discuss.python.org/t/specification-of-editable-installation/1564/40?u=pganssle). This
+rules out Poetry for the Quart and Hypercorn projects I maintain, for
+now.
+
+Switching to poetry and pyproject.toml has meant I am even closer to
+having a simpler and clearer configuration for my projects,
+i.e. everything in the pyproject.toml file. I'm likely to move more
+projects as I get time to do so.
+
+"""
