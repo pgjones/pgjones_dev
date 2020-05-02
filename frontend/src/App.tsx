@@ -26,12 +26,24 @@ const App = () => (
         <Nav />
         <div className="main-wrapper">
           <Switch>
-            <Route exact={true} path="/" component={Projects} />
-            <Route exact={true} path="/blog/" component={Blog} />
-            <Route exact={true} path="/blog/:id/" component={Post} />
-            <Route exact={true} path="/chat/" component={Chat} />
-            <Route exact={true} path="/info/" component={Info} />
-            <Route exact={true} path="/talks/" component={Talks} />
+            <Route exact={true} path="/">
+              <Projects />
+            </Route>
+            <Route exact={true} path="/blog/">
+              <Blog />
+            </Route>
+            <Route exact={true} path="/blog/:id/">
+              <Post />
+            </Route>
+            <Route exact={true} path="/chat/">
+              <Chat />
+            </Route>
+            <Route exact={true} path="/info/">
+              <Info />
+            </Route>
+            <Route exact={true} path="/talks/">
+              <Talks />
+            </Route>
           </Switch>
         </div>
       </>

@@ -6,6 +6,7 @@ import "highlight.js/styles/solarized-light.css";
 import { Marked } from "marked-ts";
 import * as React from "react";
 import { Helmet } from "react-helmet";
+import { useParams } from "react-router";
 
 registerLanguage("python", python);
 registerLanguage("javascript", javascript);
@@ -17,17 +18,14 @@ interface IPost {
   title: string;
 }
 
-interface IMatch {
-  params: {
-    id: string;
-  };
+interface IParams {
+  id: string;
 }
 
-interface IProps {
-  match: IMatch;
-}
+const Post = () => {
+  const params = useParams<IParams>();
+  const id = params.id;
 
-const Post = ({ match }: IProps) => {
   Marked.setOptions({
     highlight: (code, lang) => highlight(lang || "", code).value,
   });
@@ -35,7 +33,7 @@ const Post = ({ match }: IProps) => {
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`/v0/blogs/${match.params.id}/`);
+      const response = await fetch(`/v0/blogs/${id}/`);
       const data = await response.json();
 
       setPost(data);
