@@ -1721,3 +1721,25 @@ body {
 .skeleton-line::before {
   content: "\00a0";
 }
+
+.bingo {
+  text-align: center;
+  width: 100%;
+}
+
+.bingo td {
+  border: 2px solid grey;
+  border-radius: 4px;
+}
+
+.bingo td.clicked {
+  background: palegoldenrod;
+}
+
+.bingo tr:first-child {
+  border-top: 16px solid white;
+}
+
+.bingo tr:nth-child(3n) {
+  border-bottom: 16px solid white;
+}

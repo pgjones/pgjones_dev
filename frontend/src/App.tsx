@@ -2,6 +2,7 @@ import * as React from "react";
 import { Helmet } from "react-helmet";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
+import Bingo from "src/Bingo";
 import Blog from "src/Blog";
 import Chat from "src/Chat";
 import Info from "src/Info";
@@ -28,6 +29,9 @@ const App = () => (
           <Switch>
             <Route exact={true} path="/">
               <Projects />
+            </Route>
+            <Route exact={true} path="/bingo/">
+              <Bingo />
             </Route>
             <Route exact={true} path="/blog/">
               <Blog />
