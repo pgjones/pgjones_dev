@@ -18,21 +18,23 @@ const shuffle = (array: number[]) => {
   return array;
 };
 
+const column = (value: number) => {
+  return value === 90 ? 8 : Math.floor(value / 10);
+};
+
 const validRow = (row: number[]) => {
-  const counter = new Array(10).fill(0);
+  const columns = new Array(10).fill(0);
   for (const value of row) {
-    counter[Math.floor(value / 10)] += 1;
+    columns[column(value)] += 1;
   }
-  return !counter.some((element) => element > 1);
+  return !columns.some((element) => element > 1);
 };
 
 const extractRow = (array: number[]) => {
   const row: number[] = [];
   while (row.length !== 5) {
     const value = array.shift() as number;
-    if (
-      row.some((element) => element - (element % 10) === value - (value % 10))
-    ) {
+    if (row.some((element) => column(element) === column(value))) {
       array.push(value);
     } else {
       row.push(value);
@@ -44,9 +46,9 @@ const extractRow = (array: number[]) => {
 const build = () => {
   let tries = 0;
   let rows = [];
-  while (tries < 6) {
+  while (tries < 10) {
     const numbers = [];
-    for (let i = 0; i < 90; i++) {
+    for (let i = 1; i <= 90; i++) {
       numbers.push(i);
     }
     shuffle(numbers);
@@ -71,15 +73,20 @@ const Bingo = () => {
   let content;
   if (caller) {
     const numbers = [];
-    for (let i = 0; i < 90; i++) {
+    for (let i = 1; i <= 90; i++) {
       numbers.push(i);
     }
     shuffle(numbers);
     content = numbers.map((value) => (
-      <React.Fragment key={value}>
-        {value}
-        <br />
-      </React.Fragment>
+      <tr key={value}>
+        <td
+          onClick={(event) => {
+            (event.target as any).classList.toggle("clicked");
+          }}
+        >
+          {value}
+        </td>
+      </tr>
     ));
   } else {
     const rows = build();
@@ -90,8 +97,8 @@ const Bingo = () => {
       for (let i = 0; i < 9; i++) {
         let text;
         for (const value of row) {
-          if (value - (value % 10) === i * 10) {
-            text = (value + 1).toString();
+          if (column(value) === i) {
+            text = value.toString();
           }
         }
         let element = <td key={index * 100 + i} />;
@@ -111,16 +118,13 @@ const Bingo = () => {
       }
       return <tr key={index}>{elements}</tr>;
     });
-
-    content = (
-      <table className="bingo">
-        <tbody>{cards}</tbody>
-      </table>
-    );
+    content = <>{cards}</>;
   }
   return (
     <div className="container p-3">
-      {content}
+      <table className="bingo">
+        <tbody>{content}</tbody>
+      </table>
       <button onClick={() => setCaller((value) => !value)}>Toggle mode</button>
     </div>
   );
