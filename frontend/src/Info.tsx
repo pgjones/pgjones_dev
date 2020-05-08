@@ -14,20 +14,21 @@ const Info = () => (
             <h2 className="name font-weight-bold mb-1">Phil Jones</h2>
             <div className="tagline mb-3">Co-Founder Moneyed</div>
             <p className="bio mb-4">
-              I&apos;m a software engineer living in London, previously I was a
-              particle physicist working on the SNO+ experiment. I completed my
-              DPhil at Oxford (Lincoln College) in 2011, then worked as a
-              postdoc at QMUL before switching to industry. I&apos;m now
-              Co-Founder of <a href="https://moneyed.co.uk">Moneyed</a> a
-              financial planning app. Previously I was Head of Engineering at{" "}
-              <a href="https://octopuswealth.com/">Octopus Wealth</a>, and VP
+              I am a software engineer based in London and the co-founder of{" "}
+              <a href="https://moneyed.co.uk">Moneyed</a>, a financial planning
+              app. I initially studied Physics at the University of Oxford,
+              where I undertook my undergraduate studies before completing a
+              DPhil in particle physics 2011. After a period of postdoctoral
+              study at Queen Mary’s University of London I switched to industry,
+              securing roles as Head of Engineering at{" "}
+              <a href="https://octopuswealth.com/">Octopus Wealth</a> and VP
               Engineering at <a href="https://smarkets.com/">Smarkets</a>.
             </p>
             <p>
-              I primarily contribute to open source in Python on projects
-              related to web development specifically the HTTP stack. At work I
-              currently write Python, Typescript, and Terraform, although I
-              mostly manage the tech effort.
+              At present I contribute to open source in Python on projects
+              relating to web development, including most notably the HTTP
+              stack. I also have experience managing large industry tech and
+              write Python, Typescript and Terraform.
             </p>
           </div>
         </div>
@@ -36,7 +37,7 @@ const Info = () => (
 
     <section className="overview-section p-3 p-lg-5">
       <div className="container">
-        <h2 className="section-title font-weight-bold mb-3">This websiste</h2>
+        <h2 className="section-title font-weight-bold mb-3">This website</h2>
         <p className="section-intro mb-5">
           This site is{" "}
           <a href="https://gitlab.com/pgjones/pgjones_dev">open source</a> with
