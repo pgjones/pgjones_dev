@@ -7,6 +7,11 @@ frontend-ci:
 
   image: node:10-alpine
 
+  cache:
+    key: pgjones-node-cache
+    paths:
+      - frontend/node_modules/
+
   before_script:
   - apk --update add yarn
   - cd frontend && yarn install
@@ -21,9 +26,15 @@ backend-ci:
 
   image: python:3.8-alpine
 
+  cache:
+    key: pgjones-poetry-cache
+    paths:
+      - backend/.venv
+
   before_script:
   - apk --update add alpine-sdk libffi-dev libxml2-dev libxslt-dev openssl openssl-dev bsd-compat-headers
   - pip install poetry
+  - poetry config virtualenvs.in-project true
   - cd backend && poetry install
 
   script:
@@ -52,7 +63,8 @@ ecr-push:
 
   script:
     - $(aws ecr get-login --no-include-email --region eu-west-1)
-    - docker build --build-arg CI_COMMIT_SHA=$CI_COMMIT_SHA -t $AWS_REPOSITORY_URL .
+    - docker pull $AWS_REPOSITORY_URL || true
+    - docker build --build-arg CI_COMMIT_SHA=$CI_COMMIT_SHA --cache-from $AWS_REPOSITORY_URL -t $AWS_REPOSITORY_URL .
     - docker push $AWS_REPOSITORY_URL
   only:
     - master
