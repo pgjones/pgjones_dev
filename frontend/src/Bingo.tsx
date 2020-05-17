@@ -171,14 +171,13 @@ const Bingo = () => {
     }
     shuffle(numbers);
     content = numbers.map((value) => (
-      <tr key={value}>
-        <td
-          onClick={(event) => {
-            (event.target as any).classList.toggle("clicked");
-          }}
-        >
-          {value}
-        </td>
+      <tr
+        key={value}
+        onClick={(event) => {
+          (event.currentTarget as any).classList.toggle("clicked");
+        }}
+      >
+        <td>{value}</td>
         <td>{BINGO_NAMES[value]}</td>
       </tr>
     ));

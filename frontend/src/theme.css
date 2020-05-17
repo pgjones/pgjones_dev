@@ -1732,7 +1732,7 @@ body {
   border-radius: 4px;
 }
 
-.bingo td.clicked {
+.bingo .clicked {
   background: palegoldenrod;
 }
 
