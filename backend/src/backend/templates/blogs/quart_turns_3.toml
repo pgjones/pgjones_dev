@@ -1,0 +1,112 @@
+date = "2020-05-21"
+id = "quart-turns-3-2020"
+summary = """
+The first release of Quart, 0.1.0, was three years ago today. This a
+brief review and an attempt to produce a roadmap towards version 1.0.
+"""
+
+title = "Quart turns 3"
+body = """
+# Quart turns 3
+
+##### 2020-05-21
+
+Three years ago the first release of Quart,
+[0.1.0](https://gitlab.com/pgjones/quart/-/tree/d7d8127a9ebc785966c771249de94a2e9ceefb86),
+was uploaded to PyPI. Today I've released
+[0.12.0](https://gitlab.com/pgjones/quart/-/tree/a2c91d8468042174c2babbef48bf81ef63bf75b9)
+which is the 38th release of Quart.
+
+### Motivation
+
+I started Quart in late 2016 when my team was splitting a monolith
+into Flask microservices and I was concerned that the Python community
+would soon move to a async ecosystem and new async frameworks. I
+resolved that we needed a plan to also migrate.
+
+At that time I considered
+[Sanic](https://github.com/huge-success/sanic) and
+[aiohttp](https://github.com/aio-libs/aiohttp). Whilst Sanic was
+closer to the Flask API we were familiar with, it was clear that
+switching to either would mean learning a new framework alongside the
+new async/await concurrency model. Whereas ideally I wanted to stick
+with Flask and use async/await.
+
+So I went looking for a Flask async port and found two abandoned non
+functioning attempts, a fork of
+[flask](https://github.com/mrdon/flask) and another (I can't find
+anymore) that was built on aiohttp. Sadly I didn't understand the
+former enough to continue working on it. The latter though served as
+a guide for me to develop a minimal Flask API on the aiohttp
+server as a proof of concept.
+
+At the time I had no idea how to incorporate any async changes I made
+with Flask and Werkzeug, even now I am
+[uncertain](https://pgjones.dev/blog/flask-async-quart-sync-2019/)
+what is possible with Flask. Instead I decided to continue developing
+the proof of concept, now named Quart following the Whisky (WSGI) naming
+scheme set by Flask, Bottle, Growler, and others.
+
+### ASGI
+
+By version 0.1 I had removed the aiohttp dependency to allow
+experimentation with HTTP/2. Specifically Quart was the first Python
+framework to support
+[server-push](https://pgjones.dev/blog/push-promise-2019/) (in
+0.3.0). Like most frameworks at the time though Quart had its own
+server built in.
+
+This changed in mid 2018, after [Tom
+Christie](https://github.com/tomchristie) introduced me to the revised
+(version 2) [ASGI
+specification](https://github.com/django/asgiref/tree/master/specs). This
+version dropped the requirement for an external message broker for a
+much simpler in-process version (like WSGI).
+
+It took me a while to accept that supporting ASGI was worth the effort
+separating out the server from Quart. It really was, especially
+looking at how [Starlette](https://github.com/encode/starlette) powers
+[FastAPI](https://github.com/tiangolo/fastapi).
+
+I called the ASGI server
+[Hypercorn](https://gitlab.com/pgjones/hypercorn) and removed it from
+[Quart
+0.6.0](https://gitlab.com/pgjones/quart/-/tree/e0ccbbcd4eb1df931e44d5d8050dd2c1f2d4868f).
+
+### Contributing back to Flask & Werkzeug
+
+Within the last year Quart has reached a level of maturity that meant
+I could consider features that extend the Flask API (rather than pure
+additions like WebSockets). This has meant contributing these changes
+back to Flask and Werkzeug in order for Quart to remain API
+compatible.
+
+The [most
+notable](https://medium.com/octopus-wealth/returning-json-from-flask-cf4ce6fe9aeb)
+contribution is the ability to return a dictionary from a route
+function and have it considered JSON. This is just a shorthand for
+writing `jsonify`, but a very useful one given how JSON APIs have come
+to dominate.
+
+In Werkzeug I've taken the
+[CORS](https://github.com/pallets/werkzeug/pull/1699) and
+[CSP](https://github.com/pallets/werkzeug/pull/1617) header
+datastructures and parsers from Quart and added support for [WebSocket
+routing](https://github.com/pallets/werkzeug/pull/1709).
+
+### Roadmap to Version 1.0
+
+As this [issue](https://gitlab.com/pgjones/quart/-/issues/5) attests
+I've never been certain what version 1.0 of Quart should be or
+mean. At the moment I think Quart is close, and I had orignally
+thought 0.12.0 should be version 1.0, however now I think Quart should
+be fully based on Werkzeug (rather than using its own code). For
+example Quart has its own exceptions and wrappers. Switching to
+Werkzeug will ensure a much closer match to the implicit Flask API
+(i.e. the Werkzeug API).
+
+In fact I think most of my Quart related work over the next three
+years will be on Werkzeug and the other pallets projects
+(e.g. explicit async/await usage in Jinja2). I'm confident though that
+version 1.0 will be released before the next 3 year anniversary.
+"""
