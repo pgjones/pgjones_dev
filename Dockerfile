@@ -1,14 +1,11 @@
 FROM node:10-alpine as frontend
 
 # hadolint ignore=DL3018
-RUN apk --no-cache add yarn gzip
+RUN apk --no-cache add yarn
 
 COPY frontend /frontend/
 WORKDIR /frontend/
-RUN yarn install && yarn build
-
-RUN gzip --keep /frontend/build/static/js/*; \
-    gzip --keep /frontend/build/static/media/*
+RUN yarn install && yarn run export
 
 FROM python:3.8-alpine
 
@@ -25,7 +22,7 @@ ENV PATH=/ve/bin:${PATH}
 # hadolint ignore=DL3013
 RUN pip install --no-cache-dir dumb-init poetry
 
-RUN mkdir -p /app/templates /app/static/css /app/static/icons /app/static/js /app/static/media /root/.config/pypoetry
+RUN mkdir -p /app/static/sapper /root/.config/pypoetry
 
 COPY backend/poetry.lock backend/pyproject.toml /app/
 WORKDIR /app
@@ -34,13 +31,7 @@ RUN poetry config virtualenvs.create false \
     && poetry cache clear pypi --all --no-interaction
 
 COPY backend/src/backend/ /app/
-COPY --from=frontend /frontend/build/index.html /app/templates/
-COPY --from=frontend /frontend/build/manifest.json /app/static/
-COPY --from=frontend /frontend/build/service-worker.js /app/static/js/
-COPY --from=frontend /frontend/build/static/css/* /app/static/css/
-COPY --from=frontend /frontend/build/icons/* /app/static/icons/
-COPY --from=frontend /frontend/build/static/js/* /app/static/js/
-COPY --from=frontend /frontend/build/static/media/* /app/static/media/
+COPY --from=frontend /frontend/__sapper__/export/ /app/static/sapper/
 
 USER nobody
 

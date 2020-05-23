@@ -18,8 +18,6 @@ frontend-ci:
 
   script:
   - yarn run format
-  - yarn run lint
-  - yarn run build
 
 backend-ci:
   stage: lint-test
