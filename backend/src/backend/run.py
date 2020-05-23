@@ -47,6 +47,7 @@ def create_app(production: bool = True) -> JSONQuart:
     if production:
         return HTTPToHTTPSRedirectMiddleware(app, "pgjones.dev")  # type: ignore
     else:
+        app.config["TEMPLATES_AUTO_RELOAD"] = True
         return app
 
 
