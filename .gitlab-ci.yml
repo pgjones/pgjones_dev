@@ -19,6 +19,11 @@ frontend-ci:
   script:
   - yarn run format
 
+  only:
+    changes:
+      - frontend/**/*
+      - .gitlab-ci.yml
+
 backend-ci:
   stage: lint-test
 
@@ -39,6 +44,11 @@ backend-ci:
   - poetry run format
   - poetry run lint
 
+  only:
+    changes:
+      - backend/**/*
+      - .gitlab-ci.yml
+
 docker-ci:
   stage: lint-test
 
@@ -46,6 +56,11 @@ docker-ci:
 
   script:
     - hadolint Dockerfile
+
+  only:
+    changes:
+      - Dockerfile
+      - .gitlab-ci.yml
 
 ecr-push:
   stage: push
