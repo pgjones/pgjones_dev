@@ -31,13 +31,14 @@
       <button
         class="navbar-toggler"
         type="button"
-        aria-controls="navigation"
+        aria-controls="#navigation"
+        aria-expanded={expand}
         aria-label="Toggle navigation"
         on:click={onClick}>
         <span class="navbar-toggler-icon" />
       </button>
 
-      <div class="collapse navbar-collapse flex-column" class:show={expand}>
+      <div class="collapse navbar-collapse flex-column" class:show={expand} id="navigation">
         <div class="profile-section pt-3 pt-lg-0">
           <img
             class="profile-image mb-3 rounded mx-auto"
