@@ -70,7 +70,7 @@ def _extract_blogs(template_root: Path) -> List[dict]:
     path = template_root / "blogs"
     for blog in path.glob("*.toml"):
         blogs.append(toml.loads(blog.read_text()))  # type: ignore
-    return blogs
+    return sorted(blogs, key=lambda blog: blog["date"], reverse=True)
 
 
 def _create_feeds(blogs: List[dict]) -> Tuple[bytes, bytes]:
