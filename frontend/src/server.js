@@ -15,7 +15,7 @@ polka() // You can also use Express
         uri => uri.startsWith("/v0"),
       ],
     }),
-    createProxyMiddleware({ target }),
+    createProxyMiddleware({ changeOrigin: true, target }),
   )
   .listen(PORT, err => {
 	if (err) console.log("error", err);
