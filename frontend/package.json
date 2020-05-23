@@ -3,46 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "license": "UNLICENSED",
-  "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "*",
-    "@fortawesome/free-solid-svg-icons": "*",
-    "@fortawesome/react-fontawesome": "*",
-    "bootstrap": "*",
-    "highlight.js": "^9.15.6",
-    "marked-ts": "^1.0.0-beta.4",
-    "react": "*",
-    "react-dom": "*",
-    "react-helmet": "*",
-    "react-router-dom": "*",
-    "react-scripts-ts": "*",
-    "typeface-roboto": "*"
-  },
-  "proxy": "http://localhost:5000",
   "scripts": {
-    "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
-    "format": "yarn run prettier:base --list-different \"src/**/*.{ts,tsx}\"",
-    "reformat": "yarn run prettier:base --write \"src/**/*.{ts,tsx}\"",
-    "lint": "yarn run lint:ts; yarn run lint:css",
-    "lint:ts": "yarn run tslint \"src/**/*.{ts,tsx}\"",
-    "lint:css": "stylelint \"./src/**/*.{ts,tsx}\"",
-    "eject": "react-scripts-ts eject",
-    "prettier:base": "prettier --parser typescript",
-    "analyse": "source-map-explorer \"build/static/js/*.js\""
+    "export": "sapper export",
+    "format": "yarn run prettier:base --list-different \"src/**/*.svelte\"",
+    "reformat": "yarn run prettier:base --write \"src/**/*.svelte\"",
+    "prettier:base": "prettier",
+    "start": "sapper dev"
+  },
+  "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "*",
+    "@ts-stack/markdown": "*",
+    "highlight.js": "*",
+    "svelte-awesome": "*"
   },
   "devDependencies": {
-    "@types/node": "*",
-    "@types/react": "*",
-    "@types/react-dom": "*",
-    "@types/react-helmet": "*",
-    "@types/react-router-dom": "*",
-    "enzyme": "*",
-    "enzyme-adapter-react-16": "*",
+    "autoprefixer": "*",
+    "http-proxy-middleware": "*",
+    "npm-run-all": "*",
+    "polka": "*",
     "prettier": "*",
-    "source-map-explorer": "*",
-    "stylelint": "*",
-    "stylelint-config-standard": "*",
-    "stylelint-order": "*",
-    "typescript": "*"
-  }
+    "prettier-plugin-svelte": "*",
+    "sapper": "*",
+    "sirv": "*",
+    "svelte": "*",
+    "svelte-loader": "*",
+    "svelte-preprocess": "*",
+    "typescript": "*",
+    "webpack": "*"
+  },
+  "browserslist": [
+    "last 2 versions"
+  ]
 }
