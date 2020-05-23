@@ -1,14 +1,7 @@
 from typing import Optional
 
-from quart import (
-    Blueprint,
-    current_app,
-    make_push_promise,
-    make_response,
-    render_template,
-    ResponseReturnValue,
-)
-from quart.static import safe_join, send_file
+from quart import Blueprint, current_app, make_push_promise, render_template, ResponseReturnValue
+from quart.static import safe_join, send_file, send_from_directory
 
 blueprint = Blueprint("serving", __name__)
 
@@ -19,7 +12,14 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
     for push_path in current_app.push_promise_paths:
         await make_push_promise(push_path)
 
-    response = await make_response(await render_template("index.html"))
+    if path is None:
+        file_name = "index.html"
+    else:
+        file_name = f"{path.rstrip('/')}/index.html"
+
+    sapper_dir = current_app.static_folder / "sapper"
+    response = await send_from_directory(sapper_dir, file_name)
+    return response
     response.headers["Content-Security-Policy"] = ""
     response.content_security_policy.default_src = "'self'"
     response.content_security_policy.base_uri = "'self'"
@@ -32,6 +32,12 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
     response.headers["X-XSS-Protection"] = "1; mode=block"
     return response
+
+
+@blueprint.route("/client/<path:path>")
+async def client_static(path: str) -> ResponseReturnValue:
+    client_dir = current_app.static_folder / "sapper" / "client"
+    return await send_from_directory(client_dir, path)
 
 
 @blueprint.route("/blog/atom.xml")
