@@ -1,4 +1,4 @@
-FROM node:10-alpine as frontend
+FROM node:12-alpine as frontend
 
 # hadolint ignore=DL3018
 RUN apk --no-cache add yarn
