@@ -38,7 +38,10 @@
         <span class="navbar-toggler-icon" />
       </button>
 
-      <div class="collapse navbar-collapse flex-column" class:show={expand} id="navigation">
+      <div
+        class="collapse navbar-collapse flex-column"
+        class:show={expand}
+        id="navigation">
         <div class="profile-section pt-3 pt-lg-0">
           <img
             class="profile-image mb-3 rounded mx-auto"
