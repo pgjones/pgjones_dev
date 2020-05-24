@@ -12,9 +12,15 @@
   import Stackoverflow from "./Stackoverflow.svelte";
   import Twitter from "./Twitter.svelte";
 
+  export let page;
   export let segment;
 
   let expand = false;
+
+  // Collapse on navigation
+  page.subscribe(() => {
+    expand = false;
+  });
 
   const onClick = () => {
     expand = !expand;
