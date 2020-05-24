@@ -24,17 +24,11 @@
   <div class="container text-center">
     <h2 class="heading">A Blog About Software Development</h2>
     <div class="intro mb-4">Welcome to my blog.</div>
-    <a
-      href="https://pgjones.dev/blog/atom.xml"
-      type="submit"
-      class="btn btn-primary mr-2">
+    <a href="https://pgjones.dev/blog/atom.xml" class="btn btn-primary mr-2">
       <Icon data={faRssSquare} />
       Atom Feed
     </a>
-    <a
-      href="https://pgjones.dev/blog/rss20.xml"
-      type="submit"
-      class="btn btn-primary">
+    <a href="https://pgjones.dev/blog/rss20.xml" class="btn btn-primary">
       <Icon data={faRssSquare} />
       RSS Feed
     </a>
