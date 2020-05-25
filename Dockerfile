@@ -15,7 +15,7 @@ CMD ["./app"]
 COPY app hypercorn.toml /app/
 
 # hadolint ignore=DL3018
-RUN apk --no-cache add build-base git libffi-dev libxml2-dev libxslt-dev openssl openssl-dev bsd-compat-headers
+RUN apk --no-cache add build-base git gzip libffi-dev libxml2-dev libxslt-dev openssl openssl-dev bsd-compat-headers
 
 RUN python -m venv /ve
 ENV PATH=/ve/bin:${PATH}
@@ -32,6 +32,11 @@ RUN poetry config virtualenvs.create false \
 
 COPY backend/src/backend/ /app/
 COPY --from=frontend /frontend/__sapper__/export/ /app/static/sapper/
+
+RUN gzip --keep /app/static/css/*; \
+    gzip --keep /app/static/img/*; \
+    gzip --keep /app/static/js/*; \
+    gzip --keep /app/static/media/*
 
 USER nobody
 
