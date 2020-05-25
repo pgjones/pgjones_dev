@@ -33,10 +33,7 @@ RUN poetry config virtualenvs.create false \
 COPY backend/src/backend/ /app/
 COPY --from=frontend /frontend/__sapper__/export/ /app/static/sapper/
 
-RUN gzip --keep /app/static/css/*; \
-    gzip --keep /app/static/img/*; \
-    gzip --keep /app/static/js/*; \
-    gzip --keep /app/static/media/*
+RUN gzip --keep --recursive /app/static/*
 
 USER nobody
 
