@@ -6,6 +6,10 @@ const { PORT, NODE_ENV } = process.env;
 const target = NODE_ENV === "development" ? "http://localhost:5000" : "https://pgjones.dev";
 
 polka() // You can also use Express
+  .use((req, res, next) => {
+    res.locals = { nonce: "{{ nonce }}"};
+    next();
+  })
   .use(
 	sapper.middleware({
       ignore: [

@@ -1,6 +1,16 @@
+from secrets import token_urlsafe
 from typing import Optional
 
-from quart import Blueprint, current_app, make_push_promise, render_template, ResponseReturnValue
+from jinja2.exceptions import TemplateNotFound
+from quart import (
+    Blueprint,
+    current_app,
+    make_push_promise,
+    make_response,
+    render_template,
+    ResponseReturnValue,
+)
+from quart.exceptions import NotFound
 from quart.static import safe_join, send_file, send_from_directory
 
 blueprint = Blueprint("serving", __name__)
@@ -13,30 +23,35 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
         await make_push_promise(push_path)
 
     if path is None:
-        file_name = "index.html"
+        file_name = "/index.html"
     else:
         file_name = f"{path.rstrip('/')}/index.html"
 
-    sapper_dir = current_app.static_folder / "sapper"
-    response = await send_from_directory(sapper_dir, file_name)
-    return response
-    response.headers["Content-Security-Policy"] = ""
-    response.content_security_policy.default_src = "'self'"
-    response.content_security_policy.base_uri = "'self'"
-    response.content_security_policy.form_action = "'self'"
-    response.content_security_policy.frame_ancestors = "'none'"
-    response.content_security_policy.img_src = "'self' data:"
-    response.content_security_policy.style_src = "'self' 'unsafe-inline'"
+    nonce = token_urlsafe(12)
+    try:
+        body = await render_template(f"sapper{file_name}", nonce=nonce)
+    except TemplateNotFound:
+        raise NotFound()
+    else:
+        response = await make_response(body)
+        response.headers["Content-Security-Policy"] = ""
+        response.content_security_policy.default_src = "'self'"
+        response.content_security_policy.base_uri = "'self'"
+        response.content_security_policy.form_action = "'self'"
+        response.content_security_policy.frame_ancestors = "'none'"
+        response.content_security_policy.img_src = "'self' data:"
+        response.content_security_policy.script_src = f"'self' 'nonce-{nonce}'"
+        response.content_security_policy.style_src = "'self' 'unsafe-inline'"
 
-    response.headers["Referrer-Policy"] = "no-referrer, strict-origin-when-cross-origin"
-    response.headers["X-Frame-Options"] = "SAMEORIGIN"
-    response.headers["X-XSS-Protection"] = "1; mode=block"
-    return response
+        response.headers["Referrer-Policy"] = "no-referrer, strict-origin-when-cross-origin"
+        response.headers["X-Frame-Options"] = "SAMEORIGIN"
+        response.headers["X-XSS-Protection"] = "1; mode=block"
+        return response
 
 
 @blueprint.route("/client/<path:path>")
 async def client_static(path: str) -> ResponseReturnValue:
-    client_dir = current_app.static_folder / "sapper" / "client"
+    client_dir = current_app.static_folder / "sapper"
     return await send_from_directory(client_dir, path)
 
 
