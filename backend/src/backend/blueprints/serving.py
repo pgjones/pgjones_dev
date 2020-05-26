@@ -23,13 +23,13 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
         await make_push_promise(push_path)
 
     if path is None:
-        file_name = "/index.html"
+        file_name = "index.html"
     else:
         file_name = f"{path.rstrip('/')}/index.html"
 
     nonce = token_urlsafe(12)
     try:
-        body = await render_template(f"sapper{file_name}", nonce=nonce)
+        body = await render_template(f"sapper/{file_name}", nonce=nonce)
     except TemplateNotFound:
         raise NotFound()
     else:
