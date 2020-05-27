@@ -14,11 +14,14 @@
 <script lang="typescript">
   export let post;
 
+  import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
+  import { Marked } from "@ts-stack/markdown";
   import hljs from "highlight.js/lib/core";
   import javascript from "highlight.js/lib/languages/javascript";
   import python from "highlight.js/lib/languages/python";
   import shell from "highlight.js/lib/languages/shell";
-  import { Marked } from "@ts-stack/markdown";
+  import { onMount } from "svelte";
+  import Icon from "svelte-awesome/components/Icon.svelte";
 
   hljs.registerLanguage("javascript", javascript);
   hljs.registerLanguage("python", python);
@@ -30,6 +33,20 @@
   });
 
   const body = Marked.parse(post.body);
+
+  let canShare = false;
+
+  onMount(() => {
+    canShare = window.navigator.share;
+  });
+
+  const shareClick = (event) => {
+    window.navigator.share({
+      title: post.title,
+      text: post.summary,
+      url: document.location.href,
+    });
+  };
 </script>
 
 <svelte:head>
@@ -42,5 +59,13 @@
     <div class="blog-post-body">
       {@html body}
     </div>
+
+    <button
+      on:click={shareClick}
+      class="btn btn-secondary"
+      class:d-none={!canShare}>
+      <Icon data={faShareAlt} />
+      <span class="d-none d-sm-inline-block">Share</span>
+    </button>
   </div>
 </article>
