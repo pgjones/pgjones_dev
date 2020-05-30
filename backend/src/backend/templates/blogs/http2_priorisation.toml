@@ -4,13 +4,9 @@ summary = """
 Hypercorn 0.8.0 introduced support for HTTP/2 prioritisation the
 verification of which is demonstrated via a simple webpage.
 """
-
 title = "Verifying HTTP/2 Prioritisation in Hypercorn"
+
 body = """
-# Verifying HTTP/2 Prioritisation in Hypercorn
-
-##### 2019-10-18
-
 HTTP/2 prioritisation allows a client to specify that certain streams
 (requests) are more important than others. The server should then
 deliver streams as prioritised. An example benefit of prioritisation

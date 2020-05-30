@@ -6,13 +6,9 @@ following on from a recent change to Quart to support (non-blocking)
 sync view functions. This article explains this approach and why Flask
 and Quart are necessarily complimentrary projets.
 """
-
 title = "Making Flask async and Quart sync"
+
 body = """
-# Making Flask async and Quart sync
-
-##### 2019-10-18
-
 Web frameworks such as Flask are a perfect use case for asynchronous
 programming techniques as their purpose is to handle independent
 stateless requests. In addition web frameworks are typically dominated

@@ -4,13 +4,9 @@ summary = """
 The first release of Quart, 0.1.0, was three years ago today. This a
 brief review and an attempt to produce a roadmap towards version 1.0.
 """
-
 title = "Quart turns 3"
+
 body = """
-# Quart turns 3
-
-##### 2020-05-21
-
 Three years ago the first release of Quart,
 [0.1.0](https://gitlab.com/pgjones/quart/-/tree/d7d8127a9ebc785966c771249de94a2e9ceefb86),
 was uploaded to PyPI. Today I've released

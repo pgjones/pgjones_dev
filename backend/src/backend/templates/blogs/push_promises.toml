@@ -2,11 +2,8 @@ date = "2019-05-11"
 id = "push-promise-2019"
 summary = "This is a commentrary on my usage of, and experience with, push promises and how I've added support in Quart."
 title = "My experience with Push Promises (Server Push)"
+
 body = """
-# My experience with Push Promises (Server Push)
-
-##### 2019-05-11
-
 If you are visiting this website with a HTTP/2 capable user agent the
 server has most likely pushed the javascript, css, and media assets to
 you whilst the html response was crafted and sent. If your user agent

@@ -6,13 +6,9 @@ Hypercorn can serve all three. This article will show how to use
 Hypercorn and how Hypercorn uses three great Sans-IO libraries to
 work.
 """
-
 title = "How to serve HTTP 1, 2, and 3 in Python"
+
 body = """
-# How to serve HTTP 1, 2, & 3 in Python
-
-##### 2019-08-26
-
 The latest release of
 [Hypercorn](https://gitlab.com/pgjones/hypercorn), 0.8.0, adds HTTP/2
 prioritisation (completing HTTP/2 support) and introduces HTTP/3

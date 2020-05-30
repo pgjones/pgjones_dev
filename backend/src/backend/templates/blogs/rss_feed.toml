@@ -4,13 +4,9 @@ summary = """
 RSS is very useful feature that was missing from this blog, so I've
 added it. This explains why I've added it and how.
 """
-
 title = "Adding an RSS feed"
+
 body = """
-# Adding an RSS feed
-
-##### 2019-09-03
-
 A recent [blog
 post](https://kevq.uk/please-add-rss-support-to-your-site) and a
 twitter request has made me rethink RSS support for this blog. I had

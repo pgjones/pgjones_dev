@@ -6,13 +6,9 @@ whereby the frontend is served on a different domain to the backend
 necessitating the use of CORS. This article shows how to make CORS
 work in this architecture.
 """
-
 title = "How to setup CORS for a Single Page App"
+
 body = """
-# How to setup CORS for a Single Page App
-
-##### 2019-08-01
-
 Single Page Apps have changed how we architect web services, rather
 than having a single backend that collates data and renders a page to
 the user the client now renders the page with data fetched from a

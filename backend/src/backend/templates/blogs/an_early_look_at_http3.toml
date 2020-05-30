@@ -2,11 +2,8 @@ date = "2019-10-09"
 id = "early-look-at-http3-2019"
 summary = "This is an overview of how this site performs when served over HTTP/3."
 title = "An early look at HTTP/3"
+
 body = """
-# An early look at HTTP/3
-
-##### 2019-10-19
-
 HTTP/3 is the next generation HTTP version that is currently being
 standardised and developed. Happily that development is now at a stage
 whereby there is initial browser and server support. This allows for

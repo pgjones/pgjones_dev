@@ -4,13 +4,9 @@ summary = """
 I've recently started packaging without setup.py by using poetry and
 pyproject.toml. This explains why and how I have done so.
 """
-
 title = "Packaging without setup.py"
+
 body = """
-# Packaging without setup.py
-
-##### 2020-04-19
-
 I author a number of [open source projects](https://pgjones.dev/blog/)
 which I make available to others via PyPI. To do so I need to build a
 source distribution (sdist) and optionally a wheel from the project

@@ -7,13 +7,9 @@ import annotations, see PEP-563. The startup time when importing quart
 is measured both with and without the future import with no difference
 observed.
 """
-
 title = "Is there a startup time cost to type hinting?"
+
 body = """
-# Is there a startup time cost to type hinting?
-
-##### 2020-02-26
-
 Type hints in Python 3 are executed at import time, meaning that the
 usage of type hints is not computationally free. This could manifest
 as degraded startup time and/or increased memory usage. This concern
