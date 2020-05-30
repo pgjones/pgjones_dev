@@ -14,7 +14,10 @@
     <div class="row no-gutters">
       {#if imgSrc !== undefined}
         <div class="card-img-holder">
-          <img src={imgSrc} class="card-img" alt={name} />
+          <picture>
+            <source srcset="{imgSrc}.webp" type="image/webp" class="card-img" alt={name} />
+            <img src="{imgSrc}.png" type="image/png" class="card-img" alt={name} />
+          </picture>
         </div>
       {/if}
       <div class="card-body">

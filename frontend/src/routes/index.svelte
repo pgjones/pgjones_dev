@@ -25,7 +25,7 @@
 
       <Project
         name="Quart"
-        imgSrc="/static/media/Quart.png"
+        imgSrc="/static/media/Quart"
         sourceHref="https://gitlab.com/pgjones/quart"
         docsHref="https://pgjones.gitlab.io/quart/">
         Quart is a Python ASGI web microframework, that allows websites to be
@@ -36,7 +36,7 @@
 
       <Project
         name="Hypercorn"
-        imgSrc="/static/media/Hypercorn.png"
+        imgSrc="/static/media/Hypercorn"
         sourceHref="https://gitlab.com/pgjones/hypercorn"
         docsHref="https://pgjones.gitlab.io/hypercorn/">
         Hypercorn is a Python ASGI server, capable of serving HTTP/1, HTTP/2,

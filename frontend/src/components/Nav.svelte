@@ -49,10 +49,10 @@
         class:show={expand}
         id="navigation">
         <div class="profile-section pt-3 pt-lg-0">
-          <img
-            class="profile-image mb-3 rounded mx-auto"
-            src="/static/media/MeSudbury.jpeg"
-            alt="My avatar" />
+          <picture>
+            <source class="profile-image mb-3 rounded mx-auto" srcset="/static/media/MeSudbury.webp" type="image/webp" alt="My avatar">
+            <img class="profile-image mb-3 rounded mx-auto" src="/static/media/MeSudbury.jpeg" type="image/jpeg" alt="My avatar">
+          </picture>
 
           <div class="bio mb-3">
             Hi, my name is Philip Jones. Welcome to my personal website!
