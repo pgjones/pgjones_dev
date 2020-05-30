@@ -37,7 +37,7 @@
   let canShare = false;
 
   onMount(() => {
-    canShare = window.navigator.share;
+    canShare = !!window.navigator.share;
   });
 
   const shareClick = (event) => {
@@ -56,16 +56,28 @@
 
 <article class="blog-post px-3 py-5 p-md-5">
   <div class="container single-col-max-width">
+    <div class="row">
+      <div class="col-10">
+        <header class="blog-post-header">
+          <h2 class="title mb-2">{post.title}</h2>
+          <div class="meta mb-3">
+            <span class="date">{post.date}</span>
+          </div>
+        </header>
+      </div>
+      <div class="col-2">
+        <button
+          on:click={shareClick}
+          class="btn btn-secondary"
+          class:d-none={!canShare}>
+          <Icon data={faShareAlt} />
+          <span class="d-none d-md-inline-block">Share</span>
+        </button>
+      </div>
+    </div>
+
     <div class="blog-post-body">
       {@html body}
     </div>
-
-    <button
-      on:click={shareClick}
-      class="btn btn-secondary"
-      class:d-none={!canShare}>
-      <Icon data={faShareAlt} />
-      <span class="d-none d-sm-inline-block">Share</span>
-    </button>
   </div>
 </article>
