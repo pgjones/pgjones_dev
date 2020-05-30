@@ -15,8 +15,16 @@
       {#if imgSrc !== undefined}
         <div class="card-img-holder">
           <picture>
-            <source srcset="{imgSrc}.webp" type="image/webp" class="card-img" alt={name} />
-            <img src="{imgSrc}.png" type="image/png" class="card-img" alt={name} />
+            <source
+              srcset="{imgSrc}.webp"
+              type="image/webp"
+              class="card-img"
+              alt={name} />
+            <img
+              src="{imgSrc}.png"
+              type="image/png"
+              class="card-img"
+              alt={name} />
           </picture>
         </div>
       {/if}

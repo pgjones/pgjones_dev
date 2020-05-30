@@ -50,8 +50,16 @@
         id="navigation">
         <div class="profile-section pt-3 pt-lg-0">
           <picture>
-            <source class="profile-image mb-3 rounded mx-auto" srcset="/static/media/MeSudbury.webp" type="image/webp" alt="My avatar">
-            <img class="profile-image mb-3 rounded mx-auto" src="/static/media/MeSudbury.jpeg" type="image/jpeg" alt="My avatar">
+            <source
+              class="profile-image mb-3 rounded mx-auto"
+              srcset="/static/media/MeSudbury.webp"
+              type="image/webp"
+              alt="My avatar" />
+            <img
+              class="profile-image mb-3 rounded mx-auto"
+              src="/static/media/MeSudbury.jpeg"
+              type="image/jpeg"
+              alt="My avatar" />
           </picture>
 
           <div class="bio mb-3">
