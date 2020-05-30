@@ -1,5 +1,5 @@
 import os
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import cast, List, Tuple
 
@@ -25,6 +25,7 @@ def create_app(production: bool = True) -> JSONQuart:
         )
 
     app = JSONQuart(__name__)
+    app.config["SEND_FILE_MAX_AGE_DEFAULT"] = timedelta(days=90)
 
     @app.before_serving
     async def startup() -> None:
