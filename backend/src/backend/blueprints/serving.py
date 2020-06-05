@@ -11,7 +11,7 @@ from quart import (
     ResponseReturnValue,
 )
 from quart.exceptions import NotFound
-from quart.static import safe_join, send_file, send_from_directory
+from quart.static import safe_join, send_file
 
 blueprint = Blueprint("serving", __name__)
 
@@ -51,8 +51,7 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
 
 @blueprint.route("/client/<path:path>")
 async def client_static(path: str) -> ResponseReturnValue:
-    client_dir = current_app.static_folder / "sapper"
-    return await send_from_directory(client_dir, path)
+    return await current_app.send_static_file(f"sapper/{path}")
 
 
 @blueprint.route("/blog/atom.xml")
