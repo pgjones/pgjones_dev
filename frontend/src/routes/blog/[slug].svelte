@@ -20,6 +20,7 @@
   import javascript from "highlight.js/lib/languages/javascript";
   import python from "highlight.js/lib/languages/python";
   import shell from "highlight.js/lib/languages/shell";
+  import hljs_svelte from "highlightjs-svelte";
   import { onMount } from "svelte";
   import Icon from "svelte-awesome/components/Icon.svelte";
 
@@ -27,6 +28,7 @@
   hljs.registerLanguage("python", python);
   hljs.registerLanguage("javascript", javascript);
   hljs.registerLanguage("shell", shell);
+  hljs_svelte(hljs);
 
   Marked.setOptions({
     highlight: (code, lang) => hljs.highlight(lang, code).value,
@@ -52,6 +54,7 @@
 <svelte:head>
   <link rel="stylesheet" href="/static/css/solarized-light.css" />
   <title>{post.title}</title>
+  <meta name="description" content={post.summary} />
 </svelte:head>
 
 <article class="blog-post px-3 py-5 p-md-5">
