@@ -1,0 +1,167 @@
+date = "2020-06-06"
+id = "svelte-rewrite-2020"
+summary = """
+I've rewritten the frontend of this website using Svelte + Sapper and
+it works great. I think Svelte + Sapper is the best of the modern web
+frameworks for my needs.
+"""
+title = "This site is now written in Svelte"
+
+body = """
+
+This is my personal website and it exists for two reasons, the first
+is to allow me to blog about technical things that interest me and the
+second is to allow me to test web development stacks. In this regard
+my site is a perpetual prototype, for example you may have been served
+this [page over
+HTTP/3](https://pgjones.dev/blog/early-look-at-http3-2019/) despite
+HTTP/3 still being a draft.
+
+In terms of this site's tech stack I require it to have a
+[Quart](https://gitlab.com/pgjones/quart) and
+[Hypercorn](https://gitlab.com/pgjones/hypercorn) backend as I
+maintain these projects. The frontend however has no such
+requirements, and as it is mostly static pages there isn't a strong
+techincal constraint either.
+
+Over the years I've migrated my blog sites from vanilla HTML, to
+Jinja2 templating, to React and now to Svelte. Svelte is by far the
+best I've used for this usecase (blogging).
+
+### What is Svelte
+
+Last year I learnt about Svelte, following the [Svelte
+3](https://svelte.dev/blog/svelte-3-rethinking-reactivity)
+release. Svelte is unlike other frameworks in that it works at compile
+time, emitting code that directly updtes the dom, rather than working
+at runtime by diffing a virtual dom and then updating the dom. This
+means that Svelte apps are typically much smaller and [more
+efficient](https://svelte.dev/blog/virtual-dom-is-pure-overhead).
+
+Svelte is close to developing without a framework, with each component
+resembling a html file - css is within style tags, javascript is
+within script tags, and html is used with a templating system. The
+most unfamiliar aspect is the use of
+[`$:`](https://svelte.dev/tutorial/reactive-declarations) to denoate a
+reactive part and the templating syntax. For example a trivial Svelte
+component looks like,
+
+```svelte
+<script>
+  let name = 'world';
+</script>
+
+<style>
+  h1 {
+    color: red;
+  }
+</style>
+
+<h1>Hello {name}!</h1>
+```
+
+I also use [Sapper](https://sapper.svelte.dev/) to output
+[pre-rendered pages](https://sapper.svelte.dev/docs#Exporting) which
+the backend then serves. This blog post page is, in essence, this
+Svelte component
+
+```svelte
+<script context="module" lang="typescript">
+  export async function preload({ params, query }) {
+    const response = await this.fetch(`/v0/blogs/${params.slug}/`);
+    const data = await response.json();
+
+    if (response.status === 200) {
+      return { post: data };
+    } else {
+      this.error(response.status, data.message);
+    }
+  }
+</script>
+
+<script lang="typescript">
+  export let post;
+
+  import { Marked } from "@ts-stack/markdown";
+
+  Marked.setOptions({
+    highlight: (code, lang) => hljs.highlight(lang, code).value,
+  });
+
+  const body = Marked.parse(post.body);
+</script>
+
+<article class="blog-post px-3 py-5 p-md-5">
+  <div class="container single-col-max-width">
+    <header class="blog-post-header">
+      <h2 class="title mb-2">{post.title}</h2>
+      <div class="meta mb-3">
+        <span class="date">{post.date}</span>
+      </div>
+    </header>
+
+    <div class="blog-post-body">
+      {@html body}
+    </div>
+  </div>
+</article>
+```
+
+The full code is
+[here](https://gitlab.com/pgjones/pgjones_dev/-/blob/6248ebf895098e13f038bf392bc8d1c1dbdd2072/frontend/src/routes/blog/%5Bslug%5D.svelte).
+
+### Why I stopped using Vanilla HTML
+
+Any frontend framework choice is likely to be better than writting
+vanilla HTML in terms of my development experience. For example
+without a templating, or a component system I'd have to manage copies
+of the navigation code in each file.
+
+Vanilla HTML would likely lead to a very good user experience
+though. The total data served would likely be very small and the
+served pages will quickly render and be almost instantly
+interactive. In addition the viewers with Javascript disabled would
+notice no difference.
+
+### Why I stopped using Jinja templates
+
+Quart, like Flask, has [Jinja2](https://github.com/pallets/jinja)
+built in. Jinja2 is a templating system, with components (macros) that
+run on the backend to produce the HTML served to the browser. It
+works really well and gives a very good user experience (for the same
+reasons as vanilla HTML). It was my goto solution a few years ago, see
+[Stet's blog](https://stet.io/blog/).
+
+Jinja2 templates suffer from a lack of tooling, for example there is
+no (easy) way to autoformat the jinja2 templates. It is also best if
+the served pages are not interactive, as it makes no provisions for
+managing javascript.
+
+### Why I stopped using React
+
+React makes it very easy to write interactive frontends and is very
+pleasant to develop in - especially with the introducion of hooks. The
+downside is the user experience. This is because the Javascript must
+be executed by the browser before any aspect of the page is visible or
+usable.
+
+As a note I had looked into
+[React-Snaphot](https://github.com/geelen/react-snapshot) (which I
+couldn't get to work), but completely missed
+[Next.js](https://nextjs.org/). It is likely that using Next.js would
+have improved the user experience.
+
+## Conclusion
+
+I've found Svelte to be very easy to learn (easier than I found
+React). Yet the community is much smaller, there is less documentation
+and there are [some
+features](https://github.com/sveltejs/sapper/pull/1232) I'd like to
+see released.
+
+This Svelte version serves less than 100KB of JS, compared to at least
+200KB with the React version and the site works without the JS. This
+helps me acheive a perfect lighthouse score which hopefully means that
+you've had a great experience visiting.
+
+"""
