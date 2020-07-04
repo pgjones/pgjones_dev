@@ -20,6 +20,18 @@
     <div class="row">
 
       <Talk
+        event="FlaskCon 2020"
+        slidesHref="https://docs.google.com/presentation/d/1ZrA5lJ3vg8qoLvJ3ltnoR2UW_6Dkgnw1XpzAK8E53hM/edit?usp=sharing"
+        title="Async Flask, an introduction to Quart">
+        <p class="card-text">
+          Quart is the Flask API re-implemented in async/await. This talk will
+          introduce Quart and explain how it relates to Flask. Then I'll talk
+          about potential async support in Flask and discuss the future
+          relationship between the Quart and Flask.
+        </p>
+      </Talk>
+
+      <Talk
         event="London Python 2020"
         slidesHref="https://docs.google.com/presentation/d/1Nm7ojmwtxt-AP5sou6uXwDdCe2KYuy7HtqXI9-Ha9Z4/edit?usp=sharing"
         title="Web development with Trio">
