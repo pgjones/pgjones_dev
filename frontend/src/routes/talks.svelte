@@ -22,7 +22,8 @@
       <Talk
         event="FlaskCon 2020"
         slidesHref="https://docs.google.com/presentation/d/1ZrA5lJ3vg8qoLvJ3ltnoR2UW_6Dkgnw1XpzAK8E53hM/edit?usp=sharing"
-        title="Async Flask, an introduction to Quart">
+        title="Async Flask, an introduction to Quart"
+        videoHref="https://www.youtube.com/watch?v=3mIpeeDqKAU&list=PL-MSuSC-Kjb45rrRGL6gWGn6gv35O1mC1">
         <p class="card-text">
           Quart is the Flask API re-implemented in async/await. This talk will
           introduce Quart and explain how it relates to Flask. Then I'll talk
