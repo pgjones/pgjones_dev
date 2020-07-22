@@ -22,18 +22,17 @@
       <Talk
         event="EuroPython 2020"
         slidesHref="https://docs.google.com/presentation/d/1ls0OOa9Qpl6-Z3vwLm5fpApH9utEa6AAsYoxR7mUU_I/edit?usp=sharing"
-        title="An ASGI Server from scratch"
+        title="An ASGI Server from scratch">
         <p class="card-text">
-          I intend for this to be a fairly advanced talk that shows
-          the steps required to go from a TCP echo server to a basic
-          HTTP/1 ASGI server using asyncio for the IO. This is aimed
-          at people who've read about asyncio, coroutines, etc and
-          want to see them used in practice.
+          I intend for this to be a fairly advanced talk that shows the steps
+          required to go from a TCP echo server to a basic HTTP/1 ASGI server
+          using asyncio for the IO. This is aimed at people who've read about
+          asyncio, coroutines, etc and want to see them used in practice.
         </p>
         <p class="card-text">
-          This is a tutorial on how to build a HTTP/1 ASGI server using
-          asyncio. I plan to start by building a TCP echo server and then add
-          HTTP parsing and ASGI compliance.
+          This is a tutorial on how to build a HTTP/1 ASGI server using asyncio.
+          I plan to start by building a TCP echo server and then add HTTP
+          parsing and ASGI compliance.
         </p>
       </Talk>
 
