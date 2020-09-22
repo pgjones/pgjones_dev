@@ -22,7 +22,8 @@
       <Talk
         event="EuroPython 2020"
         slidesHref="https://docs.google.com/presentation/d/1ls0OOa9Qpl6-Z3vwLm5fpApH9utEa6AAsYoxR7mUU_I/edit?usp=sharing"
-        title="An ASGI Server from scratch">
+        title="An ASGI Server from scratch"
+        videoHref="https://youtu.be/FNBxYyeti-s">
         <p class="card-text">
           I intend for this to be a fairly advanced talk that shows the steps
           required to go from a TCP echo server to a basic HTTP/1 ASGI server
