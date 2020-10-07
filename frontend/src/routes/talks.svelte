@@ -18,7 +18,6 @@
 <section class="blog-list px-3 py-5 p-md-5">
   <div class="container">
     <div class="row">
-
       <Talk
         event="EuroPython 2020"
         slidesHref="https://docs.google.com/presentation/d/1ls0OOa9Qpl6-Z3vwLm5fpApH9utEa6AAsYoxR7mUU_I/edit?usp=sharing"
@@ -155,7 +154,6 @@
           patching allows for some of the Flask extensions to work.
         </p>
       </Talk>
-
     </div>
   </div>
 </section>

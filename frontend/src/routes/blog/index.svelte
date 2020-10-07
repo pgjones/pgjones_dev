@@ -44,7 +44,6 @@
 <section class="blog-list px-3 py-5 p-md-5">
   <div class="container">
     <div class="row">
-
       {#each posts as post}
         <PostCard
           date={post.date}

@@ -16,8 +16,6 @@
         <a href="/blog/{slug}/" class="theme-link">Read more →</a>
       </p>
     </div>
-    <div class="card-footer">
-      <small class="text-muted">{date}</small>
-    </div>
+    <div class="card-footer"><small class="text-muted">{date}</small></div>
   </div>
 </div>

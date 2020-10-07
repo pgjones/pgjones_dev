@@ -22,7 +22,6 @@
 <section class="projects-list px-3 py-5 p-md-5">
   <div class="container">
     <div class="project-cards row isotope">
-
       <Project
         name="Quart"
         imgSrc="/static/media/Quart"
@@ -49,7 +48,8 @@
         sourceHref="https://gitlab.com/pgjones/quart-trio">
         Quart-Trio is a Quart extension that supports the
         <a href="https://trio.readthedocs.io/en/stable/">Trio</a>
-        {' '} event loop (rather than asyncio).
+        {' '}
+        event loop (rather than asyncio).
       </Project>
 
       <Project
@@ -98,7 +98,6 @@
         Werkzeug is a comprehensive WSGI web application library, my effort is
         to make it a ASGI web application library as well.
       </Project>
-
     </div>
   </div>
 </section>

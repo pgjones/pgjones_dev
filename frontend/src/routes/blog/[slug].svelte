@@ -63,9 +63,7 @@
       <div class="col-10">
         <header class="blog-post-header">
           <h2 class="title mb-2">{post.title}</h2>
-          <div class="meta mb-3">
-            <span class="date">{post.date}</span>
-          </div>
+          <div class="meta mb-3"><span class="date">{post.date}</span></div>
         </header>
       </div>
       <div class="col-2">

@@ -18,8 +18,6 @@
         <a href={slidesHref} class="more-link">Read Slides →</a>
       </p>
     </div>
-    <div class="card-footer">
-      <small class="text-muted">{event}</small>
-    </div>
+    <div class="card-footer"><small class="text-muted">{event}</small></div>
   </div>
 </div>
