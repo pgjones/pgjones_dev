@@ -94,9 +94,9 @@
 
   const shuffle = (array: number[]) => {
     // Adapted from https://stackoverflow.com/a/2450976/1293256
-    let currentIndex = array.length;
-    let temporaryValue;
-    let randomIndex;
+    let currentIndex: number = array.length;
+    let temporaryValue: number;
+    let randomIndex: number;
 
     while (0 !== currentIndex) {
       randomIndex = Math.floor(Math.random() * currentIndex);
@@ -182,8 +182,8 @@
     calling = !calling;
   };
 
-  const toggleClicked = (event) => {
-    event.currentTarget.classList.toggle("clicked");
+  const toggleClicked = (event: Event) => {
+    (event.currentTarget as any).classList.toggle("clicked");
   };
 </script>
 

@@ -6,6 +6,7 @@
   "scripts": {
     "export": "sapper export",
     "format": "yarn run prettier:base --list-different \"src/**/*.svelte\"",
+    "lint": "yarn run svelte-check",
     "reformat": "yarn run prettier:base --write \"src/**/*.svelte\"",
     "prettier:base": "prettier",
     "start": "sapper dev"
@@ -18,6 +19,8 @@
     "svelte-awesome": "*"
   },
   "devDependencies": {
+    "@tsconfig/svelte": "^1.0.10",
+    "@types/highlight.js": "*",
     "autoprefixer": "*",
     "http-proxy-middleware": "*",
     "npm-run-all": "*",
@@ -28,6 +31,7 @@
     "sapper": "*",
     "sirv": "*",
     "svelte": "*",
+    "svelte-check": "*",
     "svelte-loader": "*",
     "svelte-preprocess": "*",
     "typescript": "*",

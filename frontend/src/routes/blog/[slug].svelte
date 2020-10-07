@@ -1,5 +1,5 @@
 <script context="module" lang="typescript">
-  export async function preload({ params, query }) {
+  export async function preload({ params }) {
     const response = await this.fetch(`/v0/blogs/${params.slug}/`);
     const data = await response.json();
 
@@ -12,7 +12,14 @@
 </script>
 
 <script lang="typescript">
-  export let post;
+  interface IPost {
+    body: string;
+    date: string;
+    summary: string;
+    title: string;
+  }
+
+  export let post: IPost;
 
   import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
   import { Marked } from "@ts-stack/markdown";
@@ -42,7 +49,7 @@
     canShare = !!window.navigator.share;
   });
 
-  const shareClick = (event) => {
+  const shareClick = () => {
     window.navigator.share({
       title: post.title,
       text: post.summary,

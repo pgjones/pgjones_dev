@@ -12,8 +12,8 @@
   import Stackoverflow from "./Stackoverflow.svelte";
   import Twitter from "./Twitter.svelte";
 
-  export let page;
-  export let segment;
+  export let page: any;
+  export let segment: string;
 
   let expand = false;
 

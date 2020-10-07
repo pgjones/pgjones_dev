@@ -4,15 +4,22 @@
 
   import PostCard from "../../components/PostCard.svelte";
 
-  export async function preload({ params, query }) {
+  export async function preload() {
     const response = await this.fetch("/v0/blogs/");
-    const data = await response.json();
-    return data;
+    return await response.json();
   }
 </script>
 
 <script lang="typescript">
-  export let posts;
+  interface IPostCard {
+    date: string;
+    id: string;
+    slug: string;
+    summary: string;
+    title: string;
+  };
+
+  export let posts: IPostCard[];
 </script>
 
 <svelte:head>

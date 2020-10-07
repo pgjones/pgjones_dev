@@ -18,6 +18,7 @@ frontend-ci:
 
   script:
   - yarn run format
+  - yarn run lint
 
   only:
     changes:
