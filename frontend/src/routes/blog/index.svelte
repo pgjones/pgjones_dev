@@ -17,7 +17,7 @@
     slug: string;
     summary: string;
     title: string;
-  };
+  }
 
   export let posts: IPostCard[];
 </script>
