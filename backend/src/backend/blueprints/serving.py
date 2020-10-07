@@ -41,7 +41,7 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
         response.content_security_policy.frame_ancestors = "'none'"
         response.content_security_policy.img_src = "'self' data:"
         response.content_security_policy.script_src = f"'self' 'nonce-{nonce}'"
-        response.content_security_policy.style_src = "'self' 'unsafe-inline'"
+        response.content_security_policy.style_src = "'self' 'nonce-{nonce}'"
 
         response.headers["Referrer-Policy"] = "no-referrer, strict-origin-when-cross-origin"
         response.headers["X-Frame-Options"] = "SAMEORIGIN"
