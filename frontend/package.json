@@ -22,6 +22,7 @@
     "http-proxy-middleware": "*",
     "npm-run-all": "*",
     "polka": "*",
+    "postcss": "*",
     "prettier": "*",
     "prettier-plugin-svelte": "*",
     "sapper": "*",
