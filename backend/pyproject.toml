@@ -3,16 +3,16 @@ line-length = 100
 target-version = ["py38"]
 
 [tool.isort]
-dont-skip = ["__init__.py"]
 combine_as_imports = true
 force_grid_wrap = 0
 include_trailing_comma = true
-known_first_party = "backend, tests"
-known_third_party = "itsdangerous, hypercorn, pyotp, quart, toml, zxcvbn"
+known_first_party = "blueprints, lib, tests"
+known_third_party = "feedgen, itsdangerous, hypercorn, pyotp, quart, toml, zxcvbn"
 line_length = 100
 multi_line_output = 3
 no_lines_before = "LOCALFOLDER"
 order_by_type = false
+reverse_relative = true
 
 [tool.poetry]
 name = "backend"

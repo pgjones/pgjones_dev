@@ -21,7 +21,8 @@ def create_app(production: bool = True) -> JSONQuart:
     if os.environ.get("SENTRY_DSN") is not None:
         # Needs to be pre app creation
         sentry_sdk.init(
-            dsn=os.environ["SENTRY_DSN"], integrations=[QuartIntegration()],
+            dsn=os.environ["SENTRY_DSN"],
+            integrations=[QuartIntegration()],
         )
 
     app = JSONQuart(__name__)

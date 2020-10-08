@@ -13,10 +13,7 @@ from sentry_sdk.integrations._wsgi_common import _filter_headers
 from sentry_sdk.utils import capture_internal_exceptions, event_from_exception
 
 if False:
-    from typing import Any
-    from typing import Dict
-    from typing import Union
-    from typing import Callable
+    from typing import Any, Callable, Dict, Union
 
 
 class QuartIntegration(Integration):
@@ -75,9 +72,7 @@ def _request_started(sender, **kwargs):
         request = _request_ctx_stack.top.request
         weak_request = weakref.ref(request)
         scope.add_event_processor(
-            _make_request_event_processor(
-                app, weak_request, integration  # type: ignore
-            )
+            _make_request_event_processor(app, weak_request, integration)  # type: ignore
         )
 
 
