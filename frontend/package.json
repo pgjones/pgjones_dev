@@ -20,7 +20,6 @@
   },
   "devDependencies": {
     "@tsconfig/svelte": "^1.0.10",
-    "@types/highlight.js": "*",
     "autoprefixer": "*",
     "http-proxy-middleware": "*",
     "npm-run-all": "*",
@@ -35,7 +34,7 @@
     "svelte-loader": "*",
     "svelte-preprocess": "*",
     "typescript": "*",
-    "webpack": "*"
+    "webpack": "4.44.2"
   },
   "browserslist": [
     "last 2 versions"
