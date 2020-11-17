@@ -16,24 +16,28 @@
         <div class="card-img-holder">
           <picture>
             <source
+              height="100"
               srcset="{imgSrc}.webp"
               type="image/webp"
+              width="100"
               class="card-img"
               alt={name} />
             <img
+              height="100"
               src="{imgSrc}.png"
               type="image/png"
+              width="100"
               class="card-img"
               alt={name} />
           </picture>
         </div>
       {/if}
       <div class="card-body">
-        <h5 class="card-title">
+        <h3 class="card-title">
           <a href="https://gitlab.com/pgjones/quart" class="theme-link">
             {name}
           </a>
-        </h5>
+        </h3>
         <p class="card-text card-main">
           <slot />
         </p>

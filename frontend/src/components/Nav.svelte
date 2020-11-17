@@ -55,8 +55,10 @@
               alt="My avatar" />
             <img
               class="profile-image mb-3 rounded mx-auto"
+              height="160"
               src="/static/media/MeSudbury.jpeg"
               type="image/jpeg"
+              width="160"
               alt="My avatar" />
           </picture>
 
