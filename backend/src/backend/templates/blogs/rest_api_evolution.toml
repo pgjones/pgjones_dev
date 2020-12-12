@@ -23,21 +23,18 @@ to communicate to my future self how it works. It is also hard to
 guarantee that the API works as the communicated documentation says it
 does.
 
-To combat these difficulties I aim to validate that any data received
-or sent structually matches the communicated structure; that
-standardised documentation (using openapi) is created for third
-parties; that linting tooling checks and informs me if I make any
-mistakes; and that all of the above takes the minimal amount of effort
-to achieve.
+To combat these difficulties I aim,
 
-If I am able to meet these aims then I can be confident that a third
-party will be able to understand how to use the API, that they'll know
-when they are using it incorrectly, that I'll know when I'm using it
-incorrectly, and that the development is easy and fast.
+- to ensure that any data received or sent matches the communicated
+  structure,
+- to communicate the structure using standardised documentation,
+  specifically [OpenAPI](https://www.openapis.org/),
+- to setup linting tooling checks that inform me if I make any mistakes,
+- to do all of this with the minimal effort.
 
 ## Initial Flask setup
 
-The first APIs I wrote used Flask, and could be summarised as,
+This is a simple example of how I used to write a Flask APIs,
 
 ```python
 @app.route("/todo/", methods=["POST"])
@@ -52,17 +49,18 @@ which works very nicely, but meets none of my aims. Both myself and
 third party user would be required to read the code to understand what
 data sent to and returned by the API.
 
-This system does not help the third party or me to know when the wrong
-data has been sent, as for example `due` should be a date but if it
-isn't the `create_todo` function will raise a `ValueError` resulting
-in the API returning a 500 response. It should return a 400 response
-so that the third party and I can tell that it is an error with the
-data rather than a server or programming issue.
+It also does not help to know when the wrong data has been sent. For
+example `due` should be a date but if it isn't the `create_todo`
+function will raise a `ValueError` resulting in the API returning a
+500 response. It should return a 400 response so that the third party
+and I can tell that it is an error with the data rather than a server
+or programming issue.
 
 ## Flask with docstrings
 
 In an attempt to solve the documentation problem experienced with the
-simple Flask setup I tried the sphinx autohttp extensions,
+simple Flask setup I tried the [sphinx autohttp
+extensions](https://sphinxcontrib-httpdomain.readthedocs.io/en/stable/),
 
 ```python
 @app.route("/todo/", methods=["POST"])
@@ -92,8 +90,8 @@ data structures in the docstring.
 Whilst this helps with the documentation it has the same issues as the
 simpler Flask example, in that it doesn't validate the data sent to
 the route, nor the data returned. It also doesn't help with any
-linters, for example if I code `data["duo"]` I would only know during
-testing (or worse production).
+linters, for example a simple typo like `data["duo"]` would only raise
+an error during testing, or worse in production.
 
 The bigger issue though, is writing the docstring documentation as it
 is time consuming, boring work that I (and my colleagues) would forget
@@ -106,8 +104,10 @@ example as this documentation ended up actively misleading.
 ## Aside switch to Quart
 
 It was around this time in that I switched writing APIs in Flask to
-writing them in Quart. The snippets onwards in this article will also
-switch to Quart.
+writing them in [Quart](https://gitlab.com/pgjones/quart). The
+snippets onwards in this article will now assume Quart, but the only
+difference is the use of async/await keywords, you can remove them to
+get a Flask equivalent.
 
 I switched to Quart (and wrote Quart) as I wanted to start using the
 `async` `await` keywords and libraries. You can remove `async`,
@@ -118,142 +118,9 @@ I switched to Quart (and wrote Quart) as I wanted to start using the
 The data sent and received in the APIs I write is formatted as
 JSON. This means a [JSONSchema](https://json-schema.org/) could be
 used to describe the structure and used to validate that any data
-matches it. This allows decorators that accept JSONSchemas that
-validate request and response data. For example,
+matches it. This allows me to write decorators that accept JSONSchemas
+to validate request and response data,
 
-```python
-@app.route("/todo/", methods=["POST"])
-@validate_request(
-    {
-        "type": "object",
-        "properties": {
-            "due": {"type": "string", "format": "date"},
-            "task": {"type": "string"},
-        },
-        "required": ["due", "task"],
-        "additionalProperties": False,
-    }
-)
-@validate_response(
-    {
-        201: {
-            "type": "object",
-            "properties": {
-                "due": {"type": "string", "format": "date"},
-                "id": {"type": "number"},
-                "task": {"type": "string"},
-            },
-            "required": ["due", "id", "task"],
-            "additionalProperties": False,
-        },
-    }
-)
-async def create_todo():
-    data = await request.get_json()
-    todo_id = create_todo(data["task"], data["due"])
-    todo = {"id": todo_id, "task": data["task"], "due": data["due"]}
-    return todo, 201
-```
-
-The JSONSchemas can then be used as the documentation either when
-developing or to create an openapi specification of the API for third
-parties.
-
-This solves the validation and documentation problems, whilst ensuring
-that the documentation stays correct. It is however just as painful to
-write as the sphinx docstrings (although now it cannot be ignored). It
-also doesn't help linters understand what we are doing with the data.
-
-I've added the code for these decorators at the end of this article.
-
-## Dataclass decorators
-
-To gain help from the linting tools the data needs to be defined in a
-structure they understand. Conveniently Python 3.7 shipped dataclasses
-which are exactly that, as if I try to use the wrong attribute linters
-and most IDEs will alert me to an issue. As long as the dataclasses
-can be [converted](https://github.com/s-knibbs/dataclasses-jsonschema)
-to JSONSchemas they can be used instead of the JSONSchema above i.e.,
-
-
-```python
-@dataclass
-class TodoData:
-    due: date
-    task: str
-
-@dataclass
-class Todo(TodoData):
-    id: int
-
-@app.route("/todo/", methods=["POST"])
-@validate_request(TodoData)
-@validate_response(Todo, 201)
-async def index() -> Todo:
-    data = await request.get_json()
-    todo_data = TodoData(**data)
-    todo_id = create_todo(todo_data.task, todo_data.due)
-    return Todo(id=todo_id, task=todo_data.task, due=todo_data.due), 201
-```
-
-which is actually quite pleasant code to write and actually makes it
-quicker (with the IDE autocompletion) than any of the previous
-examples.
-
-I have been experimenting with the code to make the dataclass
-decorators work for a while, and it isn't the easiest. Thankfully I
-recently came across [pydantic's
-dataclasses](https://pydantic-docs.helpmanual.io/usage/dataclasses/)
-which validate the arguments, and can generate schemas for
-documentation.
-
-## Quart-Schema
-
-Quart-Schema is a Quart extension that provides the validation
-decorators and auto-generated documentation. The example in this
-article in full is,
-
-```python
-from datetime import date
-
-from pydantic.dataclasses import dataclass
-from quart import Quart
-from quart_schema import QuartSchema, validate_request, validate_response
-
-app = Quart(__name__)
-QuartSchema(app)
-
-@dataclass
-class TodoData:
-    due: date
-    task: str
-
-@dataclass
-class Todo(TodoData):
-    id: int
-
-@app.route("/todo/", methods=["POST"])
-@validate_request(TodoData)
-@validate_response(Todo, 201)
-async def index(data: TodoData) -> Todo:
-    todo = await create_todo(data)
-    return todo, 201
-```
-
-with the documentation available at `/docs` or `/openapi.json` for the
-raw form.
-
-You can see the code to make this possible
-[here](https://gitlab.com/pgjones/quart-schema/-/blob/8f3ef9ddfb6e6b0acfbfe8464d7f72b1bf805e27/src/quart_schema/__init__.py).
-
-## Conclusion
-
-I think, with Quart-Schema, that I've finally achieved all my initial
-aims in a form that is very clear and simple to write. I'd quite like
-to know what you think of this - I'm on twitter
-[@pdgjones](https://twitter.com/pdgjones).
-
-## Appendix: Schema validators
 
 ```python
 from functools import wraps
@@ -310,5 +177,134 @@ def validate_response(schemas: Dict[int, Dict[str, Any]]) -> Callable:
 
     return decorator
 ```
+
+These can then be used, for example,
+
+```python
+@app.route("/todo/", methods=["POST"])
+@validate_request(
+    {
+        "type": "object",
+        "properties": {
+            "due": {"type": "string", "format": "date"},
+            "task": {"type": "string"},
+        },
+        "required": ["due", "task"],
+        "additionalProperties": False,
+    }
+)
+@validate_response(
+    {
+        201: {
+            "type": "object",
+            "properties": {
+                "due": {"type": "string", "format": "date"},
+                "id": {"type": "number"},
+                "task": {"type": "string"},
+            },
+            "required": ["due", "id", "task"],
+            "additionalProperties": False,
+        },
+    }
+)
+async def create_todo():
+    data = await request.get_json()
+    todo_id = create_todo(data["task"], data["due"])
+    todo = {"id": todo_id, "task": data["task"], "due": data["due"]}
+    return todo, 201
+```
+
+The JSONSchemas can then be used as the documentation either when
+developing or to create an openapi specification of the API for third
+parties.
+
+This solves the validation and documentation problems, whilst ensuring
+that the documentation stays correct. It is however just as painful to
+write as the sphinx docstrings (although now it cannot be ignored). It
+also doesn't help linters understand what we are doing with the data.
+
+I've added the code for these decorators at the end of this article.
+
+## Dataclass decorators
+
+To gain help from the linting tools the data needs to be defined in a
+structure they understand. Conveniently Python 3.7 shipped dataclasses
+which we can use to define the structure and will enable IDEs and
+linters to alert me of any issues. If these the dataclasses can be
+[converted](https://github.com/s-knibbs/dataclasses-jsonschema) to
+JSONSchemas they can be used instead of the JSONSchema above i.e.,
+
+
+```python
+@dataclass
+class TodoData:
+    due: date
+    task: str
+
+@dataclass
+class Todo(TodoData):
+    id: int
+
+@app.route("/todo/", methods=["POST"])
+@validate_request(TodoData)
+@validate_response(Todo, 201)
+async def index() -> Todo:
+    data = await request.get_json()
+    todo_data = TodoData(**data)
+    todo_id = create_todo(todo_data.task, todo_data.due)
+    return Todo(id=todo_id, task=todo_data.task, due=todo_data.due), 201
+```
+
+which is actually quite pleasant code to write and actually makes it
+quicker (with the IDE autocompletion) than any of the previous
+examples.
+
+I have been experimenting with the code to make the dataclass
+decorators work for a while, and it isn't the easiest. Thankfully I
+recently came across [pydantic's
+dataclasses](https://pydantic-docs.helpmanual.io/usage/dataclasses/)
+which validate the arguments, and can generate schemas for
+documentation.
+
+## Quart-Schema (Conclusion)
+
+[Quart-Schema](https://gitlab.com/pgjones/quart-schema) is a Quart
+extension that provides the validation decorators and auto-generated
+documentation. The example in this article in full is,
+
+```python
+from datetime import date
+
+from pydantic.dataclasses import dataclass
+from quart import Quart
+from quart_schema import QuartSchema, validate_request, validate_response
+
+app = Quart(__name__)
+QuartSchema(app)
+
+@dataclass
+class TodoData:
+    due: date
+    task: str
+
+@dataclass
+class Todo(TodoData):
+    id: int
+
+@app.route("/todo/", methods=["POST"])
+@validate_request(TodoData)
+@validate_response(Todo, 201)
+async def index(data: TodoData) -> Todo:
+    todo = await create_todo(data)
+    return todo, 201
+```
+
+with the documentation available at `/docs` or `/openapi.json` for the
+raw form.
+
+I think, with Quart-Schema, that I've finally achieved all my initial
+aims in a form that is very clear and simple to write. I'd quite like
+to know what you think of this - I'm on twitter
+[@pdgjones](https://twitter.com/pdgjones).
 
 """
