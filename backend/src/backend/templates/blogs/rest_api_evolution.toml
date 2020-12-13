@@ -226,8 +226,6 @@ that the documentation stays correct. It is however just as painful to
 write as the sphinx docstrings (although now it cannot be ignored). It
 also doesn't help linters understand what we are doing with the data.
 
-I've added the code for these decorators at the end of this article.
-
 ## Dataclass decorators
 
 To gain help from the linting tools the data needs to be defined in a
@@ -268,7 +266,7 @@ dataclasses](https://pydantic-docs.helpmanual.io/usage/dataclasses/)
 which validate the arguments, and can generate schemas for
 documentation.
 
-## Quart-Schema
+## Quart-Schema (Conclusion)
 
 [Quart-Schema](https://gitlab.com/pgjones/quart-schema) is a Quart
 extension that provides the validation decorators and auto-generated
@@ -303,8 +301,6 @@ async def index(data: TodoData) -> Todo:
 
 with the documentation available at `/docs` or `/openapi.json` for the
 raw form.
-
-## Conclusion
 
 I think, with Quart-Schema, that I've finally achieved all my initial
 aims in a form that is very clear and simple to write. This has only
