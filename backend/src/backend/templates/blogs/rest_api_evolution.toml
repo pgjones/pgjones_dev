@@ -1,36 +1,37 @@
 date = "2020-12-11"
 id = "rest-api-evolution-2020"
 summary = """
-I've been writing JSON-REST APIs for a number of years all the time
-wanting to have tooling to validate the JSON sent and received with
-the validation also generating documentation. I finally have this
-with Quart-Schema, and this article explains how I got there.
+I've been writing JSON-REST APIs for a number of years, all the time
+wanting to have tooling that validates the JSON sent and received and
+automatically generates documentation. I finally have this with
+Quart-Schema, and this article explains how I got there.
 """
 title = "My evolution writing JSON-REST APIs"
 
 body = """
 
 I've been writing JSON-REST APIs in Python for a number of years, and
-over that time I've found the tooling has improved to such an extent
-that I think it is worth outlining. If you want to skip to the end
-though, jump ahead and look at [Quart
-Schema](https://gitlab.com/pgjones/quart-schema).
+over that time I've found the tooling has greatly improved. To show
+you how you can benefit I'm going to show you how I've evolved.
+However, if you want to skip to the tooling I use today take a look at
+[Quart-Schema](https://gitlab.com/pgjones/quart-schema).
 
-Writing JSON-REST APIs is not very difficult, especially in Python
-with Flask/Quart (my prefered choice). It is however difficult to
-communicate with third parties about how the API should be used, and
-to communicate to my future self how it works. It is also hard to
-guarantee that the API works as the communicated documentation says it
-does.
+Writing JSON-REST APIs in Python using Flask/Quart has always been
+pleasent. Yet communicating the API structure (routes, data, etc) to
+third parties and to my future self has not been. It is also difficult
+to guarantee that the API works as the documentation says it
+does. This has resulted in isses, bugs and misuse, in production I'd
+love to have avoided.
 
-To combat these difficulties I aim,
+I think I would have avoided these if the APIs I wrote,
 
-- to ensure that any data received or sent matches the communicated
+- ensured that any data received or sent matched the communicated
   structure,
-- to communicate the structure using standardised documentation,
+- communicated their structure using standardised documentation,
   specifically [OpenAPI](https://www.openapis.org/),
-- to setup linting tooling checks that inform me if I make any mistakes,
-- to do all of this with the minimal effort.
+- were setup such that linting checks informed me if I made any
+  mistakes,
+- took less effort to write (whilst acheiving these aims).
 
 ## Initial Flask setup
 
@@ -45,9 +46,9 @@ def create_todo():
     return jsonify(todo), 201
 ```
 
-which works very nicely, but meets none of my aims. Both myself and
-third party user would be required to read the code to understand what
-data sent to and returned by the API.
+which works very nicely, but meet none of my aims. Both myself and
+third party user would have to read the code to understand what is
+sent and returned by the API.
 
 It also does not help to know when the wrong data has been sent. For
 example `due` should be a date but if it isn't the `create_todo`
@@ -99,19 +100,21 @@ to do. Over time this lead to the documentation being wrong leading to
 distrust and lack of use.
 
 I eventually stopped using this technique and reverted to the simpler
-example as this documentation ended up actively misleading.
+example as this documentation ended up actively misleading. It also
+became clear that the winning documentation standard was OpenAPI,
+rather than sphinx documentation.
 
 ## Aside switch to Quart
 
-It was around this time in that I switched writing APIs in Flask to
-writing them in [Quart](https://gitlab.com/pgjones/quart). The
+It was around this time in that I switched from writing APIs in Flask
+to writing them in [Quart](https://gitlab.com/pgjones/quart). The
 snippets onwards in this article will now assume Quart, but the only
 difference is the use of async/await keywords, you can remove them to
 get a Flask equivalent.
 
-I switched to Quart (and wrote Quart) as I wanted to start using the
-`async` `await` keywords and libraries. You can remove `async`,
-`await` from the examples to get a Flask equivalent.
+I wrote Quart as I wanted to start using the `async` `await` keywords
+and libraries. You can remove `async`, `await` from the examples to
+get a Flask equivalent.
 
 ## JSONSchema decorators
 
@@ -230,10 +233,9 @@ I've added the code for these decorators at the end of this article.
 To gain help from the linting tools the data needs to be defined in a
 structure they understand. Conveniently Python 3.7 shipped dataclasses
 which we can use to define the structure and will enable IDEs and
-linters to alert me of any issues. If these the dataclasses can be
-[converted](https://github.com/s-knibbs/dataclasses-jsonschema) to
-JSONSchemas they can be used instead of the JSONSchema above i.e.,
-
+linters to alert me of any issues. By altering the decorator to
+[convert](https://github.com/s-knibbs/dataclasses-jsonschema) the
+dataclass to a JSONSchema allows a dataclass to be used instead,
 
 ```python
 @dataclass
@@ -266,7 +268,7 @@ dataclasses](https://pydantic-docs.helpmanual.io/usage/dataclasses/)
 which validate the arguments, and can generate schemas for
 documentation.
 
-## Quart-Schema (Conclusion)
+## Quart-Schema
 
 [Quart-Schema](https://gitlab.com/pgjones/quart-schema) is a Quart
 extension that provides the validation decorators and auto-generated
@@ -302,9 +304,14 @@ async def index(data: TodoData) -> Todo:
 with the documentation available at `/docs` or `/openapi.json` for the
 raw form.
 
+## Conclusion
+
 I think, with Quart-Schema, that I've finally achieved all my initial
-aims in a form that is very clear and simple to write. I'd quite like
-to know what you think of this - I'm on twitter
+aims in a form that is very clear and simple to write. This has only
+been possible with the async/await, type hinting, and dataclass
+improvements to Python made over the past few years.
+
+I'd quite like to know what you think of this - I'm on twitter
 [@pdgjones](https://twitter.com/pdgjones).
 
 """
