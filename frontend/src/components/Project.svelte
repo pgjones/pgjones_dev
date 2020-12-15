@@ -34,9 +34,7 @@
       {/if}
       <div class="card-body">
         <h3 class="card-title">
-          <a href="https://gitlab.com/pgjones/quart" class="theme-link">
-            {name}
-          </a>
+          <a href={sourceHref} class="theme-link"> {name} </a>
         </h3>
         <p class="card-text card-main">
           <slot />
