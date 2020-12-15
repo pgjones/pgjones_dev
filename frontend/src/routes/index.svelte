@@ -77,6 +77,15 @@
       </Project>
 
       <Project
+        name="Quart-Schema"
+        sourceHref="https://gitlab.com/pgjones/quart-schema"
+        docsHref="https://pgjones.gitlab.io/quart-schema/">
+        Quart-Schema is a Quart extension that provides schema validation and
+        auto-generated API documentation. This is particularly useful when
+        writing RESTful APIs.
+      </Project>
+
+      <Project
         name="h2"
         sourceHref="https://github.com/python-hyper/hyper-h2"
         role="MAINTAINER">
