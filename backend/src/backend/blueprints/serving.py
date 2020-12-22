@@ -39,6 +39,7 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
         response.content_security_policy.base_uri = "'self'"
         response.content_security_policy.form_action = "'self'"
         response.content_security_policy.frame_ancestors = "'none'"
+        response.content_security_policy.frame_src = "https://www.youtube-nocookie.com"
         response.content_security_policy.img_src = "'self' data:"
         response.content_security_policy.script_src = f"'self' 'nonce-{nonce}'"
         response.content_security_policy.style_src = f"'self' 'nonce-{nonce}'"
