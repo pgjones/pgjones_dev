@@ -116,7 +116,7 @@
               Talks
             </a>
           </li>
-          <li class:active={segment === 'talks'} class="nav-item">
+          <li class:active={segment === 'bingo'} class="nav-item">
             <a href="/bingo/" class="nav-link">Bingo</a>
           </li>
         </ul>
