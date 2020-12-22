@@ -3,6 +3,7 @@
     faBlog,
     faChalkboard,
     faLaptopCode,
+    faPlay,
     faUser,
   } from "@fortawesome/free-solid-svg-icons";
   import Icon from "svelte-awesome/components/Icon.svelte";
@@ -114,6 +115,12 @@
             <a href="/talks/" class="nav-link">
               <Icon data={faChalkboard} />
               Talks
+            </a>
+          </li>
+          <li class:active={segment === 'tutorials'} class="nav-item">
+            <a href="/tutorials/" class="nav-link">
+              <Icon data={faPlay} />
+              Tutorials
             </a>
           </li>
           <li class:active={segment === 'bingo'} class="nav-item">
