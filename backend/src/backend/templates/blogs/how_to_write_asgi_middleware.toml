@@ -1,7 +1,8 @@
 date = "2021-02-07"
 id = "how-to-write-asgi-middleware-2021"
 summary = """
-A guide to when to write ASGI middleware and how to correctly do it.
+A guide to writing ASGI middleware via an example domain based
+dispatcher.
 """
 title = "How to write ASGI middleware"
 
