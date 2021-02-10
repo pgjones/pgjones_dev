@@ -104,7 +104,7 @@ class DomainDispatcherMiddleware:
                 await send({"type": "http.response.body"})
 
     def _get_host(self, headers: Tuple[bytes, bytes]) -> Optional[str]:
-        for name, value in scope["headers"]:
+        for name, value in headers:
             if name.lower() == b"host":
                 return value.decode()
 ```
@@ -140,7 +140,7 @@ class MultiAppMiddleware:
             self.startup_complete = {domain: False for domain in self.mounts}
             self.shutdown_complete = {domain: False for domain in self.mounts}
 
-            for domain, app in self.mounts.values():
+            for domain, app in self.mounts.items():
                 asyncio.ensure_future(
                     app(
                         scope,
@@ -222,7 +222,7 @@ class DomainDispatcherMiddleware:
             self.startup_complete = {domain: False for domain in self.mounts}
             self.shutdown_complete = {domain: False for domain in self.mounts}
 
-            for domain, app in self.mounts.values():
+            for domain, app in self.mounts.items():
                 asyncio.ensure_future(
                     app(
                         scope,
@@ -237,6 +237,25 @@ class DomainDispatcherMiddleware:
                     await queue.put(message)
                 if message["type"] == "lifespan.shutdown":
                     break
+        elif scope["type"] in {"http", "websocket"}:
+            host = self._get_host(scope["headers"])
+            app = self.mounts.get(host)
+            if app is not None:
+                await app(scope, receive, send)
+            else:
+                await send(
+                    {
+                        "type": "http.response.start",
+                        "status": 404,
+                        "headers": [(b"content-length", b"0")],
+                    }
+                )
+                await send({"type": "http.response.body"})
+
+    def _get_host(self, headers: Tuple[bytes, bytes]) -> Optional[str]:
+        for name, value in scope["headers"]:
+            if name.lower() == b"host":
+                return value.decode()
 
     async def send(self, domain: str, send: Callable, message: dict) -> None:
         if message["type"] == "lifespan.startup.complete":
