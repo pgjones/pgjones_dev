@@ -1,0 +1,158 @@
+date = "2021-02-28"
+id = "automatic-api-testing-2021"
+summary = """
+How to use Hypothesis, and Quart-Schema, to automatically test your
+API.
+"""
+title = "Automatic API Testing"
+
+body = """
+
+Writing tests that cover to cover edge cases is time consuming and
+difficult - it isn't always clear what the edge cases are and it is
+often harder to enumerate them. Automatically generating these tests
+is therefore a great time saver and a great way to find bugs. I've
+just released [Quart-Schema](https://pgjones.gitlab.io/quart-schema/)
+[0.6.0](https://gitlab.com/pgjones/quart-schema/-/blob/master/CHANGELOG.rst)
+which makes automating tests so much easier.
+
+To show how easy this is I'm going to show a test for the todo
+creation API I built in [this tutorial](https://youtu.be/0aCHKGRJgUc),
+and a snippet of which is shown below. The test uses
+[Hypothesis](https://hypothesis.readthedocs.io) and the [Pydantic
+plugin](https://pydantic-docs.helpmanual.io/hypothesis_plugin/) to
+automatically generate test data. This data is then sent to the route
+and used to check that it does not error,
+
+```python
+import pytest
+from hypothesis import given, strategies as st
+
+from todo_api import app, TodoData
+
+@given(st.builds(TodoData))
+@pytest.mark.asyncio
+async def test_create_todo(data, test_client):
+    response = await test_client.post("/todos/", json=data)
+    assert response.status_code == 201
+```
+
+which tests this route,
+
+```python
+from dataclasses import asdict
+from datetime import datetime
+from typing import Optional
+
+from pydantic.dataclasses import dataclass
+from quart_schema import QuartSchema, validate_request, validate_response
+
+app = Quart(__name__)
+QuartSchema(app)
+
+...  # See tutorial for additional code
+
+@dataclass
+class TodoData:
+    complete: bool
+    due: Optional[datetime]
+    task: str
+
+@dataclass
+class Todo(TodoData):
+    id: int
+
+@app.route("/todos/", methods=["POST"])
+@validate_request(TodoData)
+@validate_response(Todo, 201)
+async def create_todo(data: TodoData) -> Todo:
+    \"\"\"Create a new Todo.
+
+    This allows todos to be created and stored.
+    \"\"\"
+    id_ = await app.db.fetch_val(
+        \"\"\"INSERT INTO todos (complete, due, task)
+                VALUES (:complete, :due, :task)
+             RETURNING id\"\"\",
+        values=asdict(data),
+    )
+    return Todo(id=id_, **asdict(data)), 201
+```
+
+I expected to find that Hypothesis would generate edge case date
+formats that would cause the date parsing to raise errors. Instead I
+found postgresql does not accept null-characters, `\\x00`, resulting
+in the route crashing. This was found due to Hypothesis adding
+null-characters to the `task` field.
+
+There is short discussion of this postgresql limitation
+[here](https://www.reddit.com/r/PostgreSQL/comments/k65lyw/null_characters_workarounds_arent_good_enough/)
+(including a link). I take the view that I've no need to store
+null-characters. So to fix this bug I added a validator to the
+`TodoData` dataclass to ensure that attempts to create Todos with null
+characters result in a 400, Bad Request, response,
+
+```python
+from pydantic import validator
+
+... # Code as before
+
+@dataclass
+class TodoData:
+    complete: bool
+    due: Optional[datetime]
+    task: str
+
+    @validator("task")
+    def task_must_not_contain_null(cls: Type["TodoData"], value: str) -> str:
+        if "\\x00" in value:
+            raise ValueError("Data cannot contain null characters")
+        return value
+```
+
+and updated the tests to exclude control characters from the
+Hypothesis generation and to test this edge case,
+
+```python
+... # code as before
+@given(
+    st.builds(
+        TodoData,
+        task=st.text(alphabet=st.characters(blacklist_categories=("Cc",))),
+    )
+)
+@pytest.mark.asyncio
+async def test_create_todo(data, test_client):
+    ... # code as before
+
+@pytest.mark.asyncio
+async def test_create_todo_null_character(test_client):
+    response = await test_client.post(
+        "/todos/", json={"complete": False, "due": None, "task": "\\x00"}
+    )
+    assert response.status_code == 400
+```
+
+The `Cc` part made no sense to me, until I read table 4.4 of [this
+document](https://www.unicode.org/versions/Unicode10.0.0/ch04.pdf). `Cc`
+refers to the `Other, control` category of unicode characters.
+
+## More general usage
+
+The issue I find with blog posts exploring the use of Hypothesis
+(including this one) is that the examples shown are so simple that
+they fail show how powerful it is. I hope though it is clear that you
+can substitute the `TodoData` with any `ComplexData` structure your
+route expects to receive and test with these 4 lines,
+
+```python
+@given(st.builds(ComplexData))
+@pytest.mark.asyncio
+async def test_create_todo(data, test_client) -> None:
+    response = await test_client.post("/path/", json=data)
+    assert response.status_code == 200
+```
+
+which is an incredibly easy way to automate your testing.
+
+"""
