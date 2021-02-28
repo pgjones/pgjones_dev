@@ -71,9 +71,6 @@ ecr-push:
   services:
     - docker:dind
 
-  variables:
-    DOCKER_BUILDKIT: 1
-
   before_script:
     - apk add --no-cache curl jq python3 py-pip
     - pip install docutils==0.14 awscli
