@@ -28,7 +28,7 @@ frontend-ci:
 backend-ci:
   stage: lint-test
 
-  image: python:3.9-alpine
+  image: python:3.8-alpine
 
   cache:
     key: pgjones-poetry-cache
@@ -36,7 +36,7 @@ backend-ci:
       - backend/.venv
 
   before_script:
-  - apk --update add alpine-sdk cargo gcc libffi-dev libxml2-dev libxslt-dev musl-dev openssl openssl-dev py3-pip bsd-compat-headers
+  - apk --update add alpine-sdk cargo gcc libffi-dev libxml2-dev libxslt-dev musl-dev openssl openssl-dev bsd-compat-headers
   - pip install poetry
   - poetry config virtualenvs.in-project true
   - cd backend && poetry install

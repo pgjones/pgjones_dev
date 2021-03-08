@@ -21,7 +21,7 @@ description = ""
 authors = ["pgjones <philip.graham.jones@googlemail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.8"
 hypercorn = { extras = ["h3"], version = "*" }
 quart-trio = "*"
 toml = "*"
