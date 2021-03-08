@@ -9,7 +9,7 @@ RUN yarn install && yarn run export
 
 RUN mv /frontend/__sapper__/export/client /frontend/__sapper__/
 
-FROM python:3.8-alpine
+FROM python:3.9-alpine
 
 EXPOSE 8080 8443
 ENTRYPOINT ["dumb-init"]
