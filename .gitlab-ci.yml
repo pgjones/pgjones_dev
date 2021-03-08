@@ -36,8 +36,7 @@ backend-ci:
       - backend/.venv
 
   before_script:
-  - apk --update add alpine-sdk cargo gcc libffi-dev libxml2-dev libxslt-dev musl-dev openssl openssl-dev bsd-compat-headers
-  - pip install --upgrade pip
+  - apk --update add alpine-sdk cargo gcc libffi-dev libxml2-dev libxslt-dev musl-dev openssl openssl-dev py3-pip bsd-compat-headers
   - pip install poetry
   - poetry config virtualenvs.in-project true
   - cd backend && poetry install
