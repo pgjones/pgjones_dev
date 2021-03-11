@@ -8,7 +8,7 @@ python-versions = "*"
 
 [[package]]
 name = "aioquic"
-version = "0.9.8"
+version = "0.9.11"
 description = "An implementation of QUIC and HTTP/3"
 category = "main"
 optional = false
@@ -753,8 +753,8 @@ h11 = ">=0.9.0,<1"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.9"
-content-hash = "081a72a1a7f0b61fc59578348d9331e4d4791876bc77bbe91faca1d950c4bbd6"
+python-versions = "^3.8"
+content-hash = "21736ea2622140ceaaf42d9c9520b268ba36cd55aa1a2c6f23f2d7972003e156"
 
 [metadata.files]
 aiofiles = [
@@ -762,37 +762,37 @@ aiofiles = [
     {file = "aiofiles-0.6.0.tar.gz", hash = "sha256:e0281b157d3d5d59d803e3f4557dcc9a3dff28a4dd4829a9ff478adae50ca092"},
 ]
 aioquic = [
-    {file = "aioquic-0.9.8-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:4a4f6c5abe6487a8fb4194481bbb255cc461ce57787a194ffdfa4006bdb1d8db"},
-    {file = "aioquic-0.9.8-cp36-cp36m-manylinux2010_i686.whl", hash = "sha256:dbb86e94b227973563e01de7b351fb020a1d2e496e79244153c4fe71b9d685fa"},
-    {file = "aioquic-0.9.8-cp36-cp36m-manylinux2010_x86_64.whl", hash = "sha256:0438faf8bbf0f406f49fb3d43920613d9221277efff54627eb067ee332a50698"},
-    {file = "aioquic-0.9.8-cp36-cp36m-manylinux2014_aarch64.whl", hash = "sha256:dccc322fc4fc92f6f9622808aae104210aebdc9432c7ccd04549e170e325b942"},
-    {file = "aioquic-0.9.8-cp36-cp36m-win32.whl", hash = "sha256:d4fddf69c3a75e18bf60e87551e90726697de4fe1fd6ad66b459643e5ab98330"},
-    {file = "aioquic-0.9.8-cp36-cp36m-win_amd64.whl", hash = "sha256:cb876ae6a4bfa6f5ef679ce8f772063a5d97ecc38d7ad0e87e01fb6d7312f495"},
-    {file = "aioquic-0.9.8-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:c453806df9870f9319e2de36aae0d519483a2b10f2b3603e507999ed9056171a"},
-    {file = "aioquic-0.9.8-cp37-cp37m-manylinux2010_i686.whl", hash = "sha256:3b81900b5191b752bd99b78fb9f6590d3782f718dd87d4824924b28547acf3ef"},
-    {file = "aioquic-0.9.8-cp37-cp37m-manylinux2010_x86_64.whl", hash = "sha256:2604d7c0ba9bacc9cce5b45ec991aa88529df63194170bb5c934f215710d0b51"},
-    {file = "aioquic-0.9.8-cp37-cp37m-manylinux2014_aarch64.whl", hash = "sha256:4cc3a6402b1642f63ffc140057648175383932e05c50eb325a6a6fd4b9f6151c"},
-    {file = "aioquic-0.9.8-cp37-cp37m-win32.whl", hash = "sha256:f4ec531edc39a716dac0a261b12a7551d2ca9f0a7c9cb4719dbd72a45b34fc62"},
-    {file = "aioquic-0.9.8-cp37-cp37m-win_amd64.whl", hash = "sha256:c88d88a687fd4e3f2205d59c90a9dbe25d5c03a80365a3c49a9735309f6b3d42"},
-    {file = "aioquic-0.9.8-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:4d6c53773fd7be3811b96b95c40d6107383751038204d57043db372331ce59e9"},
-    {file = "aioquic-0.9.8-cp38-cp38-manylinux2010_i686.whl", hash = "sha256:11e52e2137c7aeb6682e5da5956910fdeefb073d4ef93e1f0448ad6d82c9dbf5"},
-    {file = "aioquic-0.9.8-cp38-cp38-manylinux2010_x86_64.whl", hash = "sha256:500e32af86ab52cf4abc43b1d86263172b0d16be41c0522f347056da8627e901"},
-    {file = "aioquic-0.9.8-cp38-cp38-manylinux2014_aarch64.whl", hash = "sha256:91d71199c5aa5ce389733de3efaafe76cd7b74b4fb6e8f467118f733491014d0"},
-    {file = "aioquic-0.9.8-cp38-cp38-win32.whl", hash = "sha256:48f3abc8ff31561400ee3d15ff41efdcc7f542ac00a2aa3d79ade0d9cbac0e38"},
-    {file = "aioquic-0.9.8-cp38-cp38-win_amd64.whl", hash = "sha256:c1096de49b304c9acad255dae57f8fed82dcafd7c68783878400121eb1633ea6"},
-    {file = "aioquic-0.9.8-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:c42755e25ee713c2b27d4d11f43fe686078ddedbf30be2adcc82668835232e06"},
-    {file = "aioquic-0.9.8-cp39-cp39-manylinux2010_i686.whl", hash = "sha256:f91a8093c2930323cc2b7e00e851e21fbe31ca1f90aa9506bbf6fa135f459fda"},
-    {file = "aioquic-0.9.8-cp39-cp39-manylinux2010_x86_64.whl", hash = "sha256:ab384fe3c3aeef273e9c8fc3d6665ef82f39b3fb4cf4a2522e40647860fec23b"},
-    {file = "aioquic-0.9.8-cp39-cp39-manylinux2014_aarch64.whl", hash = "sha256:be21307f242043ad70f2b224b66afc0ff71d37e8b156a4776deca24cf7f274f0"},
-    {file = "aioquic-0.9.8-cp39-cp39-win32.whl", hash = "sha256:04550f31accc79a27c6d0ca1f32840bdbeb1d58395fb9098b1597b059c96663e"},
-    {file = "aioquic-0.9.8-cp39-cp39-win_amd64.whl", hash = "sha256:94b32d1838eb1504bb4dfeb70f21acf01c119059a01793f08a490fc076e97df2"},
-    {file = "aioquic-0.9.8-pp36-pypy36_pp73-macosx_10_9_x86_64.whl", hash = "sha256:73b9de7358e159904b3f05a99ac87b7a10e040d683a18f70c0e79d0c1c75fa93"},
-    {file = "aioquic-0.9.8-pp36-pypy36_pp73-manylinux2010_x86_64.whl", hash = "sha256:62f169b71cdec63400fc691da1ff50128b115f232c43e46c585fc60f07ddeba2"},
-    {file = "aioquic-0.9.8-pp36-pypy36_pp73-win32.whl", hash = "sha256:d04f9e420ed08dba3ee9afbc4ce471cd2e068e9f5cfd8bd618fb28b4b46b76d5"},
-    {file = "aioquic-0.9.8-pp37-pypy37_pp73-macosx_10_9_x86_64.whl", hash = "sha256:9f1a57108b7288be08f33a88254c4ee727e4ae5c50ceec548fd2310eab22e6fe"},
-    {file = "aioquic-0.9.8-pp37-pypy37_pp73-manylinux2010_x86_64.whl", hash = "sha256:8b7912d2196cc6fb642237b83a3823eb5a376c892bb3528064c8587197e2a427"},
-    {file = "aioquic-0.9.8-pp37-pypy37_pp73-win32.whl", hash = "sha256:0d1f699690917978b0d4756e1e5f35d265cb948f6bd1d5a850909a0b8aecde66"},
-    {file = "aioquic-0.9.8.tar.gz", hash = "sha256:6530a110564293bc477e557509f421257fac0e058496466e4b8626337c1b7c23"},
+    {file = "aioquic-0.9.11-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:cb41cf01de1724bbbbbbea5f286252caf14b8a41cc4786bfea5714c579827ad7"},
+    {file = "aioquic-0.9.11-cp36-cp36m-manylinux2010_i686.whl", hash = "sha256:77e68e4990db0b08b02f0784177f8d0a70ec8e1d8f8bdb67f3f66d373f1207a0"},
+    {file = "aioquic-0.9.11-cp36-cp36m-manylinux2010_x86_64.whl", hash = "sha256:00c00127533fcc6545522be4458b4a1d0471882d8a2297e4eb7323a3a98ffb01"},
+    {file = "aioquic-0.9.11-cp36-cp36m-manylinux2014_aarch64.whl", hash = "sha256:324ec266d883686622fe5dfbda4663a66cf44fc27cf5cdb605763c8f48385ead"},
+    {file = "aioquic-0.9.11-cp36-cp36m-win32.whl", hash = "sha256:6cd48fc96c40eb41d284d1037916d23dc4c0bc27a032307a790967310a5e3776"},
+    {file = "aioquic-0.9.11-cp36-cp36m-win_amd64.whl", hash = "sha256:380af986861822b4e7557320ef2156288f6f86b8c7646ed56f61a30c82e60f92"},
+    {file = "aioquic-0.9.11-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:5c4607f9ebf6aeed8911c234c28e9b6a9014c75be512591790fe9315baa02c8f"},
+    {file = "aioquic-0.9.11-cp37-cp37m-manylinux2010_i686.whl", hash = "sha256:837b3ad0388a49968477de7a86dfa2a92b3b8599077d96f322516694c6764c97"},
+    {file = "aioquic-0.9.11-cp37-cp37m-manylinux2010_x86_64.whl", hash = "sha256:9c1ed8f1f2bc8ef28267ce8aac59a617cfb90c3e073321da72ea2f85839dc68b"},
+    {file = "aioquic-0.9.11-cp37-cp37m-manylinux2014_aarch64.whl", hash = "sha256:0a92c2ee5cd7f65ad7a844fb879d26a9bbfb83b59114679f736e10ac14fffe17"},
+    {file = "aioquic-0.9.11-cp37-cp37m-win32.whl", hash = "sha256:90ade9c25a299777188e4939a55d9cbba7927d631f4ecbbae5d0a00c69e331d7"},
+    {file = "aioquic-0.9.11-cp37-cp37m-win_amd64.whl", hash = "sha256:ce0b861c58f5b489dac34cb7ab969be5122a422d137574cd9013707a161f470b"},
+    {file = "aioquic-0.9.11-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:9ca1bfa6f51deaeb6803ee97c04cb483c734a29691732813c17a5c5aee989013"},
+    {file = "aioquic-0.9.11-cp38-cp38-manylinux2010_i686.whl", hash = "sha256:3a9ce83d7d86b8f6667189dec5737ffd3256905be442bbbd98ecf9d676c66cc8"},
+    {file = "aioquic-0.9.11-cp38-cp38-manylinux2010_x86_64.whl", hash = "sha256:e65f9b37fd470c888dc69933cfca3fb4ebc970bdada24e6d8d2e0e2ca81d3476"},
+    {file = "aioquic-0.9.11-cp38-cp38-manylinux2014_aarch64.whl", hash = "sha256:db0e1bc525167ea822c7a5f6796dec20cc2b49694ac3be0786852922b0a6bb8d"},
+    {file = "aioquic-0.9.11-cp38-cp38-win32.whl", hash = "sha256:e87ef94897f7b42f8c4b887ea2da81f36a55dab0b73dd9259df6ce7035a053a8"},
+    {file = "aioquic-0.9.11-cp38-cp38-win_amd64.whl", hash = "sha256:ac8e26364b75d347d37b3c94e391f5d7160b6cf6d9c7eb7a7e2ebdb4101033ef"},
+    {file = "aioquic-0.9.11-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:01f82018c9caa0065c44f513c1845404875bc9b54e3caff6b229ba9a26ec0146"},
+    {file = "aioquic-0.9.11-cp39-cp39-manylinux2010_i686.whl", hash = "sha256:4eb9d5e8c6b658a7b592a1bb9c2f974069bc4e07e5ccb1ca50f74900594ab15c"},
+    {file = "aioquic-0.9.11-cp39-cp39-manylinux2010_x86_64.whl", hash = "sha256:ee1c58d191e12954c61b71a1ec5a8882787efe477adeee91dfa23a892e597ab0"},
+    {file = "aioquic-0.9.11-cp39-cp39-manylinux2014_aarch64.whl", hash = "sha256:aac9d8167889dbc72dff7b0aaa08e65d67e60f4c353e48e82efc76206202d3d2"},
+    {file = "aioquic-0.9.11-cp39-cp39-win32.whl", hash = "sha256:dada7f8f08b0d2d80141402cffbbf4e6323e051a9f8f20844e5e43fc6acc8766"},
+    {file = "aioquic-0.9.11-cp39-cp39-win_amd64.whl", hash = "sha256:e8146fc877bbf880582b34196fa3cf14b03b06d726f31e33ca7f6231d401dbd6"},
+    {file = "aioquic-0.9.11-pp36-pypy36_pp73-macosx_10_9_x86_64.whl", hash = "sha256:f0c356f964aa5f01ea9c58b71c8dcfcfe6d9e5ebf62cbdc99ca93266b352101c"},
+    {file = "aioquic-0.9.11-pp36-pypy36_pp73-manylinux2010_x86_64.whl", hash = "sha256:42331b222078e1899cec417a900a7536b0ff8c5152f17ccd4b76a0fccc4e4409"},
+    {file = "aioquic-0.9.11-pp36-pypy36_pp73-win32.whl", hash = "sha256:9c01c124c65b7b8fe55b116027e63c16f1e26868b03b13faf04730ad8c358d37"},
+    {file = "aioquic-0.9.11-pp37-pypy37_pp73-macosx_10_9_x86_64.whl", hash = "sha256:20ec27c821c2227a8db8198471e677cdf996fc7851b6dd2cb12756d451094ca8"},
+    {file = "aioquic-0.9.11-pp37-pypy37_pp73-manylinux2010_x86_64.whl", hash = "sha256:9f6a59bd4e7fbe7e01c127f218b019f23c821a8b2964d64414bebe429d6325cf"},
+    {file = "aioquic-0.9.11-pp37-pypy37_pp73-win32.whl", hash = "sha256:19bfb44802fb3570809e9268c4b7b02dbbde92f84fdbb35160a3555c45ea3df7"},
+    {file = "aioquic-0.9.11.tar.gz", hash = "sha256:7730d45578b01d76bfc84880167b838868d50c78787c63c46840bc22a9a7398d"},
 ]
 appdirs = [
     {file = "appdirs-1.4.4-py2.py3-none-any.whl", hash = "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"},
