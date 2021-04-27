@@ -19,6 +19,29 @@
   <div class="container">
     <div class="row">
       <Talk
+        event="Babylon Health 2021"
+        slidesHref="https://docs.google.com/presentation/d/1RbU71pIvAAicZXZT_gTvQJKLcs8g48ewtP8CpHuM3GQ/edit?usp=sharing"
+        title="Why isn't Flask async?">
+        <p class="card-text">
+          The introduction of async/await and asyncio has lead to an explosion
+          of new web frameworks bringing many new ideas. Yet the enduring WSGI
+          frameworks have been slow, and often unable, to adopt these new
+          features - particularly the two most popular frameworks, Django and
+          Flask.
+        </p>
+        <p class="card-text">
+          With the recent Django 3.0 supporting async/await, the focus is
+          switching to Flask - why isn't Flask async?
+        </p>
+        <p class="card-text">
+          This talk will discuss the approaches taken in the past to support
+          async/await in Flask, where they struggled, and the challenges in
+          general. It will then show how inspiration has been taken from Django
+          to introduce support in the upcoming Flask-2.0 release.
+        </p>
+      </Talk>
+
+      <Talk
         event="EuroPython 2020"
         slidesHref="https://docs.google.com/presentation/d/1ls0OOa9Qpl6-Z3vwLm5fpApH9utEa6AAsYoxR7mUU_I/edit?usp=sharing"
         title="An ASGI Server from scratch"
