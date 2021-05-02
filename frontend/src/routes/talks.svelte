@@ -21,7 +21,8 @@
       <Talk
         event="Babylon Health 2021"
         slidesHref="https://docs.google.com/presentation/d/1RbU71pIvAAicZXZT_gTvQJKLcs8g48ewtP8CpHuM3GQ/edit?usp=sharing"
-        title="Why isn't Flask async?">
+        title="Why isn't Flask async?"
+        videoHref="https://youtu.be/bw1qeMoFBmw">
         <p class="card-text">
           The introduction of async/await and asyncio has lead to an explosion
           of new web frameworks bringing many new ideas. Yet the enduring WSGI
