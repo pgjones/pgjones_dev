@@ -19,6 +19,17 @@
   <div class="container">
     <div class="row">
       <Talk
+        event="PyCon 2021"
+        slidesHref="https://docs.google.com/presentation/d/1RpzvHtIyASJZ2IRFPuVm5lw7b3ftuoO6hxB5dN4QaWo/edit?usp=sharing"
+        title="What's new in Flask 2.0">
+        <p class="card-text">
+          Flask 2.0 introduces async/await support, short form @app.post
+          decorators, nested blueprints and more!
+        </p>
+        <p class="card-text">This is a lightning talk.</p>
+      </Talk>
+
+      <Talk
         event="Babylon Health 2021"
         slidesHref="https://docs.google.com/presentation/d/1RbU71pIvAAicZXZT_gTvQJKLcs8g48ewtP8CpHuM3GQ/edit?usp=sharing"
         title="Why isn't Flask async?"
