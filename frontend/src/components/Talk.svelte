@@ -1,6 +1,7 @@
 <script lang="typescript">
   export let event: string;
-  export let slidesHref: string;
+  export let listenHref: string | undefined = undefined;
+  export let slidesHref: string | undefined = undefined;
   export let title: string;
   export let videoHref: string | undefined = undefined;
 </script>
@@ -15,7 +16,14 @@
           <a href={videoHref} class="more-link">Watch →</a>
           <br />
         {/if}
-        <a href={slidesHref} class="more-link">Read Slides →</a>
+        {#if slidesHref !== undefined}
+          <a href={slidesHref} class="more-link">Read Slides →</a>
+          <br />
+        {/if}
+        {#if listenHref !== undefined}
+          <a href={listenHref} class="more-link">Listen →</a>
+          <br />
+        {/if}
       </p>
     </div>
     <div class="card-footer"><small class="text-muted">{event}</small></div>

@@ -30,6 +30,16 @@
       </Talk>
 
       <Talk
+        event="TalkPython['Podcast'] 2021"
+        listenHref="https://talkpython.fm/episodes/show/316/flask-2.0"
+        title="Flask 2.0">
+        <p class="card-text">
+          I joined the Talk Python podcast with David Lord to talk about Flask
+          2.0.
+        </p>
+      </Talk>
+
+      <Talk
         event="Babylon Health 2021"
         slidesHref="https://docs.google.com/presentation/d/1RbU71pIvAAicZXZT_gTvQJKLcs8g48ewtP8CpHuM3GQ/edit?usp=sharing"
         title="Why isn't Flask async?"
@@ -146,6 +156,15 @@
           This talk will outline why ASGI is a good asynchronous version of
           WSGI, and then give an overview of Quart, demonstrating features that
           go beyond the Flask framework.
+        </p>
+      </Talk>
+
+      <Talk
+        event="TalkPython['Podcast'] 2018"
+        listenHref="https://talkpython.fm/episodes/show/147/quart-flask-but-3x-faster"
+        title="Quart: Flask, but 3x faster">
+        <p class="card-text">
+          I joined the Talk Python podcast to talk about Quart.
         </p>
       </Talk>
 
