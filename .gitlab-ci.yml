@@ -77,7 +77,6 @@ ecr-push:
   script:
     - $(aws ecr get-login --no-include-email --region eu-west-1)
 
-    - docker pull $AWS_REPOSITORY_URL:frontend || true
     - docker build
         --build-arg CI_COMMIT_SHA=$CI_COMMIT_SHA
         --cache-from $AWS_REPOSITORY_URL:frontend
@@ -85,7 +84,6 @@ ecr-push:
         -t $AWS_REPOSITORY_URL:frontend .
     - docker push $AWS_REPOSITORY_URL:frontend
 
-    - docker pull $AWS_REPOSITORY_URL:latest || true
     - docker build
         --build-arg CI_COMMIT_SHA=$CI_COMMIT_SHA
         --cache-from $AWS_REPOSITORY_URL:latest
