@@ -7,6 +7,10 @@ module.exports = {
     "prettier",
   ],
   plugins: ["svelte3", "@typescript-eslint"],
+  rules: {
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+  },
   ignorePatterns: ["*.cjs"],
   overrides: [{ files: ["*.svelte"], processor: "svelte3/svelte3" }],
   settings: {

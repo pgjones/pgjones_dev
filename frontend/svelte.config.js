@@ -14,9 +14,7 @@ const config = {
     target: "#svelte",
     vite: {
       optimizeDeps: {
-        include: [
-          "highlight.js",
-        ],
+        include: ["highlight.js"],
       },
     },
   },

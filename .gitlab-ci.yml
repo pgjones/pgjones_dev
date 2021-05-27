@@ -5,7 +5,7 @@ stages:
 frontend-ci:
   stage: lint-test
 
-  image: node:10-alpine
+  image: node:16-alpine
 
   cache:
     key: pgjones-node-cache
@@ -13,12 +13,10 @@ frontend-ci:
       - frontend/node_modules/
 
   before_script:
-  - apk --update add yarn
-  - cd frontend && yarn install
+  - cd frontend && npm install
 
   script:
-  - yarn run format
-  - yarn run lint
+  - npm run lint
 
   only:
     changes:
