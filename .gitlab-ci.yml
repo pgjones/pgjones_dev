@@ -7,11 +7,6 @@ frontend-ci:
 
   image: node:16-alpine
 
-  cache:
-    key: pgjones-node-cache
-    paths:
-      - frontend/node_modules/
-
   before_script:
   - cd frontend && npm install
 
