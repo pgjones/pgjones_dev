@@ -11,7 +11,6 @@ from quart import (
     ResponseReturnValue,
 )
 from quart.helpers import safe_join, send_file
-from werkzeug.exceptions import NotFound
 
 blueprint = Blueprint("serving", __name__)
 
@@ -19,7 +18,7 @@ blueprint = Blueprint("serving", __name__)
 @blueprint.route("/")
 @blueprint.route("/<path:path>")
 async def index(path: Optional[str] = None) -> ResponseReturnValue:
-    for push_path in current_app.push_promise_paths:
+    for push_path in current_app.push_promise_paths:  # type: ignore
         await make_push_promise(push_path)
 
     if path is None:
@@ -31,7 +30,7 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
     try:
         body = await render_template(f"svelte/{file_name}", nonce=nonce)
     except TemplateNotFound:
-        body = await render_template(f"svelte/fallback.html", nonce=nonce)
+        body = await render_template("svelte/fallback.html", nonce=nonce)
 
     response = await make_response(body)
     response.headers["Content-Security-Policy"] = ""
@@ -57,17 +56,17 @@ async def client_static(path: str) -> ResponseReturnValue:
 
 @blueprint.route("/blog/atom.xml")
 async def atom_feed() -> ResponseReturnValue:
-    return current_app.feeds[1], {"Content-Type": "text/xml"}
+    return current_app.feeds[1], {"Content-Type": "text/xml"}  # type: ignore
 
 
 @blueprint.route("/blog/rss20.xml")
 async def rss_feed() -> ResponseReturnValue:
-    return current_app.feeds[0], {"Content-Type": "text/xml"}
+    return current_app.feeds[0], {"Content-Type": "text/xml"}  # type: ignore
 
 
 @blueprint.route("/manifest.json")
 async def manifest() -> ResponseReturnValue:
-    path = safe_join(current_app.static_folder, "manifest.json")
+    path = safe_join(current_app.static_folder, "manifest.json")  # type: ignore
     return await send_file(path)
 
 
