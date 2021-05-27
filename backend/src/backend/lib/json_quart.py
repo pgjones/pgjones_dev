@@ -2,8 +2,8 @@ import mimetypes
 from typing import List, Tuple
 
 from quart import request, Response, safe_join, send_file
-from quart.exceptions import NotFound
 from quart_trio import QuartTrio
+from werkzeug.exceptions import NotFound
 
 from .chat import Chat
 

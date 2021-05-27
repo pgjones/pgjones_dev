@@ -10,8 +10,8 @@ from quart import (
     render_template,
     ResponseReturnValue,
 )
-from quart.exceptions import NotFound
-from quart.static import safe_join, send_file
+from quart.helpers import safe_join, send_file
+from werkzeug.exceptions import NotFound
 
 blueprint = Blueprint("serving", __name__)
 
