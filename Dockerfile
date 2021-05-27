@@ -1,13 +1,8 @@
-FROM node:12-alpine as frontend
-
-# hadolint ignore=DL3018
-RUN apk --no-cache add yarn
+FROM node:16-alpine as frontend
 
 COPY frontend /frontend/
 WORKDIR /frontend/
-RUN yarn install && yarn run export
-
-RUN mv /frontend/__sapper__/export/client /frontend/__sapper__/
+RUN npm install && npm run build
 
 FROM python:3.8-alpine
 
@@ -25,7 +20,7 @@ ENV PATH=/ve/bin:${PATH}
 # hadolint ignore=DL3013
 RUN pip install --no-cache-dir dumb-init poetry
 
-RUN mkdir -p /app/static/sapper/client /app/templates/sapper/ /root/.config/pypoetry
+RUN mkdir -p /app/static/_app/ /app/templates/svelte/ /root/.config/pypoetry
 
 COPY backend/poetry.lock backend/pyproject.toml /app/
 WORKDIR /app
@@ -34,8 +29,8 @@ RUN poetry config virtualenvs.create false \
     && poetry cache clear pypi --all --no-interaction
 
 COPY backend/src/backend/ /app/
-COPY --from=frontend /frontend/__sapper__/client/ /app/static/sapper/
-COPY --from=frontend /frontend/__sapper__/export/ /app/templates/sapper/
+COPY --from=frontend /frontend/build/_app/ /app/static/_app/
+COPY --from=frontend /frontend/build/*.html /app/templates/svelte/
 
 RUN gzip --keep --recursive /app/static/*
 
