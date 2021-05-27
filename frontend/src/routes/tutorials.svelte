@@ -1,5 +1,5 @@
-<script lang="typescript">
-  import TutorialCard from "../components/TutorialCard.svelte";
+<script lang="ts">
+  import TutorialCard from "$lib/TutorialCard.svelte";
 </script>
 
 <svelte:head>
@@ -19,7 +19,8 @@
     <div class="row">
       <TutorialCard
         title="How to build a RESTful API with Quart & Quart-Schema"
-        video="https://www.youtube-nocookie.com/embed/0aCHKGRJgUc" />
+        video="https://www.youtube-nocookie.com/embed/0aCHKGRJgUc"
+      />
     </div>
   </div>
 </section>

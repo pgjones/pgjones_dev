@@ -1,14 +1,7 @@
-<script lang="typescript">
+<script lang="ts">
   export let title: string;
   export let video: string;
 </script>
-
-<style>
-  iframe {
-    width: 100%;
-    min-height: 300px;
-  }
-</style>
 
 <div class="col-md-6 mb-3">
   <div class="card blog-post-card">
@@ -19,7 +12,15 @@
         allowfullscreen
         frameborder="0"
         src={video}
-        {title} />
+        {title}
+      />
     </div>
   </div>
 </div>
+
+<style>
+  iframe {
+    width: 100%;
+    min-height: 300px;
+  }
+</style>

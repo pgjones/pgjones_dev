@@ -4,39 +4,33 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "export": "sapper export",
-    "format": "yarn run prettier:base --list-different \"src/**/*.svelte\"",
-    "lint": "yarn run svelte-check",
-    "reformat": "yarn run prettier:base --write \"src/**/*.svelte\"",
-    "prettier:base": "prettier",
-    "start": "sapper dev"
+    "build": "svelte-kit build",
+    "format": "prettier --list-different --plugin-search-dir=. .",
+    "lint": "prettier --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
+    "reformat": "prettier --write --plugin-search-dir=. .",
+    "start": "svelte-kit dev"
   },
+  "devDependencies": {
+    "@sveltejs/adapter-static": "*",
+    "@sveltejs/kit": "next",
+    "@typescript-eslint/eslint-plugin": "*",
+    "@typescript-eslint/parser": "*",
+    "eslint": "*",
+    "eslint-config-prettier": "*",
+    "eslint-plugin-svelte3": "*",
+    "prettier": "*",
+    "prettier-plugin-svelte": "*",
+    "svelte": "*",
+    "svelte-preprocess": "*",
+    "tslib": "*",
+    "typescript": "*"
+  },
+  "type": "module",
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "*",
     "@ts-stack/markdown": "*",
-    "highlight.js": "*",
+    "highlight.js": "11.0.0-beta1",
     "highlightjs-svelte": "*",
     "svelte-awesome": "*"
-  },
-  "devDependencies": {
-    "@tsconfig/svelte": "^1.0.10",
-    "autoprefixer": "*",
-    "http-proxy-middleware": "*",
-    "npm-run-all": "*",
-    "polka": "*",
-    "postcss": "*",
-    "prettier": "*",
-    "prettier-plugin-svelte": "*",
-    "sapper": "*",
-    "sirv": "*",
-    "svelte": "*",
-    "svelte-check": "*",
-    "svelte-loader": "*",
-    "svelte-preprocess": "*",
-    "typescript": "*",
-    "webpack": "4.44.2"
-  },
-  "browserslist": [
-    "last 2 versions"
-  ]
+  }
 }

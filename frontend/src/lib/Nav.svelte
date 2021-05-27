@@ -1,4 +1,4 @@
-<script lang="typescript">
+<script lang="ts">
   import {
     faBlog,
     faChalkboard,
@@ -8,20 +8,21 @@
   } from "@fortawesome/free-solid-svg-icons";
   import Icon from "svelte-awesome/components/Icon.svelte";
 
-  import Github from "./Github.svelte";
-  import Gitlab from "./Gitlab.svelte";
-  import Stackoverflow from "./Stackoverflow.svelte";
-  import Twitter from "./Twitter.svelte";
+  import Github from "$lib/Github.svelte";
+  import Gitlab from "$lib/Gitlab.svelte";
+  import Stackoverflow from "$lib/Stackoverflow.svelte";
+  import Twitter from "$lib/Twitter.svelte";
 
   export let page: any;
-  export let segment: string;
+  export let section: string;
 
   let expand = false;
 
-  // Collapse on navigation
   page.subscribe(() => {
     expand = false;
   });
+
+  $: console.log(section);
 
   const onClick = () => {
     expand = !expand;
@@ -39,28 +40,32 @@
         aria-controls="#navigation"
         aria-expanded={expand}
         aria-label="Toggle navigation"
-        on:click={onClick}>
+        on:click={onClick}
+      >
         <span class="navbar-toggler-icon" />
       </button>
 
       <div
         class="collapse navbar-collapse flex-column"
         class:show={expand}
-        id="navigation">
+        id="navigation"
+      >
         <div class="profile-section pt-3 pt-lg-0">
           <picture>
             <source
               class="profile-image mb-3 rounded mx-auto"
               srcset="/static/media/MeSudbury.webp"
               type="image/webp"
-              alt="My avatar" />
+              alt="My avatar"
+            />
             <img
               class="profile-image mb-3 rounded mx-auto"
               height="160"
               src="/static/media/MeSudbury.jpeg"
               type="image/jpeg"
               width="160"
-              alt="My avatar" />
+              alt="My avatar"
+            />
           </picture>
 
           <div class="bio mb-3">
@@ -93,38 +98,35 @@
         </div>
 
         <ul class="navbar-nav flex-column text-left">
-          <li class:active={segment === 'info'} class="nav-item">
+          <li class:active={section === "info"} class="nav-item">
             <a href="/info/" class="nav-link">
               <Icon data={faUser} />
               About Me
             </a>
           </li>
-          <li class:active={segment === undefined} class="nav-item">
+          <li class:active={section === ""} class="nav-item">
             <a href="/" class="nav-link">
               <Icon data={faLaptopCode} />
               Open Source
             </a>
           </li>
-          <li class:active={segment === 'blog'} class="nav-item">
+          <li class:active={section === "blog"} class="nav-item">
             <a href="/blog/" class="nav-link">
               <Icon data={faBlog} />
               Blog
             </a>
           </li>
-          <li class:active={segment === 'talks'} class="nav-item">
+          <li class:active={section === "talks"} class="nav-item">
             <a href="/talks/" class="nav-link">
               <Icon data={faChalkboard} />
               Talks
             </a>
           </li>
-          <li class:active={segment === 'tutorials'} class="nav-item">
+          <li class:active={section === "tutorials"} class="nav-item">
             <a href="/tutorials/" class="nav-link">
               <Icon data={faPlay} />
               Tutorials
             </a>
-          </li>
-          <li class:active={segment === 'bingo'} class="nav-item">
-            <a href="/bingo/" class="nav-link">Bingo</a>
           </li>
         </ul>
       </div>

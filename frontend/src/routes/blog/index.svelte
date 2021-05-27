@@ -1,16 +1,18 @@
-<script context="module" lang="typescript">
+<script context="module" lang="ts">
   import { faRssSquare } from "@fortawesome/free-solid-svg-icons";
   import Icon from "svelte-awesome/components/Icon.svelte";
 
-  import PostCard from "../../components/PostCard.svelte";
+  import PostCard from "$lib/PostCard.svelte";
 
-  export async function preload() {
-    const response = await this.fetch("/v0/blogs/");
-    return await response.json();
+  export async function load({ fetch }) {
+    const response = await fetch("/v0/blogs/");
+    return {
+      props: await response.json(),
+    };
   }
 </script>
 
-<script lang="typescript">
+<script lang="ts">
   interface IPostCard {
     date: string;
     id: string;
@@ -34,14 +36,16 @@
     <a
       rel="external"
       href="https://pgjones.dev/blog/atom.xml"
-      class="btn btn-primary mr-2">
+      class="btn btn-primary mr-2"
+    >
       <Icon data={faRssSquare} />
       Atom Feed
     </a>
     <a
       rel="external"
       href="https://pgjones.dev/blog/rss20.xml"
-      class="btn btn-primary">
+      class="btn btn-primary"
+    >
       <Icon data={faRssSquare} />
       RSS Feed
     </a>
@@ -56,7 +60,8 @@
           date={post.date}
           slug={post.id}
           summary={post.summary}
-          title={post.title} />
+          title={post.title}
+        />
       {/each}
 
       <div class="col-md-6 mb-3">

@@ -1,12 +1,10 @@
-<script context="module" lang="typescript">
-  export async function preload({ params }) {
-    const response = await this.fetch(`/v0/blogs/${params.slug}/`);
+<script context="module" lang="ts">
+  export async function load({ page }) {
+    const response = await fetch(`/v0/blogs/${page.params.slug}/`);
     const data = await response.json();
 
     if (response.status === 200) {
-      return { post: data };
-    } else {
-      this.error(response.status, data.message);
+      return { props: { post: data } };
     }
   }
 </script>
@@ -79,7 +77,8 @@
         <button
           on:click={shareClick}
           class="btn btn-secondary"
-          class:d-none={!canShare}>
+          class:d-none={!canShare}
+        >
           <Icon data={faShareAlt} />
           <span class="d-none d-md-inline-block">Share</span>
         </button>

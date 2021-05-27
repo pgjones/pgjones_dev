@@ -1,4 +1,4 @@
-<script lang="typescript">
+<script lang="ts">
   export let event: string;
   export let listenHref: string | undefined = undefined;
   export let slidesHref: string | undefined = undefined;

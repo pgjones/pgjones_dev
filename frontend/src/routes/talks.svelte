@@ -1,12 +1,13 @@
-<script lang="typescript">
-  import Talk from "../components/Talk.svelte";
+<script lang="ts">
+  import Talk from "$lib/Talk.svelte";
 </script>
 
 <svelte:head>
   <title>My public talks | PGJones</title>
   <meta
     name="description"
-    content="Talks I have given about software development." />
+    content="Talks I have given about software development."
+  />
 </svelte:head>
 
 <section class="cta-section theme-bg-light py-5">
@@ -21,7 +22,8 @@
       <Talk
         event="PyCon 2021"
         slidesHref="https://docs.google.com/presentation/d/1RpzvHtIyASJZ2IRFPuVm5lw7b3ftuoO6hxB5dN4QaWo/edit?usp=sharing"
-        title="What's new in Flask 2.0">
+        title="What's new in Flask 2.0"
+      >
         <p class="card-text">
           Flask 2.0 introduces async/await support, short form @app.post
           decorators, nested blueprints and more!
@@ -32,7 +34,8 @@
       <Talk
         event="TalkPython['Podcast'] 2021"
         listenHref="https://talkpython.fm/episodes/show/316/flask-2.0"
-        title="Flask 2.0">
+        title="Flask 2.0"
+      >
         <p class="card-text">
           I joined the Talk Python podcast with David Lord to talk about Flask
           2.0.
@@ -43,7 +46,8 @@
         event="Babylon Health 2021"
         slidesHref="https://docs.google.com/presentation/d/1RbU71pIvAAicZXZT_gTvQJKLcs8g48ewtP8CpHuM3GQ/edit?usp=sharing"
         title="Why isn't Flask async?"
-        videoHref="https://youtu.be/bw1qeMoFBmw">
+        videoHref="https://youtu.be/bw1qeMoFBmw"
+      >
         <p class="card-text">
           The introduction of async/await and asyncio has lead to an explosion
           of new web frameworks bringing many new ideas. Yet the enduring WSGI
@@ -67,7 +71,8 @@
         event="EuroPython 2020"
         slidesHref="https://docs.google.com/presentation/d/1ls0OOa9Qpl6-Z3vwLm5fpApH9utEa6AAsYoxR7mUU_I/edit?usp=sharing"
         title="An ASGI Server from scratch"
-        videoHref="https://youtu.be/FNBxYyeti-s">
+        videoHref="https://youtu.be/FNBxYyeti-s"
+      >
         <p class="card-text">
           I intend for this to be a fairly advanced talk that shows the steps
           required to go from a TCP echo server to a basic HTTP/1 ASGI server
@@ -85,7 +90,8 @@
         event="FlaskCon 2020"
         slidesHref="https://docs.google.com/presentation/d/1ZrA5lJ3vg8qoLvJ3ltnoR2UW_6Dkgnw1XpzAK8E53hM/edit?usp=sharing"
         title="Async Flask, an introduction to Quart"
-        videoHref="https://www.youtube.com/watch?v=3mIpeeDqKAU&list=PL-MSuSC-Kjb45rrRGL6gWGn6gv35O1mC1">
+        videoHref="https://www.youtube.com/watch?v=3mIpeeDqKAU&list=PL-MSuSC-Kjb45rrRGL6gWGn6gv35O1mC1"
+      >
         <p class="card-text">
           Quart is the Flask API re-implemented in async/await. This talk will
           introduce Quart and explain how it relates to Flask. Then I'll talk
@@ -97,7 +103,8 @@
       <Talk
         event="London Python 2020"
         slidesHref="https://docs.google.com/presentation/d/1Nm7ojmwtxt-AP5sou6uXwDdCe2KYuy7HtqXI9-Ha9Z4/edit?usp=sharing"
-        title="Web development with Trio">
+        title="Web development with Trio"
+      >
         <p class="card-text">
           The introduction of asyncio to the Python stdlib led to a flurry of
           new web frameworks. Lesser known though are the async/await based
@@ -117,7 +124,8 @@
         event="PyLondinium 2019"
         slidesHref="https://docs.google.com/presentation/d/1lanW471hjyVGk06qi3oGCecJydBVZpYMdaM8bvptIu0/"
         title="An introduction to ASGI, Asynchronous Server Gateway Interface"
-        videoHref="https://youtu.be/t3gCK9QqXWU">
+        videoHref="https://youtu.be/t3gCK9QqXWU"
+      >
         <p class="card-text">
           WSGI has been a huge success, allowing for an ecosystem of servers and
           frameworks to exist and develop independently, however, WSGI is unable
@@ -130,7 +138,8 @@
       <Talk
         event="London Python 2019"
         slidesHref="https://docs.google.com/presentation/d/1xoAe5TWfzjt1JsqF5701hYjLaRi3S27M6MHrqGfTKPw/"
-        title="Async web servers; design and implementation">
+        title="Async web servers; design and implementation"
+      >
         <p class="card-text">
           In this talk I'll describe an idealised process I've gone through
           developing Hypercorn. I'll define the aims of a modern async web
@@ -143,7 +152,8 @@
         event="EuroPython 2018"
         slidesHref="https://drive.google.com/open?id=1E6_G_ADuQ8J4t2UVb7rCYmNT700LclzIu7kFGrcndQ8"
         title="Quart; an ASGI alternative to Flask"
-        videoHref="https://youtu.be/t8-Y7Kivuu0">
+        videoHref="https://youtu.be/t8-Y7Kivuu0"
+      >
         <p class="card-text">
           Flask is a great web micro-framework, that is best utilised with
           event-loop concurrency. Sadly with Flask the event-loop framework
@@ -162,7 +172,8 @@
       <Talk
         event="TalkPython['Podcast'] 2018"
         listenHref="https://talkpython.fm/episodes/show/147/quart-flask-but-3x-faster"
-        title="Quart: Flask, but 3x faster">
+        title="Quart: Flask, but 3x faster"
+      >
         <p class="card-text">
           I joined the Talk Python podcast to talk about Quart.
         </p>
@@ -172,7 +183,8 @@
         event="London Python 2018"
         slidesHref="https://docs.google.com/presentation/d/1NVFL-z7_aG2HNGvYpTMBGJOqk6houo13U6ABwfXJ94E"
         title="Quart; a asyncio alternative to Flask"
-        videoHref="https://skillsmatter.com/skillscasts/11994-quart-a-asyncio-alternative-to-flask-geopandas">
+        videoHref="https://skillsmatter.com/skillscasts/11994-quart-a-asyncio-alternative-to-flask-geopandas"
+      >
         <p class="card-text">
           Flask is a great web mirco-framework, that is best utilised with
           event-loop concurrency. Sadly with Flask the event-loop framework
@@ -192,7 +204,8 @@
         event="PyCon UK 2017"
         slidesHref="https://docs.google.com/presentation/d/10rj-rP5rks9xZeWu2rOWzs6olSaxH2CY6QzTDE4tt1I"
         title="Building Quart from Flask and Asyncio"
-        videoHref="https://www.youtube.com/watch?v=EgpQcLy1kf0">
+        videoHref="https://www.youtube.com/watch?v=EgpQcLy1kf0"
+      >
         <p class="card-text">
           The Python world is moving towards asyncio web (micro) frameworks,
           with Sanic and Aiohttp leading the way. Sadly the best (IMO) micro

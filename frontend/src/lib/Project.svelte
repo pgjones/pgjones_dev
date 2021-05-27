@@ -1,4 +1,4 @@
-<script lang="typescript">
+<script lang="ts">
   export let docsHref: string | undefined = undefined;
   export let imgSrc: string | undefined = undefined;
   export let name: string;
@@ -9,7 +9,8 @@
 <div
   class:col-md-6={imgSrc !== undefined}
   class:col-md-4={imgSrc === undefined}
-  class="isotope-item col-md-6 mb-5 mobileapp frontend">
+  class="isotope-item col-md-6 mb-5 mobileapp frontend"
+>
   <div class="card project-card">
     <div class="row no-gutters">
       {#if imgSrc !== undefined}
@@ -21,14 +22,16 @@
               type="image/webp"
               width="100"
               class="card-img"
-              alt={name} />
+              alt={name}
+            />
             <img
               height="100"
               src="{imgSrc}.png"
               type="image/png"
               width="100"
               class="card-img"
-              alt={name} />
+              alt={name}
+            />
           </picture>
         </div>
       {/if}
@@ -48,7 +51,7 @@
         </p>
         <p class="card-text">
           <small class="text-muted">
-            {#if role === 'AUTHOR'}
+            {#if role === "AUTHOR"}
               I am the author of this project
             {:else}I am a maintainer of this project{/if}
           </small>

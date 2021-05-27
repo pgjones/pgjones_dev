@@ -1,4 +1,4 @@
-<script lang="typescript">
+<script lang="ts">
   export let date: string;
   export let slug: string;
   export let summary: string;
