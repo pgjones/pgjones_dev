@@ -12,11 +12,6 @@ const config = {
     }),
     ssr: false,
     target: "#svelte",
-    vite: {
-      optimizeDeps: {
-        include: ["highlight.js"],
-      },
-    },
   },
 };
 
