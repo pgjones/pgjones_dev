@@ -23,6 +23,7 @@
         event="PyCon 2021"
         slidesHref="https://docs.google.com/presentation/d/1RpzvHtIyASJZ2IRFPuVm5lw7b3ftuoO6hxB5dN4QaWo/edit?usp=sharing"
         title="What's new in Flask 2.0"
+        videoHref="https://youtu.be/5zEn3Jta2Dg?t=2686"
       >
         <p class="card-text">
           Flask 2.0 introduces async/await support, short form @app.post
