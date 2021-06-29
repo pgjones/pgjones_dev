@@ -4,6 +4,7 @@ COPY frontend /frontend/
 WORKDIR /frontend/
 RUN npm install && npm run build
 
+# hadolint ignore=DL3059
 RUN mv /frontend/build/_app /frontend/buildjs
 
 FROM python:3.8-alpine
@@ -17,11 +18,13 @@ COPY app hypercorn.toml /app/
 RUN apk --no-cache add build-base cargo gcc git gzip libffi-dev libxml2-dev \
     libxslt-dev musl-dev openssl openssl-dev bsd-compat-headers
 
+# hadolint ignore=DL3059
 RUN python -m venv /ve
 ENV PATH=/ve/bin:${PATH}
 # hadolint ignore=DL3013
 RUN pip install --no-cache-dir dumb-init poetry
 
+# hadolint ignore=DL3059
 RUN mkdir -p /app/static/_app/ /app/templates/svelte/ /root/.config/pypoetry
 
 COPY backend/poetry.lock backend/pyproject.toml /app/
