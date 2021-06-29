@@ -11,7 +11,7 @@
     "start": "svelte-kit dev"
   },
   "devDependencies": {
-    "@sveltejs/adapter-static": "*",
+    "@sveltejs/adapter-static": "next",
     "@sveltejs/kit": "next",
     "@typescript-eslint/eslint-plugin": "*",
     "@typescript-eslint/parser": "*",
@@ -29,7 +29,7 @@
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "*",
     "@ts-stack/markdown": "*",
-    "highlight.js": "11.0.0-beta1",
+    "highlight.js": "*",
     "highlightjs-svelte": "*",
     "svelte-awesome": "*"
   }

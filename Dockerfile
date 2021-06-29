@@ -4,6 +4,8 @@ COPY frontend /frontend/
 WORKDIR /frontend/
 RUN npm install && npm run build
 
+RUN mv /frontend/build/_app /frontend/buildjs
+
 FROM python:3.8-alpine
 
 EXPOSE 8080 8443
@@ -29,8 +31,8 @@ RUN poetry config virtualenvs.create false \
     && poetry cache clear pypi --all --no-interaction
 
 COPY backend/src/backend/ /app/
-COPY --from=frontend /frontend/build/_app/ /app/static/_app/
-COPY --from=frontend /frontend/build/*.html /app/templates/svelte/
+COPY --from=frontend /frontend/buildjs/ /app/static/_app/
+COPY --from=frontend /frontend/build/ /app/templates/svelte/
 
 RUN gzip --keep --recursive /app/static/*
 

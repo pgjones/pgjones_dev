@@ -1,3 +1,7 @@
+<script context="module">
+  export const prerender = true;
+</script>
+
 <svelte:head>
   <title>Information about me | PGJones</title>
   <meta name="description" content="Information about me and this site." />
