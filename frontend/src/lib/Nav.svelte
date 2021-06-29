@@ -22,8 +22,6 @@
     expand = false;
   });
 
-  $: console.log(section);
-
   const onClick = () => {
     expand = !expand;
   };
