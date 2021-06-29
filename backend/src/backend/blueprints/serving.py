@@ -11,7 +11,7 @@ from quart import (
     ResponseReturnValue,
 )
 from quart.helpers import safe_join, send_file
-from werkzeug.http import COEP, COOP
+from werkzeug.http import COOP
 
 blueprint = Blueprint("serving", __name__)
 
@@ -43,7 +43,6 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
     response.content_security_policy.img_src = "'self' data:"
     response.content_security_policy.script_src = f"'self' 'nonce-{nonce}'"
     response.content_security_policy.style_src = f"'self' 'nonce-{nonce}'"
-    response.cross_origin_embedder_policy = COEP.REQUIRE_CORP
     response.cross_origin_opener_policy = COOP.SAME_ORIGIN
     response.headers["Referrer-Policy"] = "no-referrer, strict-origin-when-cross-origin"
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
