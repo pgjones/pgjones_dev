@@ -93,6 +93,6 @@ ecr-push:
     - docker push $AWS_REPOSITORY_URL:latest
 
   only:
-    - master
+    - main
   tags:
     - docker
