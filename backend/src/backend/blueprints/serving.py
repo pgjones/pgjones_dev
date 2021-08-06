@@ -9,11 +9,32 @@ from quart import (
     make_response,
     render_template,
     ResponseReturnValue,
+    send_from_directory,
 )
 from quart.helpers import safe_join, send_file
+from werkzeug.exceptions import NotFound
 from werkzeug.http import COOP
+from werkzeug.sansio.response import Response
 
 blueprint = Blueprint("serving", __name__)
+
+
+def _apply_security_headers(response: Response, nonce: Optional[str] = None) -> Response:
+    response.headers["Content-Security-Policy"] = ""
+    response.content_security_policy.default_src = "'self'"
+    response.content_security_policy.base_uri = "'self'"
+    response.content_security_policy.form_action = "'self'"
+    response.content_security_policy.frame_ancestors = "'none'"
+    response.content_security_policy.frame_src = "https://www.youtube-nocookie.com"
+    response.content_security_policy.img_src = "'self' data:"
+    if nonce is not None:
+        response.content_security_policy.script_src = f"'self' 'nonce-{nonce}'"
+        response.content_security_policy.style_src = f"'self' 'nonce-{nonce}'"
+    response.cross_origin_opener_policy = COOP.SAME_ORIGIN
+    response.headers["Referrer-Policy"] = "no-referrer, strict-origin-when-cross-origin"
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    return response
 
 
 @blueprint.route("/")
@@ -34,25 +55,22 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
         body = await render_template("svelte/fallback.html", nonce=nonce)
 
     response = await make_response(body)
-    response.headers["Content-Security-Policy"] = ""
-    response.content_security_policy.default_src = "'self'"
-    response.content_security_policy.base_uri = "'self'"
-    response.content_security_policy.form_action = "'self'"
-    response.content_security_policy.frame_ancestors = "'none'"
-    response.content_security_policy.frame_src = "https://www.youtube-nocookie.com"
-    response.content_security_policy.img_src = "'self' data:"
-    response.content_security_policy.script_src = f"'self' 'nonce-{nonce}'"
-    response.content_security_policy.style_src = f"'self' 'nonce-{nonce}'"
-    response.cross_origin_opener_policy = COOP.SAME_ORIGIN
-    response.headers["Referrer-Policy"] = "no-referrer, strict-origin-when-cross-origin"
-    response.headers["X-Frame-Options"] = "SAMEORIGIN"
-    response.headers["X-XSS-Protection"] = "1; mode=block"
-    return response
+    return _apply_security_headers(response, nonce)
 
 
 @blueprint.route("/_app/<path:path>")
 async def client_static(path: str) -> ResponseReturnValue:
     return await current_app.send_static_file(f"_app/{path}")
+
+
+@blueprint.route("/tozo/", defaults={"path": ""})
+@blueprint.route("/tozo/<path:path>")
+async def tozo(path: str) -> ResponseReturnValue:
+    try:
+        response = await send_from_directory(current_app.root_path, f"tozo/{path}")
+    except NotFound:
+        response = await send_from_directory(current_app.root_path, f"tozo/{path}/index.html")
+    return _apply_security_headers(response)
 
 
 @blueprint.route("/blog/atom.xml")
