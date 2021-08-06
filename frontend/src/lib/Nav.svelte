@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    faBook,
     faBlog,
     faChalkboard,
     faLaptopCode,
@@ -124,6 +125,12 @@
             <a href="/tutorials/" class="nav-link">
               <Icon data={faPlay} />
               Tutorials
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/tozo/" class="nav-link" rel="external">
+              <Icon data={faBook} />
+              Zero to production web apps - book
             </a>
           </li>
         </ul>
