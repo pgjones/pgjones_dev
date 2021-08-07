@@ -1301,7 +1301,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../under_construction/" class="md-nav__link">
+      <a href="../../deployment/emails/" class="md-nav__link">
         Emailing
       </a>
     </li>
@@ -1464,7 +1464,7 @@ language.</p>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">enGB</span><span class="p">,</span> <span class="nx">de</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;date-fns/locale&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="nx">React</span> <span class="k">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="p">{</span> <span class="nx">useTranslation</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;react-i18next&quot;</span><span class="p">;</span>
-<span class="k">import</span> <span class="p">{</span> <span class="nx">Link</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;react-router-dom&quot;</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Link</span><span class="p">,</span> <span class="nx">Redirect</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;react-router-dom&quot;</span><span class="p">;</span>
 <span class="k">import</span> <span class="nx">styled</span> <span class="k">from</span> <span class="s2">&quot;styled-components&quot;</span><span class="p">;</span>
 
 <span class="k">import</span> <span class="p">{</span> <span class="nx">Todo</span> <span class="p">}</span> <span class="k">from</span> <span class="s2">&quot;src/models&quot;</span><span class="p">;</span>
@@ -1485,55 +1485,59 @@ language.</p>
 
   <span class="kd">const</span> <span class="nx">locale</span> <span class="o">=</span> <span class="nx">i18n</span><span class="p">.</span><span class="nx">language</span> <span class="o">===</span> <span class="s2">&quot;en&quot;</span> <span class="o">?</span> <span class="nx">enGB</span> : <span class="kt">de</span><span class="p">;</span>
 
-  <span class="k">return</span> <span class="p">(</span>
-    <span class="o">&lt;&gt;</span>
-      <span class="o">&lt;</span><span class="nx">List</span><span class="o">&gt;</span>
-        <span class="p">{</span><span class="nx">todos</span><span class="o">?</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">todo</span>: <span class="kt">Todo</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
-          <span class="kd">const</span> <span class="nx">secondary</span> <span class="o">=</span> <span class="nx">todo</span><span class="p">.</span><span class="nx">due</span>
-            <span class="o">?</span> <span class="nx">format</span><span class="p">(</span><span class="nx">todo</span><span class="p">.</span><span class="nx">due</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">locale</span> <span class="p">})</span>
-            <span class="o">:</span> <span class="kc">undefined</span><span class="p">;</span>
-          <span class="k">return</span> <span class="p">(</span>
-            <span class="o">&lt;</span><span class="nx">ListItem</span>
-              <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">todo</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span>
-              <span class="nx">button</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
-              <span class="nx">component</span><span class="o">=</span><span class="p">{</span><span class="nx">Link</span><span class="p">}</span>
-              <span class="nx">to</span><span class="o">=</span><span class="p">{</span><span class="sb">`/todos/</span><span class="si">${</span><span class="nx">todo</span><span class="p">.</span><span class="nx">id</span><span class="si">}</span><span class="sb">/`</span><span class="p">}</span>
-            <span class="o">&gt;</span>
-              <span class="o">&lt;</span><span class="nx">ListItemIcon</span><span class="o">&gt;</span>
-                <span class="o">&lt;</span><span class="nx">Checkbox</span>
-                  <span class="nx">checked</span><span class="o">=</span><span class="p">{</span><span class="nx">todo</span><span class="p">.</span><span class="nx">complete</span><span class="p">}</span>
-                  <span class="nx">disabled</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
-                  <span class="nx">disableRipple</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
-                  <span class="nx">edge</span><span class="o">=</span><span class="s2">&quot;start&quot;</span>
-                  <span class="nx">tabIndex</span><span class="o">=</span><span class="p">{</span><span class="o">-</span><span class="mf">1</span><span class="p">}</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">todos</span><span class="o">?</span><span class="p">.</span><span class="nx">length</span> <span class="o">===</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">&lt;</span><span class="nx">Redirect</span> <span class="nx">to</span><span class="o">=</span><span class="s2">&quot;/todos/new/&quot;</span> <span class="o">/&gt;</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span>
+      <span class="o">&lt;&gt;</span>
+        <span class="o">&lt;</span><span class="nx">List</span><span class="o">&gt;</span>
+          <span class="p">{</span><span class="nx">todos</span><span class="o">?</span><span class="p">.</span><span class="nx">map</span><span class="p">((</span><span class="nx">todo</span>: <span class="kt">Todo</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+            <span class="kd">const</span> <span class="nx">secondary</span> <span class="o">=</span> <span class="nx">todo</span><span class="p">.</span><span class="nx">due</span>
+              <span class="o">?</span> <span class="nx">format</span><span class="p">(</span><span class="nx">todo</span><span class="p">.</span><span class="nx">due</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">locale</span> <span class="p">})</span>
+              <span class="o">:</span> <span class="kc">undefined</span><span class="p">;</span>
+            <span class="k">return</span> <span class="p">(</span>
+              <span class="o">&lt;</span><span class="nx">ListItem</span>
+                <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">todo</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span>
+                <span class="nx">button</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
+                <span class="nx">component</span><span class="o">=</span><span class="p">{</span><span class="nx">Link</span><span class="p">}</span>
+                <span class="nx">to</span><span class="o">=</span><span class="p">{</span><span class="sb">`/todos/</span><span class="si">${</span><span class="nx">todo</span><span class="p">.</span><span class="nx">id</span><span class="si">}</span><span class="sb">/`</span><span class="p">}</span>
+              <span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="nx">ListItemIcon</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="nx">Checkbox</span>
+                    <span class="nx">checked</span><span class="o">=</span><span class="p">{</span><span class="nx">todo</span><span class="p">.</span><span class="nx">complete</span><span class="p">}</span>
+                    <span class="nx">disabled</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
+                    <span class="nx">disableRipple</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
+                    <span class="nx">edge</span><span class="o">=</span><span class="s2">&quot;start&quot;</span>
+                    <span class="nx">tabIndex</span><span class="o">=</span><span class="p">{</span><span class="o">-</span><span class="mf">1</span><span class="p">}</span>
+                  <span class="o">/&gt;</span>
+                <span class="o">&lt;</span><span class="err">/ListItemIcon&gt;</span>
+                <span class="o">&lt;</span><span class="nx">ListItemText</span> <span class="nx">primary</span><span class="o">=</span><span class="p">{</span><span class="nx">todo</span><span class="p">.</span><span class="nx">task</span><span class="p">}</span> <span class="nx">secondary</span><span class="o">=</span><span class="p">{</span><span class="nx">secondary</span><span class="p">}</span> <span class="o">/&gt;</span>
+              <span class="o">&lt;</span><span class="err">/ListItem&gt;</span>
+            <span class="p">);</span>
+          <span class="p">})</span> <span class="o">??</span>
+            <span class="p">[</span><span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="mf">3</span><span class="p">].</span><span class="nx">map</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span>
+              <span class="o">&lt;</span><span class="nx">ListItem</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span><span class="o">&gt;</span>
+                <span class="o">&lt;</span><span class="nx">ListItemIcon</span><span class="o">&gt;</span>
+                  <span class="o">&lt;</span><span class="nx">Checkbox</span>
+                    <span class="nx">disabled</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
+                    <span class="nx">disableRipple</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
+                    <span class="nx">edge</span><span class="o">=</span><span class="s2">&quot;start&quot;</span>
+                    <span class="nx">tabIndex</span><span class="o">=</span><span class="p">{</span><span class="o">-</span><span class="mf">1</span><span class="p">}</span>
+                  <span class="o">/&gt;</span>
+                <span class="o">&lt;</span><span class="err">/ListItemIcon&gt;</span>
+                <span class="o">&lt;</span><span class="nx">ListItemText</span>
+                  <span class="nx">primary</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="nx">Skeleton</span> <span class="o">/&gt;</span><span class="p">}</span>
+                  <span class="nx">secondary</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="nx">Skeleton</span> <span class="nx">width</span><span class="o">=</span><span class="s2">&quot;200px&quot;</span> <span class="o">/&gt;</span><span class="p">}</span>
                 <span class="o">/&gt;</span>
-              <span class="o">&lt;</span><span class="err">/ListItemIcon&gt;</span>
-              <span class="o">&lt;</span><span class="nx">ListItemText</span> <span class="nx">primary</span><span class="o">=</span><span class="p">{</span><span class="nx">todo</span><span class="p">.</span><span class="nx">task</span><span class="p">}</span> <span class="nx">secondary</span><span class="o">=</span><span class="p">{</span><span class="nx">secondary</span><span class="p">}</span> <span class="o">/&gt;</span>
-            <span class="o">&lt;</span><span class="err">/ListItem&gt;</span>
-          <span class="p">);</span>
-        <span class="p">})</span> <span class="o">??</span>
-          <span class="p">[</span><span class="mf">1</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="mf">3</span><span class="p">].</span><span class="nx">map</span><span class="p">((</span><span class="nx">id</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">(</span>
-            <span class="o">&lt;</span><span class="nx">ListItem</span> <span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">id</span><span class="p">}</span><span class="o">&gt;</span>
-              <span class="o">&lt;</span><span class="nx">ListItemIcon</span><span class="o">&gt;</span>
-                <span class="o">&lt;</span><span class="nx">Checkbox</span>
-                  <span class="nx">disabled</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
-                  <span class="nx">disableRipple</span><span class="o">=</span><span class="p">{</span><span class="kc">true</span><span class="p">}</span>
-                  <span class="nx">edge</span><span class="o">=</span><span class="s2">&quot;start&quot;</span>
-                  <span class="nx">tabIndex</span><span class="o">=</span><span class="p">{</span><span class="o">-</span><span class="mf">1</span><span class="p">}</span>
-                <span class="o">/&gt;</span>
-              <span class="o">&lt;</span><span class="err">/ListItemIcon&gt;</span>
-              <span class="o">&lt;</span><span class="nx">ListItemText</span>
-                <span class="nx">primary</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="nx">Skeleton</span> <span class="o">/&gt;</span><span class="p">}</span>
-                <span class="nx">secondary</span><span class="o">=</span><span class="p">{</span><span class="o">&lt;</span><span class="nx">Skeleton</span> <span class="nx">width</span><span class="o">=</span><span class="s2">&quot;200px&quot;</span> <span class="o">/&gt;</span><span class="p">}</span>
-              <span class="o">/&gt;</span>
-            <span class="o">&lt;</span><span class="err">/ListItem&gt;</span>
-          <span class="p">))}</span>
-      <span class="o">&lt;</span><span class="err">/List&gt;</span>
-      <span class="o">&lt;</span><span class="nx">SFab</span> <span class="nx">component</span><span class="o">=</span><span class="p">{</span><span class="nx">Link</span><span class="p">}</span> <span class="nx">to</span><span class="o">=</span><span class="s2">&quot;/todos/new/&quot;</span><span class="o">&gt;</span>
-        <span class="o">&lt;</span><span class="nx">AddIcon</span> <span class="o">/&gt;</span>
-      <span class="o">&lt;</span><span class="err">/SFab&gt;</span>
-    <span class="o">&lt;</span><span class="err">/&gt;</span>
-  <span class="p">);</span>
+              <span class="o">&lt;</span><span class="err">/ListItem&gt;</span>
+            <span class="p">))}</span>
+        <span class="o">&lt;</span><span class="err">/List&gt;</span>
+        <span class="o">&lt;</span><span class="nx">SFab</span> <span class="nx">component</span><span class="o">=</span><span class="p">{</span><span class="nx">Link</span><span class="p">}</span> <span class="nx">to</span><span class="o">=</span><span class="s2">&quot;/todos/new/&quot;</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">AddIcon</span> <span class="o">/&gt;</span>
+        <span class="o">&lt;</span><span class="err">/SFab&gt;</span>
+      <span class="o">&lt;</span><span class="err">/&gt;</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
 <span class="p">};</span>
 
 <span class="k">export</span> <span class="k">default</span> <span class="nx">Todos</span><span class="p">;</span>

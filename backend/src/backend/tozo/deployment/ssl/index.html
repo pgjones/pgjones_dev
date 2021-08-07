@@ -1301,7 +1301,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../under_construction/" class="md-nav__link">
+      <a href="../emails/" class="md-nav__link">
         Emailing
       </a>
     </li>
@@ -1505,6 +1505,24 @@ app, via the following additions to <code>infrastructure/heroku.tf</code>,</p>
   <span class="na">depends_on</span> <span class="o">=</span> <span class="p">[</span><span class="nv">heroku_formation.tozo-web</span><span class="p">]</span>
 <span class="p">}</span>
 </code></pre></div>
+<p>Finally we need to ensure that any visitor to our app uses HTTPS, even
+if they initially visit using HTTP. This is achieved by a responding
+with a redirect for any HTTP visitors by adding the following to
+<code>backend/src/backend/run.py</code>,</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">quart</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">Response</span>
+
+
+<span class="k">def</span> <span class="nf">create_app</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Quart</span><span class="p">:</span>
+    <span class="o">...</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">before_request</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">redirect_to_https</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Response</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;X-Forwarded-Proto&quot;</span><span class="p">,</span> <span class="s2">&quot;https&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;https&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;http://&quot;</span><span class="p">,</span> <span class="s2">&quot;https://&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">301</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+</code></pre></div>
                 
               
               
@@ -1538,7 +1556,7 @@ app, via the following additions to <code>infrastructure/heroku.tf</code>,</p>
         </a>
       
       
-        <a href="../../under_construction/" class="md-footer__link md-footer__link--next" rel="next">
+        <a href="../emails/" class="md-footer__link md-footer__link--next" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">

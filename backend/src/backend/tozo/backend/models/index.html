@@ -1341,7 +1341,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../under_construction/" class="md-nav__link">
+      <a href="../../deployment/emails/" class="md-nav__link">
         Emailing
       </a>
     </li>
@@ -1662,7 +1662,7 @@ in the database,</p>
 
 <span class="k">async</span> <span class="k">def</span> <span class="nf">update_member_email_verified</span><span class="p">(</span><span class="n">db</span><span class="p">:</span> <span class="n">Database</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">await</span> <span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-        <span class="s2">&quot;UPDATE members SET email_verified = now() id = :id&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;UPDATE members SET email_verified = now() WHERE id = :id&quot;</span><span class="p">,</span>
         <span class="n">values</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="nb">id</span><span class="p">},</span>
     <span class="p">)</span>
 </code></pre></div>
