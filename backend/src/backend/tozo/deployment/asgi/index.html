@@ -330,7 +330,7 @@
   
     <li class="md-nav__item">
       <a href="../../local-setup/database/" class="md-nav__link">
-        Database, Postgres
+        Database: Postgres
       </a>
     </li>
   
@@ -342,7 +342,7 @@
   
     <li class="md-nav__item">
       <a href="../../local-setup/database-tooling/" class="md-nav__link">
-        Database, Tooling
+        Database: Tooling
       </a>
     </li>
   
@@ -1461,12 +1461,20 @@ Quart. It is also something I know very well as I'm the Hypercorn
 author.</p>
 <p>To use Hypercorn in the production environment we need to configure
 how it should work. I prefer to do this via a <a href="https://toml.io">TOML</a>
-configuration file. At this stage we should configure the logging, by
-adding the following to <code>hypercorn.toml</code>,</p>
+configuration file. At this stage we should configure the logging, and
+restrict the host names the server will respond to by adding the
+following to <code>hypercorn.toml</code>,</p>
 <div class="highlight"><pre><span></span><code><span class="n">accesslog</span> <span class="o">=</span> <span class="s">&quot;-&quot;</span>
 <span class="n">access_log_format</span> <span class="o">=</span> <span class="s">&quot;%(t)s %(h)s %(f)s - %(S)s &#39;%(r)s&#39; %(s)s %(b)s %(D)s&quot;</span>
 <span class="n">errorlog</span> <span class="o">=</span> <span class="s">&quot;-&quot;</span>
+<span class="n">server_names</span> <span class="o">=</span> <span class="k">[ &quot;tozo.dev&quot;, &quot;www.tozo.dev&quot; ]</span>
 </code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Setting the <code>serve_names</code> means that the server will respond with
+a 404, not found response to any request that targets a different
+host that those given.</p>
+</div>
 <p>The hypercon server can be started via the following command,</p>
 <div class="highlight"><pre><span></span><code>hypercorn --config hypercorn.toml <span class="s1">&#39;run:create_app()&#39;</span>
 </code></pre></div>
