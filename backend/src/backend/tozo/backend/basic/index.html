@@ -175,8 +175,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../forward/" class="md-nav__link">
-        Forward
+      <a href="../../foreword/" class="md-nav__link">
+        Foreword
       </a>
     </li>
   
@@ -1532,6 +1532,9 @@
                 <p>To begin it makes sense to setup a basic API that responds to pings
 (requests) with a pong. This firstly requires Quart as a (full)
 dependency,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add quart
 </code></pre></div>
 <p>which installed Quart 0.14.1. For the basic setup we can add a simple
@@ -1584,10 +1587,16 @@ to add to <code>backend/pyproject.toml</code>,</p>
     <span class="n">_check_call_quiet</span><span class="p">([</span><span class="s2">&quot;python&quot;</span><span class="p">,</span> <span class="s2">&quot;src/backend/run.py&quot;</span><span class="p">])</span>
 </code></pre></div>
 <p>which allows,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry run start
 </code></pre></div>
 <p>to start our application. You can test it works manually using the
 <code>curl</code> tool,</p>
+<div class="admonition info inline end">
+<p>Run this command in any location</p>
+</div>
 <div class="highlight"><pre><span></span><code>curl localhost:5000/control/ping/
 </code></pre></div>
 <p>or visiting <code>localhost:5000/control/ping/</code> in your browser.</p>

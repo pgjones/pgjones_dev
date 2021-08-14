@@ -175,8 +175,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../forward/" class="md-nav__link">
-        Forward
+      <a href="../../foreword/" class="md-nav__link">
+        Foreword
       </a>
     </li>
   
@@ -1531,6 +1531,9 @@
 control the database is best placed with the backend tooling. Firstly
 we need commands to delete/drop the database (and user) and then to
 create them. This will be invoked via,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry run recreate_db
 </code></pre></div>
 <p>by adding the following to the <code>backend/pyproject.toml</code> file,</p>

@@ -175,8 +175,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../forward/" class="md-nav__link">
-        Forward
+      <a href="../../foreword/" class="md-nav__link">
+        Foreword
       </a>
     </li>
   
@@ -1519,6 +1519,9 @@
 direct CLI usage as this ensures that any changes to the
 infrastructure will be recorded in the repository and hence the
 infrastructure can be recreated at any time. To install Terraform,</p>
+<div class="admonition info inline end">
+<p>Run this command any location</p>
+</div>
 <div class="highlight"><pre><span></span><code>brew install terraform
 </code></pre></div>
 <p>which installed 0.13.5.</p>
@@ -1541,6 +1544,9 @@ repository has access to the secrets. To avoid this I use
 to encrypt the secrets and Terraform's state.</p>
 <p>First lets install Ansible-vault using pip, (pip is available after
 you install Python),</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>infrastructure/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>pip install ansible-vault
 </code></pre></div>
 <p>which can be used to encrypt any files that contain secrets with only
@@ -1559,10 +1565,16 @@ use a <code>secrets.auto.tfvars</code> file to store all the secrets used as
 variables in my Terraform scripts. This file is automatically read by
 Terraform whenever you issue a Terraform command. So it must also be
 encrypted,</p>
+<div class="admonition info inline end">
+<p>Run these commands in <code>infrastructure/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>ansible-vault encrypt secrets.auto.tfvars --output<span class="o">=</span>secrets.auto.tfvars.vault
 ansible-vault encrypt terraform.tfstate --output<span class="o">=</span>terraform.tfstate.vault
 </code></pre></div>
 <p>and to decrypt,</p>
+<div class="admonition info inline end">
+<p>Run these commands in <code>infrastructure/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>ansible-vault decrypt secrets.auto.tfvars.vault --output<span class="o">=</span>secrets.auto.tfvars
 ansible-vault decrypt terraform.tfstate.vault --output<span class="o">=</span>terraform.tfstate
 </code></pre></div>

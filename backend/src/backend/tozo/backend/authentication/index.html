@@ -175,8 +175,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../forward/" class="md-nav__link">
-        Forward
+      <a href="../../foreword/" class="md-nav__link">
+        Foreword
       </a>
     </li>
   
@@ -1582,6 +1582,9 @@ against a recalculated version.</p>
 <p><a href="https://gitlab.com/pgjones/quart-auth">Quart-Auth</a> can be used to
 manage the cookies. Quart-Auth will sign the data, and ensure that
 the cookies are securely stored in the browser.</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add quart-auth
 </code></pre></div>
 <p>Then by activating the AuthManager when creating the app in
@@ -1604,6 +1607,9 @@ many other websites. Therefore instead of the password a hash of the
 password is calculated and stored.</p>
 <p><a href="https://github.com/pyca/bcrypt/">bcrypt</a> is a great library to hash
 passwords. It can be installed,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add bcrypt
 </code></pre></div>
 <h2 id="json-error-responses">JSON error responses</h2>
@@ -1632,6 +1638,9 @@ user cannot alter the token without generating a correct signature,
 which requires our secret key. To do this we can use
 <a href="https://itsdangerous.palletsprojects.com/">itsdangerous</a>, which is
 installed via poetry,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add itsdangerous
 </code></pre></div>
 <p>The downside to this approach is that users will be able to read

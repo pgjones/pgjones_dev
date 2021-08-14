@@ -170,8 +170,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../forward/" class="md-nav__link">
-        Forward
+      <a href="../../foreword/" class="md-nav__link">
+        Foreword
       </a>
     </li>
   
@@ -1455,14 +1455,23 @@
 relational database <a href="https://www.postgresql.org/">postgres</a> is my go
 to choice. We'll need it installed locally for development, which we
 can do using brew,</p>
+<div class="admonition info inline end">
+<p>Run this command in any location</p>
+</div>
 <div class="highlight"><pre><span></span><code>brew install postgres
 </code></pre></div>
 <p>which installed postgres 13.</p>
 <p>You can then access the local database using the <code>psql</code> client,</p>
+<div class="admonition info inline end">
+<p>Run this command in any location</p>
+</div>
 <div class="highlight"><pre><span></span><code>psql -U postgres
 </code></pre></div>
 <p>note that <code>postgres</code> is the default user and may not exist, if it
 isn't create it using,</p>
+<div class="admonition info inline end">
+<p>Run this command in any location</p>
+</div>
 <div class="highlight"><pre><span></span><code>createuser -s postgres
 </code></pre></div>
 <p>We'll use the <code>postgres</code> superuser to create a specific user for our

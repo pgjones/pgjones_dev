@@ -175,8 +175,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../forward/" class="md-nav__link">
-        Forward
+      <a href="../../foreword/" class="md-nav__link">
+        Foreword
       </a>
     </li>
   
@@ -1545,6 +1545,9 @@
 feature</a>
 that can be used to map poetry commands to arbitrary python code. For
 example</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry run hello
 </code></pre></div>
 <p>can be mapped to,</p>
@@ -1573,6 +1576,9 @@ added to <code>backend/scripts.py</code>,</p>
 <p>Python does not have an official format/formatter, however
 <a href="https://github.com/psf/black">black</a> is the <em>de-facto</em> formatter. We
 should add it to the project, as a development depenedency,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add --allow-prereleases --dev black
 </code></pre></div>
 <p><img alt="isort logo" src="../img/isort.png" style="height: 80px;float: right" /></p>
@@ -1580,6 +1586,9 @@ should add it to the project, as a development depenedency,</p>
 stage yet). Whilst Black formats the code it doesn't order the
 imports, which is something I find very useful<sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup>. Therefore I also
 use <a href="https://github.com/pycqa/isort">isort</a> which can be added,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add --dev isort
 </code></pre></div>
 <p>Both Black and isort require configuring, which should be added to the
@@ -1602,6 +1611,9 @@ use <a href="https://github.com/pycqa/isort">isort</a> which can be added,</p>
 templates will be left unformatted. Thankfully
 <a href="https://github.com/rtts/djhtml">djhtml</a> can be used to format the
 templates, it is added,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add --dev djhtml
 </code></pre></div>
 <p>This allows two commands <code>reformat</code> to autoformat the code and
@@ -1629,6 +1641,9 @@ templates, it is added,</p>
     <span class="p">)</span>
 </code></pre></div>
 <p>which allows,</p>
+<div class="admonition info inline end">
+<p>Run these commands in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry run reformat
 poetry run format
 </code></pre></div>
@@ -1649,6 +1664,9 @@ e.g. for <code>quart-auth</code>,</p>
 is being called with the types the author expected catches a fair
 number of bugs. I use <a href="https://github.com/python/mypy">mypy</a> to check
 this, as installed,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add --dev mypy
 </code></pre></div>
 <p>and configured by adding the following to <code>backend/pyproject.toml</code>,</p>
@@ -1662,6 +1680,9 @@ along with the <a href="https://github.com/jbkahn/flake8-print">flake8-print</a>
 and <a href="https://github.com/PyCQA/pep8-naming">pep8-naming</a> plugins. These
 ensure I have readable (easier to understand) code, without any print
 statements. To install these,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add --dev flake8 flake8-print pep8-naming
 </code></pre></div>
 <p>and configured in the <code>backend/setup.cfg</code> file<sup id="fnref:2"><a class="footnote-ref" href="#fn:2">2</a></sup>, (these settings
@@ -1674,6 +1695,9 @@ avoid conflicts with the other tooling),</p>
 called. This happens when I forget to delete, or get confused. My goto
 tool is <a href="https://github.com/jendrikseipp/vulture">vulture</a>, which can
 be installed,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add --dev vulture
 </code></pre></div>
 <p>and configured in the <code>backend/pyproject.toml</code> file,</p>
@@ -1684,6 +1708,9 @@ be installed,</p>
 <p>Finally I like to check, and get some reassurance, that the code has
 no obvious security vulnerabilities. For this I use
 <a href="https://github.com/PyCQA/bandit">bandit</a>, as installed,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add --dev bandit
 </code></pre></div>
 <p>which requires no special configuration.</p>
@@ -1711,6 +1738,9 @@ tests,</p>
 </code></pre></div>
 <p>To install pytest, and the
 <a href="https://github.com/pytest-dev/pytest-asyncio">pytest-asyncio</a> plugin,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add --dev pytest pytest-asyncio
 </code></pre></div>
 <p>and configured to ensure that locals are shown on error (as this
@@ -1730,6 +1760,9 @@ really helps debug the failure), by adding the following to
     <span class="n">_check_call_quiet</span><span class="p">([</span><span class="s2">&quot;pytest&quot;</span><span class="p">,</span> <span class="s2">&quot;tests/&quot;</span><span class="p">,</span> <span class="o">*</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
 </code></pre></div>
 <p>passing the additional arguments allows commands like</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry run <span class="nb">test</span> -k test_basic.py
 </code></pre></div>
 <p>to run just the tests in a <code>test_basic.py</code> file.</p>

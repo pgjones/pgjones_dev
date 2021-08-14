@@ -175,8 +175,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../forward/" class="md-nav__link">
-        Forward
+      <a href="../../foreword/" class="md-nav__link">
+        Foreword
       </a>
     </li>
   
@@ -1624,6 +1624,9 @@ done by adding to the <code>"scripts"</code> mapping in <code>frontend/package.j
 <p>Typescript does not have an official format/formatter, however
 <a href="https://prettier.io/">prettier</a> is the <em>de-facto</em> formatter. We
 should add it to the project, as a development depenedency,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>frontend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>npm install --save-dev prettier
 </code></pre></div>
 <p>to match the Python style I configure prettier by adding to
@@ -1642,6 +1645,9 @@ should add it to the project, as a development depenedency,</p>
 <span class="p">}</span>
 </code></pre></div>
 <p>and used</p>
+<div class="admonition info inline end">
+<p>Run these commands in <code>frontend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>npm run reformat
 npm run format
 </code></pre></div>
@@ -1658,6 +1664,9 @@ which
 can be used. Finally we'll add langauge translations to the frontend,
 which are easily missed without
 <a href="https://github.com/edvardchen/eslint-plugin-i18next">eslint-plugin-i18next</a>,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>frontend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>npm install --save-dev eslint eslint-config-prettier eslint-plugin-i18next eslint-plugin-import
 </code></pre></div>
 <p>as most of the configuration is already correct I change the
@@ -1731,6 +1740,9 @@ is potentially problematic as it will allow errors to creep in to the
 css. <a href="https://stylelint.io/">stylelint</a> and
 <a href="https://github.com/hudochenkov/stylelint-order">stylelint-order</a>
 solve this problem,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>frontend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>npm install --save-dev stylelint stylelint-order stylelint-config-standard
 </code></pre></div>
 <p>These are configured by a <code>stylelint</code> section in the
@@ -1758,11 +1770,17 @@ be defined,</p>
 <span class="p">}</span>
 </code></pre></div>
 <p>and used,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>frontend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>npm run lint
 </code></pre></div>
 <h2 id="testing">Testing</h2>
 <p>The Create React App command used to <a href="../frontend/">setup the frontend</a>
 also set up a testing command using jest,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>frontend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>npm run <span class="nb">test</span>
 </code></pre></div>
 <p>We'll alter the <code>test</code> command (in <code>frontend/package.json</code>) to add the
@@ -1779,6 +1797,9 @@ that the user isn't waiting too long for the code to be downloaded. To
 check the bundle size, and analyse what is included in each bundle I
 use
 <a href="https://github.com/danvk/source-map-explorer#readme">source-map-explorer</a>,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>frontend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>npm install --save-dev source-map-explorer
 </code></pre></div>
 <p>Which allows an <code>analyse</code> command to analyse the bundle sizes, via
@@ -1789,6 +1810,9 @@ adding the following to the <code>frontend/package.json</code> file,</p>
 <span class="p">}</span>
 </code></pre></div>
 <p>and used</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>frontend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>npm run analyse
 </code></pre></div>
                 

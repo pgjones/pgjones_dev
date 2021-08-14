@@ -175,8 +175,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../forward/" class="md-nav__link">
-        Forward
+      <a href="../../foreword/" class="md-nav__link">
+        Foreword
       </a>
     </li>
   
@@ -1546,18 +1546,30 @@ in, instead the direct terraform commands should be used.</p>
 <h2 id="formatting">Formatting</h2>
 <p>Terraform comes with an in-build formatter which can be invoked to
 autoformat your code,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>infrastructure/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>terraform fmt
 </code></pre></div>
 <p>and to check if your code meets the formatting rules,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>infrastructure/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>terraform fmt --check<span class="o">=</span><span class="nb">true</span>
 </code></pre></div>
 <h2 id="linting">Linting</h2>
 <p>Terraform also comes with a tool to check your code,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>infrastructure/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>terraform validate
 </code></pre></div>
 <h2 id="testing">Testing</h2>
 <p>I currently don't know of a good technique to test the Terraform code,
 other than running</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>infrastructure/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>terraform plan
 </code></pre></div>
 <p>and checking the output makes sense.</p>

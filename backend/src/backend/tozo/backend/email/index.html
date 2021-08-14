@@ -175,8 +175,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../forward/" class="md-nav__link">
-        Forward
+      <a href="../../foreword/" class="md-nav__link">
+        Foreword
       </a>
     </li>
   
@@ -1541,6 +1541,9 @@ multipart emails with plain text and HTML parts<sup id="fnref:2"><a class="footn
 writing HTML and plain emails I prefer a single markdown email that is
 rendered to HTML and plain text. Which we can do using the markdown
 library, as installed with poetry,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add markdown
 poetry add --dev types-Markdown
 </code></pre></div>
@@ -1608,6 +1611,9 @@ setup by adding the following to <code>backend/src/backend/run.py</code>,</p>
 Postmark. We can do this using the async compatible
 <a href="https://github.com/encode/httpx/">httpx</a> which is installable via
 poetry,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add httpx
 </code></pre></div>
 <p>allowing the following to be added to

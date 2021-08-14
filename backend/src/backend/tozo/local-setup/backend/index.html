@@ -175,8 +175,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../forward/" class="md-nav__link">
-        Forward
+      <a href="../../foreword/" class="md-nav__link">
+        Foreword
       </a>
     </li>
   
@@ -1517,6 +1517,9 @@
 <p>The backend will be written in Python, so we need Python installed to
 run it locally. You may already have a version of Python installed,
 but we need to use Python&gt;=3.9 so I'd recommend installing,</p>
+<div class="admonition info inline end">
+<p>Run this command in any location</p>
+</div>
 <div class="highlight"><pre><span></span><code>brew install python
 </code></pre></div>
 <p>which installed Python 3.9.0.</p>
@@ -1526,12 +1529,18 @@ but we need to use Python&gt;=3.9 so I'd recommend installing,</p>
 install and manage Python packages. So we also need another package
 manager. There are many choices in Python, and I think
 <a href="https://python-poetry.org/">Poetry</a> is the best, so lets install,</p>
+<div class="admonition info inline end">
+<p>Run this command in any location</p>
+</div>
 <div class="highlight"><pre><span></span><code>brew install poetry
 </code></pre></div>
 <p>which installed Poetry 1.1.0.</p>
 <p>We'll keep the backend code separate in a backend folder, so please
 create it at the top level of the project and then create a new poetry
 project within that folder,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>tozo/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry new --src backend
 </code></pre></div>
 <p>which should give the following folder structure,</p>

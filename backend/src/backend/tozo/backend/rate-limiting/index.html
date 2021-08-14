@@ -175,8 +175,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../forward/" class="md-nav__link">
-        Forward
+      <a href="../../foreword/" class="md-nav__link">
+        Foreword
       </a>
     </li>
   
@@ -1522,6 +1522,9 @@ rate at which a remote client can make requests to the app. We'll use
 the Quart extension
 <a href="https://gitlab.com/pgjones/quart-rate-limiter">Quart-Rate-Limiter</a> to
 enforce rate limits, first by installing,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
 <div class="highlight"><pre><span></span><code>poetry add quart-rate-limiter
 </code></pre></div>
 <p>which installed 0.4.0. Then by activating the RateLimiter when
