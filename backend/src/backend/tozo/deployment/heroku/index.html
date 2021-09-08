@@ -465,7 +465,19 @@
   
     <li class="md-nav__item">
       <a href="../../backend/passwords/" class="md-nav__link">
-        Password strength
+        Passwords
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../backend/tokens/" class="md-nav__link">
+        Tokens
       </a>
     </li>
   
@@ -1504,6 +1516,7 @@ url. The following should be added to <code>infrastructure/heroku.tf</code>,</p>
 
   <span class="nb">config_vars</span> <span class="o">=</span> <span class="p">{</span>
     <span class="na">BASE_URL</span> <span class="o">=</span> <span class="s2">&quot;https://tozo.dev&quot;</span>
+    <span class="na">QUART_AUTH_COOKIE_NAME</span> <span class="o">=</span> <span class="s2">&quot;__Host-tozo-session&quot;</span>
   <span class="p">}</span>
 
   <span class="nb">sensitive_config_vars</span> <span class="o">=</span> <span class="p">{</span>

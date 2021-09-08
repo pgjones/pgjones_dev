@@ -16,7 +16,7 @@
     
     
       
-        <title>Password strength - Zero to production web apps</title>
+        <title>Passwords - Zero to production web apps</title>
       
     
     
@@ -64,6 +64,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#password-storage" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -90,7 +95,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Password strength
+              Passwords
             
           </span>
         </div>
@@ -475,10 +480,57 @@
       
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Passwords
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
-        Password strength
+        Passwords
       </a>
       
+        
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#password-storage" class="md-nav__link">
+    Password storage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#password-strength" class="md-nav__link">
+    Password strength
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tokens/" class="md-nav__link">
+        Tokens
+      </a>
     </li>
   
 
@@ -1444,15 +1496,69 @@
               </div>
             
             
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#password-storage" class="md-nav__link">
+    Password storage
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#password-strength" class="md-nav__link">
+    Password strength
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
           
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
                 
                 
-                  <h1>Password strength</h1>
+                  <h1>Passwords</h1>
                 
-                <p>We'll want to enforce a minimum password complexity to help ensure our
+                <p>Our users will log in by providing their email and password which
+means we need to manage their password in terms of storage and
+strength.</p>
+<h2 id="password-storage">Password storage</h2>
+<p>Will will check the password provided at login against a password we
+store when they create their account. This password must not be stored
+directly as if an attacker gains access to the database they likely
+gain the user's password to many other websites. Therefore instead of
+the password a hash of the password is calculated and stored.</p>
+<p><a href="https://github.com/pyca/bcrypt/">bcrypt</a> is a great library to hash
+passwords. It can be installed,</p>
+<div class="admonition info inline end">
+<p>Run this command in <code>backend/</code></p>
+</div>
+<div class="highlight"><pre><span></span><code>poetry add bcrypt
+</code></pre></div>
+<h2 id="password-strength">Password strength</h2>
+<p>We'll want to enforce a minimum password complexity to help ensure our
 user's information is safe. To do this I use
 <a href="https://github.com/dwolfhub/zxcvbn-python">zxcvbn</a> to measure the
 complexity. It is installed via poetry,</p>
@@ -1496,13 +1602,13 @@ good enough.</p>
         </a>
       
       
-        <a href="../rate-limiting/" class="md-footer__link md-footer__link--next" rel="next">
+        <a href="../tokens/" class="md-footer__link md-footer__link--next" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Rate limiting
+              Tokens
             </div>
           </div>
           <div class="md-footer__button md-icon">

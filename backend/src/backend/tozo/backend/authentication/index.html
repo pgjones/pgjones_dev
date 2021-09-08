@@ -497,8 +497,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#password-storage" class="md-nav__link">
-    Password storage
+  <a href="#securing-the-cookie" class="md-nav__link">
+    Securing the cookie
   </a>
   
 </li>
@@ -506,13 +506,6 @@
         <li class="md-nav__item">
   <a href="#json-error-responses" class="md-nav__link">
     JSON error responses
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#signed-tokens" class="md-nav__link">
-    Signed tokens
   </a>
   
 </li>
@@ -531,7 +524,19 @@
   
     <li class="md-nav__item">
       <a href="../passwords/" class="md-nav__link">
-        Password strength
+        Passwords
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tokens/" class="md-nav__link">
+        Tokens
       </a>
     </li>
   
@@ -1522,8 +1527,8 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#password-storage" class="md-nav__link">
-    Password storage
+  <a href="#securing-the-cookie" class="md-nav__link">
+    Securing the cookie
   </a>
   
 </li>
@@ -1531,13 +1536,6 @@
         <li class="md-nav__item">
   <a href="#json-error-responses" class="md-nav__link">
     JSON error responses
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#signed-tokens" class="md-nav__link">
-    Signed tokens
   </a>
   
 </li>
@@ -1580,8 +1578,8 @@ data using a secret key to create a signature. This signature is then
 stored with the data, allowing the stored signature to be checked
 against a recalculated version.</p>
 <p><a href="https://gitlab.com/pgjones/quart-auth">Quart-Auth</a> can be used to
-manage the cookies. Quart-Auth will sign the data, and ensure that
-the cookies are securely stored in the browser.</p>
+manage the cookies. Quart-Auth will sign the data, and help ensure
+that the cookies are securely stored in the browser.</p>
 <div class="admonition info inline end">
 <p>Run this command in <code>backend/</code></p>
 </div>
@@ -1598,19 +1596,49 @@ the cookies are securely stored in the browser.</p>
     <span class="n">auth_manager</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
     <span class="o">...</span>
 </code></pre></div>
-<h2 id="password-storage">Password storage</h2>
-<p>The user will log in by providing their email and password which we
-can check against a password we store when they create their
-account. This password must not be stored directly as if an attacker
-gains access to the database they likely gain the user's password to
-many other websites. Therefore instead of the password a hash of the
-password is calculated and stored.</p>
-<p><a href="https://github.com/pyca/bcrypt/">bcrypt</a> is a great library to hash
-passwords. It can be installed,</p>
-<div class="admonition info inline end">
-<p>Run this command in <code>backend/</code></p>
+<h2 id="securing-the-cookie">Securing the cookie</h2>
+<p>Whilst Quart-Auth comes with a sensible set of defaults for securing
+the cookie, our usage allows us to be more secure. In addition,
+however, we will need to disable some of the security for development.</p>
+<p>Firstly to help development we will disable the secure cookie flag, as
+we aren't using HTTPS in development. In addition we'll allow the
+cookie name to be customised, so that we can use the <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#cookie_prefixes"><code>__Host-</code>
+prefix</a>
+in production. To do so add the following to
+<code>backend/src/backend/run.py</code>,</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">create_app</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Quart</span><span class="p">:</span>
+    <span class="o">...</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="s2">&quot;QUART_AUTH_COOKIE_NAME&quot;</span><span class="p">]:</span>
+        <span class="o">...</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;QUART_AUTH_COOKIE_SECURE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;QUART_AUTH_COOKIE_SECURE&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;true&quot;</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>and the following to the configuration files,</p>
+<div class="tabbed-set" data-tabs="1:3"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><label for="__tabbed_1_1">backend/development.env</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="na">QUART_AUTH_COOKIE_NAME</span> <span class="o">=</span> <span class="s">&quot;tozo-session&quot;</span>
+<span class="na">QUART_AUTH_COOKIE_SECURE</span> <span class="o">=</span> <span class="s">false</span>
+</code></pre></div>
 </div>
-<div class="highlight"><pre><span></span><code>poetry add bcrypt
+<input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><label for="__tabbed_1_2">backend/test.env</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="na">QUART_AUTH_COOKIE_NAME</span> <span class="o">=</span> <span class="s">&quot;tozo-session&quot;</span>
+<span class="na">QUART_AUTH_COOKIE_SECURE</span> <span class="o">=</span> <span class="s">false</span>
+</code></pre></div>
+</div>
+<input id="__tabbed_1_3" name="__tabbed_1" type="radio" /><label for="__tabbed_1_3">backend/ci.env</label><div class="tabbed-content">
+<div class="highlight"><pre><span></span><code><span class="na">QUART_AUTH_COOKIE_NAME</span> <span class="o">=</span> <span class="s">&quot;tozo-session&quot;</span>
+<span class="na">QUART_AUTH_COOKIE_SECURE</span> <span class="o">=</span> <span class="s">false</span>
+</code></pre></div>
+</div>
+</div>
+<p>Finally we can utilise the <code>Strict</code>
+<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies#samesite_attribute">samesite</a>
+setting, rather than the <code>Lax</code> that Quart-Auth defaults to. This is
+because we only need to authenticate non-navigation requests to the
+API routes. We can do this by adding the following to
+<code>backend/src/backend/run.py</code>,</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">create_app</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Quart</span><span class="p">:</span>
+    <span class="o">...</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;QUART_AUTH_COOKIE_SAMESITE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;Strict&quot;</span>
 </code></pre></div>
 <h2 id="json-error-responses">JSON error responses</h2>
 <p>User attempts to access <code>login_required</code> routes without valid
@@ -1628,32 +1656,6 @@ error handler by adding the following to <code>backend/src/backend/run.py</code>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_unauthorized</span><span class="p">(</span><span class="n">_</span><span class="p">:</span> <span class="n">Unauthorized</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ResponseReturnValue</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;code&quot;</span><span class="p">:</span> <span class="s2">&quot;UNAUTHORIZED&quot;</span><span class="p">},</span> <span class="mi">401</span>
 </code></pre></div>
-<h2 id="signed-tokens">Signed tokens</h2>
-<p>We'll want to send links to users that they can use to prove they are
-a certain user, for example to change a forgotten password. We can do
-this by including a token that identifies the user in the link.</p>
-<p>To create the token we can sign the user's ID using a cryptographic
-hash function, secret key, and salt. This will ensure that a malicious
-user cannot alter the token without generating a correct signature,
-which requires our secret key. To do this we can use
-<a href="https://itsdangerous.palletsprojects.com/">itsdangerous</a>, which is
-installed via poetry,</p>
-<div class="admonition info inline end">
-<p>Run this command in <code>backend/</code></p>
-</div>
-<div class="highlight"><pre><span></span><code>poetry add itsdangerous
-</code></pre></div>
-<p>The downside to this approach is that users will be able to read
-anything we place in the token. It is important therefore not to put
-anything sensitive in the token (the user ID is not sensitive).</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>We should ensure we use a different salt for each token flow so
-that a malicious user cannot use a token generated for one flow in
-another. We should also encode the date the token was generated
-and reject tokens that are too old, as this will protect users if
-a malicious user gets hold of old emails/tokens.</p>
-</div>
                 
               
               
@@ -1693,7 +1695,7 @@ a malicious user gets hold of old emails/tokens.</p>
               <span class="md-footer__direction">
                 Next
               </span>
-              Password strength
+              Passwords
             </div>
           </div>
           <div class="md-footer__button md-icon">

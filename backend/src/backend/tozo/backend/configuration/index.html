@@ -477,7 +477,19 @@
   
     <li class="md-nav__item">
       <a href="../passwords/" class="md-nav__link">
-        Password strength
+        Passwords
+      </a>
+    </li>
+  
+
+          
+            
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tokens/" class="md-nav__link">
+        Tokens
       </a>
     </li>
   
@@ -1469,8 +1481,8 @@ used, which is installed with poetry,</p>
 <p>We have four environments we need consider, development, testing, ci,
 and production. Each will require different settings and so I manage
 the environments via <code>backend/development.env</code>, <code>backend/test.env</code>,
-<code>backend/ci.env</code>, and production environment variables - see LINK??
-for the production setup.</p>
+<code>backend/ci.env</code>, and production environment variables - see <a href="../../deployment/heroku/">heroku
+setup</a> for the production setup.</p>
 <p>These environments are then loaded in the <code>backend/scripts.py</code> by
 adding the following,</p>
 <div class="highlight"><pre><span></span><code><span class="o">...</span>
