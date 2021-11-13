@@ -28,7 +28,9 @@ def _apply_security_headers(response: Response, nonce: Optional[str] = None) -> 
     response.content_security_policy.frame_src = "https://www.youtube-nocookie.com"
     response.content_security_policy.img_src = "'self' data:"
     if nonce is not None:
-        response.content_security_policy.script_src = f"'self' 'nonce-{nonce}' https://static.cloudflareinsights.com"
+        response.content_security_policy.script_src = (
+            f"'self' 'nonce-{nonce}' https://static.cloudflareinsights.com"
+        )
         response.content_security_policy.style_src = f"'self' 'nonce-{nonce}'"
     response.cross_origin_opener_policy = COOP.SAME_ORIGIN
     response.headers["Referrer-Policy"] = "no-referrer, strict-origin-when-cross-origin"
