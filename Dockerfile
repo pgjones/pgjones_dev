@@ -30,7 +30,7 @@ RUN mkdir -p /app/static/_app/ /app/templates/svelte/ /root/.config/pypoetry
 COPY backend/poetry.lock backend/pyproject.toml /app/
 WORKDIR /app
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-dev \
+    && poetry install \
     && poetry cache clear pypi --all --no-interaction
 
 COPY backend/src/backend/ /app/
