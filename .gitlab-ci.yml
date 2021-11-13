@@ -27,7 +27,7 @@ frontend-ci:
 backend-ci:
   stage: lint-test
 
-  image: python:3.8-alpine
+  image: python:3.10-alpine
 
   cache:
     key: pgjones-poetry-cache

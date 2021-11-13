@@ -38,7 +38,7 @@ def create_app(production: bool = True) -> JSONQuart:
         app.push_promise_paths.extend(_extract_paths(static_root, "media"))
         app.blogs = _extract_blogs(app.root_path / app.template_folder)  # type: ignore
         app.chat = Chat()
-        app.nursery.start_soon(app.chat.broadcast)
+        app.add_background_task(app.chat.broadcast)
         app.feeds = _create_feeds(app.blogs)
 
     app.after_request(_add_secure_headers)
