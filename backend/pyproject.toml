@@ -38,6 +38,7 @@ flake8-print = "*"
 mypy = "*"
 pytest-trio = "*"
 bandit = "*"
+types-toml = "*"
 
 [tool.poetry.scripts]
 format = "scripts:format"
