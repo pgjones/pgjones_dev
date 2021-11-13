@@ -20,15 +20,15 @@ blueprint = Blueprint("serving", __name__)
 
 
 def _apply_security_headers(response: Response, nonce: Optional[str] = None) -> Response:
-    response.headers["Content-Security-Policy"] = ""
     response.content_security_policy.default_src = "'self'"
     response.content_security_policy.base_uri = "'self'"
+    response.content_security_policy.connect_src = "'self' https://cloudflareinsights.com"
     response.content_security_policy.form_action = "'self'"
     response.content_security_policy.frame_ancestors = "'none'"
     response.content_security_policy.frame_src = "https://www.youtube-nocookie.com"
     response.content_security_policy.img_src = "'self' data:"
     if nonce is not None:
-        response.content_security_policy.script_src = f"'self' 'nonce-{nonce}'"
+        response.content_security_policy.script_src = f"'self' 'nonce-{nonce}' https://static.cloudflareinsights.com"
         response.content_security_policy.style_src = f"'self' 'nonce-{nonce}'"
     response.cross_origin_opener_policy = COOP.SAME_ORIGIN
     response.headers["Referrer-Policy"] = "no-referrer, strict-origin-when-cross-origin"
