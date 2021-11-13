@@ -54,6 +54,7 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
     except TemplateNotFound:
         body = await render_template("svelte/fallback.html", nonce=nonce)
 
+    body = body.replace('type="module"', f'type="module" nonce="{nonce}"')
     response = await make_response(body)
     return _apply_security_headers(response, nonce)
 
