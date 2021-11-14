@@ -63,4 +63,12 @@ app.asgi_app = SentryAsgiMiddleware(app.asgi_app)._run_asgi3
 
 I don't recommend this approach as I think it will miss errors raised
 in background tasks.
+
+## Quart-Auth bonus
+
+As a bonus if you are using Quart-Auth the auth ID will also be
+present in the contextual information sentry collects and
+displays. This will help you understand which user experienced the
+error.
+
 """
