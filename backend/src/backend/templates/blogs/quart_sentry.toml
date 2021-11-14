@@ -1,0 +1,66 @@
+date = "2021-11-14"
+id = "quart-sentry-2021"
+summary = """
+
+How to use Sentry with Quart, focusing on the integration to use to
+capture errors and trace performance.
+
+"""
+title = "How to use Sentry with Quart"
+
+body = """
+
+[Sentry](https://sentry.io) is a service that can be used to capture
+errors and monitor performance. This is vital to understand how an app
+in production is working, or often not working. I've been happily
+using it professionally for a number of years, firstly with Flask and
+now with Quart.
+
+To monitor a Quart app with Sentry I recommend using a specific Quart
+intergration rather than the more generic ASGI middleware (see
+below). Hopefully this integration will become part of Sentry's SDK
+thanks to this [pull
+request](https://github.com/getsentry/sentry-python/pull/1248), if not
+you'll need to include this
+[code](https://github.com/getsentry/sentry-python/blob/89a5c9255f27bc20e0fa1426eb0199bf873189a8/sentry_sdk/integrations/quart.py)
+directly in your codebase (e.g. in the `somewhere` module). You can
+then add the following before you create the Quart app instance,
+
+```python
+import sentry_sdk
+
+from somewhere import QuartIntegration
+
+sentry_sdk.init(
+    dsn="https://examplePublicKey@o0.ingest.sentry.io/0",
+    integrations=[QuartIntegration()],
+    traces_sample_rate=0.2,  # Optional, for performance monitoring
+)
+```
+
+which allows you to monitor the Quart app.
+
+## ASGI middleware
+
+To monitor a Quart app with Sentry using the
+[`SentryASGIMiddleware`](https://docs.sentry.io/platforms/python/guides/asgi/)
+you can do the following, note the `_run_asgi3` slight adjustment is
+due to this
+[bug](https://github.com/getsentry/sentry-python/issues/1135),
+
+```python
+import sentry_sdk
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
+
+from quart import Quart
+
+app = Quart(__name__)
+
+sentry_sdk.init(dsn="https://examplePublicKey@o0.ingest.sentry.io/0")
+
+app.asgi_app = SentryAsgiMiddleware(app.asgi_app)._run_asgi3
+```
+
+I don't recommend this approach as I think it will miss errors raised
+in background tasks.
+"""
