@@ -1,0 +1,44 @@
+date = "2021-12-03"
+id = "half-closed-sockets-2021"
+summary = """
+Clients that half close the socket (shutdown the write part) are responded
+to by Hypercorn, as explained.
+"""
+title = "How Hypercorn handles half closed sockets"
+
+body = """
+Socket connections consist of a read half and a write half which can
+be independently closed. For example a client connected to Hypercorn
+could decide to close (shutdown) the write half of its connection
+after it has sent the request. As far as I can tell this is a rare,
+but perfectly valid thing to do.
+
+When a client closes their write half Hypercorn receives a EOF (End Of
+File) marker (`b""`) and Hypercorn's read part indicates that it is at
+the EOF. Incidently when a client fully closes the connection
+Hypercorn receives the same information. This means it is not possible
+for Hypercorn (or any server) to tell if a connection is half closed
+or fully closed without trying to send (write) data.
+
+As the server cannot tell the difference between a half close and full
+close without writing, it is left with a decision to make if the
+client half closes after sending a request but before the server has a
+response to send. Should the server consider the client disinterested
+(assume fully closed) and cancel computing and sending the response or
+should it continue (compute and send the response).
+
+Many servers take the view that computing the response in this
+situation is a wasteful and therefore it is better go ahead and close
+the connection. However a recent clarification by
+[HTTPWG](https://github.com/httpwg/http-core/issues/22) indicates that
+servers should continue and try to send the response in this
+situation.
+
+Hypercorn follows the HTTPWG recommendation, however if you prefer the
+alternative [Uvicorn](https://github.com/encode/uvicorn/issues/1264)
+(another ASGI server) closes the connection.
+
+Note that the above only applies for non-SSL connections, as for SSL
+connections receiving an EOF before a close-notify is considered an
+error and will result in the connection closing in an error state.
+"""
