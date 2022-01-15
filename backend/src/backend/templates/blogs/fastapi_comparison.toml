@@ -7,7 +7,7 @@ generation. I find this direct comparison unfair, and instead I
 compare Flask-Pydantic-Spec/Quart-Schema with FastAPI and Flask/Quart
 with Starlette.
 """
-title = "How I comapre FastAPI with Flask/Quart"
+title = "How I compare FastAPI with Flask/Quart"
 
 body = """
 
@@ -73,10 +73,9 @@ routes = [Route("/", endpoint=homepage)]
 app = Starlette(routes=routes)
 ```
 
-Note that all three frameworks support asynchronous and synchronous
-route handlers. Synchronous route handlers are run in a separate
-thread for Quart and Starlette whilst asynchronous route handlers are
-run in a separate thread for Flask.
+Note that Flask also supports asynchronous (`async def`) route
+functions and that Quart and Starlette also support synchronous
+(`def`) route functions.
 
 The only functionality difference to note is that Flask does not
 provide support for websockets, whereas Quart and Starlette
