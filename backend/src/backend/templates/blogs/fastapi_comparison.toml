@@ -1,0 +1,220 @@
+date = "2022-01-16"
+id = "fastapi-flask-quart-2022"
+summary = """
+I'm often asked to compare Flask/Quart with FastAPI, usually in terms
+of the support of Pydantic based data validation and OpenAPI schema
+generation. I find this direct comparison unfair, and instead I
+compare Flask-Pydantic-Spec/Quart-Schema with FastAPI and Flask/Quart
+with Starlette.
+"""
+title = "How I comapre FastAPI with Flask/Quart"
+
+body = """
+
+As the author of Quart and a maintainer of Flask I'm often asked how
+Flask/Quart compares with FastAPI. My answer is that they aren't
+directly comparable; Flask and Quart intentionally do not provide
+functionality that FastAPI does, for example data validation. Instead
+Flask and Quart are designed to be extended, with extensions providing
+this functionality. This is the case also for Starlette which is the
+microframework that FastAPI extends.
+
+Flask/Quart can therefore be compared with Starlette, and equally
+relevant Flask/Quart extensions can be comapred with FastAPI and other
+Starlette extensions. So this is what I'm going to focus on, a
+comparison between Flask, Quart, and Starlette and a comparison
+between a few of their extensions.
+
+## Flask, Quart, and Starlette compared
+
+Quart is a reimplementation of the Flask API using `async` and `await`
+thereby being the ASGI version of Flask. Starlette is also an ASGI
+microframework. All three frameworks provide routing, convenient
+request and response wrappers and templating support.
+
+A simple JSON route in each framework is given below,
+
+#### Quart
+
+```python
+from quart import Quart
+
+app = Quart(__name__)
+
+@app.get("/")
+async def index():
+    return {"hello": "world"}
+```
+
+#### Flask
+
+```python
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.get("/")
+async def index():
+    return {"hello": "world"}
+```
+
+#### Starlette
+
+```python
+from starlette.applications import Starlette
+from starlette.responses import JSONResponse
+from starlette.routing import Route
+
+async def homepage(request):
+    return JSONResponse({'hello': 'world'})
+
+routes = [Route("/", endpoint=homepage)]
+
+app = Starlette(routes=routes)
+```
+
+Note that all three frameworks support asynchronous and synchronous
+route handlers. Synchronous route handlers are run in a separate
+thread for Quart and Starlette whilst asynchronous route handlers are
+run in a separate thread for Flask.
+
+The only functionality difference to note is that Flask does not
+provide support for websockets, whereas Quart and Starlette
+do. However, there are multiple Flask extensions that add websocket
+support. Therefore I conclude that there is nothing you can do in one
+of these frameworks that you cannot do in another.
+
+### Performance
+
+Performance is a very hot topic for frameworks, however it is the
+server and event loop implementation that have the greatest impact in
+the typical micro benchmarks. Quart and Starlette as ASGI frameworks
+work with Uvicorn, which is the fastest ASGI server (note I am the
+author of Hypercorn, another ASGI server). Uvicorn by default
+(although not on Windows) uses the uvloop event loop which is the
+fastest asyncio event loop. Flask on the other hand is a WSGI
+framework and hence requires a WSGI server of which Gunicorn is my
+preferred choice and I find Meinheld to be the fastest event loop
+choice.
+
+In my experience with production applications the performance is
+dominated by business logic and I've not experienced a noticeable
+difference between Quart, Starlette, or Flask. That said Starlette is
+the most lightweight framework, and should out perform Quart and Flask
+in microbenchmarks.
+
+Note though it is the case that none of these framework or server
+choices will give performance comparable with NodeJS or Go. Although
+this might be possible with PyPy.
+
+## Pydantic
+
+Typically when I'm asked to compare, I'm specifically asked about
+Pydantic based validation and OpenAPI schema generation. I'm therefore
+going to focus on extensions that support Pydantic.
+
+Pydantic provides an incredibly pleasant API for describing data
+models and conveniently provides functionality to convert these data
+models into OpenAPI compatible JSON schemas. For example a simple
+request that expects a username and password can be represented as,
+
+```python
+from pydantic import BaseModel
+
+class RegistrationData(BaseModel):
+    username: str
+    password: str
+```
+
+and a simple response that returns an id as,
+
+```python
+class RegisteredUser(BaseModel):
+    id: int
+```
+
+The classmethod `RegistrationData.schema_json()` provides a JSON
+schema which can be placed into an OpenAPI compatible schema.
+
+## Quart-Schema, Flask-Pydantic-Spec, and FastAPI compared
+
+I've chosen Quart-Schema, Flask-Pydantic-Spec, and FastAPI as they
+extend Quart, Flask, and Starlette respectively by adding Pydantic
+based data validation and OpenAPI schema autogeneration. There are
+other choices, but these are the three I'm most familiar with. Note
+I'm the author of Quart-Schema. See also
+[Starlite](https://github.com/starlite-api/starlite) as an example of
+a different Starlette extension.
+
+Using the `Registration` model defined above a simple registration
+in each extension is given below,
+
+#### Quart-Schema
+
+```python
+from quart import Quart
+from quart_schema import QuartSchema, validate_request, validate_response
+
+app = Quart(__name__)
+QuartSchema(app)
+
+@app.post("/")
+@validate_request(RegistrationData)
+@validate_response(RegisteredUser)
+async def register(data: RegistrationData):
+    id = await create_user(data.username, data.password)
+    return RegisteredUser(id=id)
+```
+
+#### Flask-Pydantic-Spec
+
+```python
+from flask import Flask, request
+from flask_pydantic_spec import FlaskPydanticSpec, Response, Request
+
+app = Flask(__name__)
+api = FlaskPydanticSpec('flask')
+
+@app.post("/")
+@api.validate(body=Request(RegistrationData), resp=Response(HTTP_200=RegisteredUser))
+def register():
+    id = create_user(request.context.json["username"], request.context.json["password"])
+    return {"id": id}
+```
+
+#### FastAPI
+
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.post("/", response_model=RegisteredUser)
+async def register(user: RegistrationData):
+    id = await create_user(user.username, user.password)
+    return RegisteredUser(id=id)
+```
+
+All three extensions provide autogenerated documentation in raw
+OpenAPI JSON format, and more readably in redoc and swagger UI forms.
+Quart-Schema provides these at `/redocs` and `/docs`,
+Flask-Pydantic-Spec at `/apidoc/redoc` and `/apidoc/swagger`, and
+FastAPI at `/redoc` and `/docs`.
+
+### Performance
+
+The performance of all three extensions is dominated by the
+performance of Pydantic and the underlying framework used. There is no
+notable difference between the extensions themselves.
+
+## Conclusion
+
+I think Flask, Quart, and Starlette are all excellent
+frameworks. Whilst I have a personal bias to Quart, I'd recommend you
+choose the framework with the API you enjoy working with the most.
+
+In terms of the extensions, again I recommend you choose the extension
+with the features and API you enjoy working with the most. Also
+remember that you can combine extensions for additional functionality,
+with Flask especially having a wide variety.
+"""
