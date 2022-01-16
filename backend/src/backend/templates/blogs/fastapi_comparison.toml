@@ -12,18 +12,18 @@ title = "How I compare FastAPI with Flask/Quart"
 body = """
 
 As the author of Quart and a maintainer of Flask I'm often asked how
-Flask/Quart compares with FastAPI. My answer is that they aren't
-directly comparable; Flask and Quart intentionally do not provide
-functionality that FastAPI does, for example data validation. Instead
-Flask and Quart are designed to be extended, with extensions providing
-this functionality. This is the case also for Starlette which is the
-microframework that FastAPI extends.
+Flask/Quart compares with FastAPI. This is a difficult question as I'm
+typically asked in the context of data validation which neither Flask
+nor Quart provide. However, Flask and Quart are designed to be
+extendable and there are extensions that provide this
+functionality. In addition FastAPI itself extends Starlette which is a
+microframework like Flask and Quart.
 
-Flask/Quart can therefore be compared with Starlette, and equally
-relevant Flask/Quart extensions can be comapred with FastAPI and other
-Starlette extensions. So this is what I'm going to focus on, a
-comparison between Flask, Quart, and Starlette and a comparison
-between a few of their extensions.
+Flask/Quart are therefore best compared with Starlette, and FastAPI is
+best compared with relevant Flask, Quart, and Starlette extensions. So
+this is what I'm going to focus on, a comparison between Flask, Quart,
+and Starlette and a comparison between Flask-Pydantic-Spec,
+Quart-Schema, and FastAPI.
 
 ## Flask, Quart, and Starlette compared
 
