@@ -145,8 +145,8 @@ I'm the author of Quart-Schema. See also
 [Starlite](https://github.com/starlite-api/starlite) as an example of
 a different Starlette extension.
 
-Using the `Registration` model defined above a simple registration
-in each extension is given below,
+Using the registration models defined above a simple registration
+route in each extension is given below,
 
 #### Quart-Schema
 
