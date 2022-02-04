@@ -5,7 +5,6 @@ from jinja2.exceptions import TemplateNotFound
 from quart import (
     Blueprint,
     current_app,
-    make_push_promise,
     make_response,
     render_template,
     ResponseReturnValue,
@@ -42,9 +41,6 @@ def _apply_security_headers(response: Response, nonce: Optional[str] = None) -> 
 @blueprint.route("/")
 @blueprint.route("/<path:path>")
 async def index(path: Optional[str] = None) -> ResponseReturnValue:
-    for push_path in current_app.push_promise_paths:  # type: ignore
-        await make_push_promise(push_path)
-
     if path is None:
         file_name = "index.html"
     else:

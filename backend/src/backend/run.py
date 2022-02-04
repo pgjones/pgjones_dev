@@ -32,10 +32,6 @@ def create_app(production: bool = True) -> JSONQuart:
     async def startup() -> None:
         static_root = app.static_folder
         static_root = cast(str, static_root)
-        app.push_promise_paths = ["/service-worker.js"]
-        app.push_promise_paths.extend(_extract_paths(static_root, "css"))
-        app.push_promise_paths.extend(_extract_paths(static_root, "js"))
-        app.push_promise_paths.extend(_extract_paths(static_root, "media"))
         app.blogs = _extract_blogs(app.root_path / app.template_folder)  # type: ignore
         app.chat = Chat()
         app.add_background_task(app.chat.broadcast)

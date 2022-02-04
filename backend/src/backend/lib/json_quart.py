@@ -12,7 +12,6 @@ class JSONQuart(QuartTrio):
     blogs: List[dict]
     chat: Chat
     feeds: Tuple[bytes, bytes]
-    push_promise_paths: List[str]
 
     async def send_static_file(self, filename: str) -> Response:
         path = safe_join(self.static_folder, filename)  # type: ignore
