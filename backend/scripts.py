@@ -3,6 +3,10 @@
 from subprocess import check_call
 
 
+def audit() -> None:
+    check_call(["pip-audit"])
+
+
 def format() -> None:
     check_call(["black", "--check", "--diff", "src/", "tests/"])
     check_call(["isort", "--diff", "--check", "src", "tests"])

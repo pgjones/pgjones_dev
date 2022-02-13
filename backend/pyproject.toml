@@ -39,8 +39,10 @@ mypy = "*"
 pytest-trio = "*"
 bandit = "*"
 types-toml = "*"
+pip-audit = "^1.1.2"
 
 [tool.poetry.scripts]
+audit = "scripts:audit"
 format = "scripts:format"
 reformat = "scripts:reformat"
 lint = "scripts:lint"
