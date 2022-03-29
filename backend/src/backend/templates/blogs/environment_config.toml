@@ -43,7 +43,7 @@ converted to the correct type using `json.loads`.
 
 For example if the environment had the following variables,
 
-```
+```shell
 APP_DATABASE_URL="postgresql://user:pass@host:5432/db_name"
 APP_MAX_COOKIE_SIZE=4026
 APP_TESTING=true
