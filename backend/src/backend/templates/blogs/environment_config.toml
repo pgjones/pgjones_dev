@@ -1,0 +1,78 @@
+date = "2022-03-28"
+id = "environment-config-2022"
+summary = """
+Quart 0.17.0 and Flask 2.1.0 both introduce a new method to load
+configuration values directly from the environment. The method,
+Config.from_prefixed_env will load all variables starting with a given
+prefix as explained in this article.
+"""
+title = "Loading config from the environment in Quart & Flask"
+
+body = """
+
+Storing the configuration for an app in the environment is very useful
+as it allows the deployment environment to define how the app runs. It
+is something I've been doing practically for some time and a core
+recommendation of the [twelve factor app
+principles](https://12factor.net/config). However, to do so with
+Flask/Quart has been quite a painful manual affair, with my app's
+often containing something like the following,
+
+```python
+app = Quart(__name__)
+app.config["TESTING"] = os.environ.get("APP_TESTING", False) == "true"
+app.config["MAX_COOKIE_SIZE"] = int(os.environ["APP_MAX_COOKIE_SIZE"])
+app.config["DATABASE_URL"] = os.enviorn["APP_DATABASE_URL"]
+```
+
+This is now changing with Quart 0.17.0 released on the 26th of March
+2022, and Flask 2.1.0 released on the 28th of March 2022. Both
+introduce a new `from_prefixed_env` method to the `Config` class which
+loads all the environment variables with a certain prefix into the
+config. For example to replicate the above snippet we need the
+following code,
+
+```python
+app = Quart(__name__)
+app.config.from_prefixed_env("APP")
+```
+
+as the prefix (techincally `f{prefix}_`) is removed from the
+environment variable name to form the config key and the value is
+converted to the correct type using `json.loads`.
+
+For example if the environment had the following variables,
+
+```
+APP_DATABASE_URL="postgresql://user:pass@host:5432/db_name"
+APP_MAX_COOKIE_SIZE=4026
+APP_TESTING=true
+SOMETHING_ELSE="value"
+```
+
+then the config would be,
+
+```python
+{
+  "DATABASE_URL": "postgresql://user:pass@host:5432/db_name",
+  "MAX_COOKIE_SIZE": 4026,
+  "TESTING": True,
+}
+```
+
+as the `SOMETHING_ELSE` variable does not start with the `APP_`
+prefix.
+
+## Alternate loads
+
+The `from_prefixed_env` method also accepts a `loads` argument which
+by default is set to `json.loads` and specifies how the environment
+variable value should be loaded into the configuration. This can be
+changed to use the `tomllib.loads` or any other callable that accepts
+a string and returns a value.
+
+Note that any errors (Exceptions) raised by the loads call are ignored
+with the environment variable value being placed directly into the
+config.
+
+"""
