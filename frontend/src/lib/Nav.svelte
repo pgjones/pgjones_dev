@@ -74,21 +74,25 @@
             <li class="list-inline-item">
               <a href="https://github.com/pgjones">
                 <Github />
+                <span class="sr-only">GitHub profile</span>
               </a>
             </li>
             <li class="list-inline-item">
               <a href="https://gitlab.com/pgjones">
                 <Gitlab />
+                <span class="sr-only">GitLab profile</span>
               </a>
             </li>
             <li class="list-inline-item">
               <a href="https://twitter.com/pdgjones">
                 <Twitter />
+                <span class="sr-only">Twitter profile</span>
               </a>
             </li>
             <li class="list-inline-item">
               <a href="https://stackoverflow.com/users/9231401/pgjones">
                 <Stackoverflow />
+                <span class="sr-only">Stack overflow profile</span>
               </a>
             </li>
           </ul>
