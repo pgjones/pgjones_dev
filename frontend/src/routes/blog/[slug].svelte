@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
-  export async function load({ page }) {
-    const response = await fetch(`/v0/blogs/${page.params.slug}/`);
+  export async function load({ params }) {
+    const response = await fetch(`/v0/blogs/${params.slug}/`);
     const data = await response.json();
 
     if (response.status === 200) {
@@ -9,7 +9,7 @@
   }
 </script>
 
-<script lang="typescript">
+<script lang="ts">
   interface IPost {
     body: string;
     date: string;
@@ -38,7 +38,7 @@
   hljs_svelte(hljs);
 
   Marked.setOptions({
-    highlight: (code, lang) => hljs.highlight(lang, code).value,
+    highlight: (code, language) => hljs.highlight(code, { language }).value,
   });
 
   const body = Marked.parse(post.body);

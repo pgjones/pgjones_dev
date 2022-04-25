@@ -3,19 +3,20 @@ const target =
     ? "http://localhost:5000"
     : "https://pgjones.dev";
 
-export async function handle({ request, resolve }): Response {
-  if (request.path.startsWith("/static") || request.path.startsWith("/v0/")) {
-    const response = await fetch(`${target}${request.path}`);
+export async function handle({ event, resolve }): Response {
+  if (
+    event.url.pathname.startsWith("/static") ||
+    event.url.pathname.startsWith("/v0/")
+  ) {
+    const response = await fetch(`${target}${event.url.pathname}`);
 
-    return {
-      body: new Uint8Array(await response.arrayBuffer()),
+    return new Response(await response.arrayBuffer(), {
       headers: {
         "Content-Type": response.headers.get("Content-Type"),
         "Content-Length": response.headers.get("Content-Length"),
       },
-      status: response.status,
-    };
+    });
   } else {
-    return await resolve(request);
+    return await resolve(event);
   }
 }

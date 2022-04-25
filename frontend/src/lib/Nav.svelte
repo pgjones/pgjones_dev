@@ -1,11 +1,11 @@
 <script lang="ts">
   import {
-    faBook,
+    faUser,
+    faLaptopCode,
     faBlog,
     faChalkboard,
-    faLaptopCode,
     faPlay,
-    faUser,
+    faBook,
   } from "@fortawesome/free-solid-svg-icons";
   import Icon from "svelte-awesome/components/Icon.svelte";
 

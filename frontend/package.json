@@ -21,13 +21,14 @@
     "prettier": "*",
     "prettier-plugin-svelte": "*",
     "svelte": "*",
+    "svelte-check": "*",
     "svelte-preprocess": "*",
     "tslib": "*",
     "typescript": "*"
   },
   "type": "module",
   "dependencies": {
-    "@fortawesome/free-solid-svg-icons": "*",
+    "@fortawesome/free-solid-svg-icons": "<6",
     "@ts-stack/markdown": "*",
     "highlight.js": "*",
     "highlightjs-svelte": "*",

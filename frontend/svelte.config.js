@@ -10,8 +10,7 @@ const config = {
       assets: "build",
       fallback: "fallback.html",
     }),
-    ssr: false,
-    target: "#svelte",
+    trailingSlash: "always",
   },
 };
 
