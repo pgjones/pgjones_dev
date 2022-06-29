@@ -1,0 +1,408 @@
+date = "2022-06-26"
+id = "faster-routing-2022"
+summary = """
+
+The existing HTTP router used by Flask and Quart will soon be
+significantly faster thanks to improvements in the upcoming Werkzeug
+2.2. These improvements switch the router algorithm from a regex table
+to state machine without any loss in functionality.
+
+"""
+title = "Faster routing for Flask & Quart"
+
+body = """
+
+Flask and Quart both utilise Werkzeug's HTTP router to route request
+paths to the relevant function. With the upcoming 2.2 release of
+Werkzeug this router will be significantly faster, with up to a factor
+of 5 seen in testing. This speedup increases with the size of the
+routing table and so you are likely to see further increases in your
+production applications. However, simple routing tables, as seen in
+micro-benchmarks, are unaffected and are unlikely to show a speedup.
+
+To explain how Werkzeug's router is faster, we need to first consider
+what routing is.
+
+## HTTP routing
+
+The aim of a HTTP router is to match the HTTP request to a function,
+that can handle the request. In Flask and Quart the routing is defined
+using decorators which define the method, scheme, and path that should
+match the decorated function for example:
+
+```python
+@app.get("/api")
+async def api():
+    ...
+
+@app.post("/api/<id>")
+async def api_id(id):
+    ...
+```
+
+The above defines a rule such that HTTP-GET requests with `/api` as
+the path result in `api()` being called i.e. `HTTP-GET /api ->
+api()`. In addition it defines a rule such that any HTTP-POST requests
+with a path that matches the regex `/api/([^/]+)` result in
+`api_id(id)` being called, with the `id` argument matched from the
+regex i.e. `HTTP-POST /api/2 -> api_id("2")` or `HTTP-POST /api/bob ->
+api_id("bob")`. Other requests should either 404 (no match at all) or
+405 if the wrong HTTP-method was used i.e. `HTTP-PUT /api -> 405`.
+
+The path parameter in the second route `<id>` can be converted to
+a Python type using a converter. For example for integer ids we can
+change the rule by specifying the `int` converter:
+
+```python
+@app.post("/api/<int:id>")
+async def api_id(id):
+    ...
+```
+
+With the above change the regex matching changes to `/api/(\\d+)` and
+therefore `HTTP-POST /api/2 -> api_id(2)` whereas `HTTP-POST /api/bob
+-> 404`. Alongside the `int` converter Werkzeug provides 5 more default
+converters and allows for custom converters to be defined.
+
+Werkzeug's router includes more features beyond basic routing. It
+allows for matching against the host domain or subdomain, strict
+trailing slash matching, merged slash matching, default parameters,
+redirects, and post-wildcard matching. All of these add complexity can
+constraints to the matching algorithm but mean that users of Flask and
+Quart can add whatever routing rules they desire or can imagine.
+
+The new router is faster due to an improvement to the matching
+algorithm. So to start lets consider the original algorithm.
+
+## Regex table algorithm
+
+The original algorithm used in Werkzeug's router was to build an
+ordered regex table for the rules and try to match each rule in
+turn. This is a common algorithm used for example by Starlette
+(FastAPI), Django, and many others.
+
+The algorithm works by first compiling the rules to regex and ordering
+them in a table. This ordering is typically based on the complexity of
+the rule, but it will depend on the router and its features. For
+example consider the following:
+
+```python
+@app.get("/api")
+async def api():
+    ...
+
+@app.post("/api")
+async def create_api():
+    ...
+
+@app.get("/api/<int:id>")
+async def read_api(id):
+    ...
+
+@app.post("/api/<int:id>/edit")
+async def api_edit(id):
+    ...
+
+@app.post("/<path:path>")
+async def create_post(path):
+    ...
+
+@app.post("/<path:path>/edit")
+async def edit_post(path):
+    ...
+```
+
+The `path` converter will match anything including `/`, for this
+reason it is called a wildcard parameter by other routers. These rules
+are then compiled to the following regex table:
+
+| ID | Scheme - Method | Path              | Regex        | Function            |
+|----|-----------------|-------------------|--------------|---------------------|
+| 1  | HTTP - GET      | /api              | /api         | api()               |
+| 2  | HTTP - POST     | /api              | /api         | create_api()        |
+| 3  | HTTP - GET      | /api/<int:id>     | /api/(\\d+)  | read_api(id)        |
+| 4  | HTTP - POST     | /api/<int:id>     | /api/(\\d+)  | api_edit(id)        |
+| 5  | HTTP - POST     | /<path:path>/edit | /(.*?)/edit  | edit_post(path)     |
+| 6  | HTTP - POST     | /<path:path>      | /(.*?)       | create_post(path)   |
+
+A request is then matched by testing the request path against each of
+the compiled regex rules until a match is found or no match is found
+and a 404 is returned.
+
+Considering a `HTTP-POST /api` request this is first tested against
+rule 1's regex with a match found. However the Method doesn't match
+(Rule has GET) so the next rule is checked. Rule 2's regex matches as
+does the method hence `create_api()` is called.
+
+Next we can consider a `HTTP-PUT /api` request. This matches rule 1
+and 2's regex but differs in the Method. Hence a 405 (Method not
+allowed) response is returned.
+
+Next we can consider a `HTTP-GET /api/2` request. It is tested against
+rule 1 and 2's regex with no match. Then rule 3's regex is tested and
+a match is found. The int converter then converts the match parameter
+to `2` and `read_api(2)` is called.
+
+Next we can consider a `HTTP-GET /api/bob` request. It is tested
+against rule 1, 2, 3, 4, and 5's regex with no matches. Finally rule
+6's regex matches but the Method does not match. Hence a 405 (Method
+not allowed) response is returned.
+
+Finally consider a `HTTP-POST /user/bob/edit` request. This doesn't
+match rules 1-4 but does match rule 5's regex. This results in
+`edit_post("/user/bob")` being called.
+
+As can be seen as long as a route can be represented by regex it can
+be added to the table and matched. The only complication is the order
+in which the rules in the table are tested - for example if rules 5
+and 6 where swtiched the `edit_post()` rule would never match as the
+`create_post()` rule would always match before it.
+
+The algorithmic performance of a regex table router is `O(N)` where
+`N` is the number of rules in the table as in the worst case every
+rule must be checked to find a match.
+
+The performance can be improved by optimising the implementation which
+we'll look at next.
+
+### Faster implementations
+
+Rather than change the algorithm it is possible to change the
+implementation of the regex table router to improve its
+performance. This can be preferable as the regex table router is
+simple to reason about and supports all the Werkzeug features (not all
+algorithms can).
+
+The inspiration for these improvements comes from PHP's
+[FastRoute](https://github.com/nikic/FastRoute) and this
+[article](https://www.npopov.com/2014/02/18/Fast-request-routing-using-regular-expressions.html). Which
+combines multiple regexs into a single combined-regex. This results in
+faster matching than possible by matching in turn.
+
+Whilst this approach clearly leads to improvements I will instead
+focus on algorithmic changes rather than an implementation improvement
+to the existing regex table router. This is as I don't believe making
+these changes to Werkzeug's router will result in a benefit that
+outways the cost of the more complex code.
+
+Next I looked at using a Radix tree as the routing algorithm.
+
+## Radix tree algorithm
+
+An alternative algorithm for routing utilises a [Radix or
+prefix](https://en.wikipedia.org/wiki/Radix_tree) tree. This algorithm
+is also popular in the Python community with a specific implementation
+[xrtr](https://github.com/vltr/xrtr) useable as a third party library.
+
+This algorithm works by building a radix tree of the rules and then
+matching the request path by traversing the tree. For example consider
+the following:
+
+```python
+@app.get("/api")
+async def api():
+    ...
+
+@app.post("/api")
+async def create_api():
+    ...
+
+@app.get("/api/<int:id>")
+async def read_api(id):
+    ...
+
+@app.post("/api/<int:id>/edit")
+async def api_edit(id):
+    ...
+
+@app.post("/<path:path>")
+async def create_post(path):
+    ...
+```
+
+Typically implementations create a seperate tree for each Method,
+hence the above rules become the following two trees:
+
+```
+GET
+`-- /api              -> api()
+    `-- /(\\d+)       -> read_api()
+
+
+POST
+|-- /api              -> create_api()
+|   `-- /(\\d+)/edit  -> api_edit()
+`-- /(.*?)            -> create_post()
+```
+
+A request is then matched by choosing the appropriate tree based on
+the Method and then traversing the tree based on the request path
+until a match is found or no match is found and a 404 is returned.
+
+Considering a `HTTP-POST /api` request this starts with the POST-
+tree.  As it matches the `/api` branch that is traversed first
+consuming the `/api` part of the path. As the path is now fully
+consumed and there is a rule associated with the `/api` leaf a match
+is found and `create_api()` is called.
+
+Next we can consider a `HTTP-PUT /api` request. As there is no
+PUT-tree there is no match, however there may be a match for a
+different method. Hence both trees are traversed and matches found for
+GET and POST. Hence a 405 (Method not allowed) response is returned.
+
+Next we can consider a `HTTP-GET /api/2` request. The GET-tree is
+traversed starting with the `/api` branch. Next the `/(\\d+)` branch is
+tested and found to also match whilst consuming the final part of the
+path. The int converter then converts the match parameter to `2` and
+`read_api(2)` is called.
+
+Next we can consider a `HTTP-POST /api/bob` request. The POST-tree is
+traversed starting with the `/api` branch. Next the `/(\\d+)/edit`
+branch is tested and found not to match, as there is path remaining
+and no matching branches the algorithm backtracks to check the
+wildcard branch `/(.*?)` where a match is found and
+`create_post("api/bob")` is called.
+
+Finally consider a `HTTP-POST /user/bob/edit` request. The POST-tree
+is traversed and a match is found with `/(.*?)` which results in
+`create_post("/user/bob")` being called.
+
+It will probably be clear that I've omitted the `edit_post` rule
+included in the regex table. This is because wildcard parameters must
+be a leaf in the Radix tree as any wildcard will always match and
+consume the remaining path. Hence `/<path:path>/edit` is not a valid
+radix tree rule.
+
+Other than this restriction the radix tree algorithm is significantly
+faster than the regex table. Performance can now be described as
+`O(K)` where `K` is the depth of the tree and roughly speaking `K` is
+given by the number of `/` in the longest rule.
+
+The performance can be improved by optimising the implementation which
+we'll look at next.
+
+### Faster implementations
+
+Rather than change the algorithm it is possible to change the
+implementation of the radix tree router to improve its
+performance. This is something that I think
+[Falcon](https://falcon.readthedocs.io/en/stable/api/routing.html)
+pioneered and [Sanic](https://sanic.dev/en/guide/basics/routing.html)
+has adopted.
+
+The improvement is to build the radix tree as Python code and compile
+it. This means that at runtime the tree is traversed directly as a
+sequence of if-statements.
+
+As it is not possible to support wildcard all the features present in
+Werkzeug's router I've ruled out using a radix tree as the
+algorithm. Instead a related state machine algorithm can be used.
+
+## State machine algorithm
+
+To overcome the Radix tree's restriction on wildcard usage we can
+instead consider a state machine algorithm. Whereby a rule is
+represented as a list of transitions that consume the request path,
+much like the radix tree. However, any transition starting with a
+wildcard must then consume the remaining path.
+
+To understand the state machine algorithm consider the following rules
+(note they all have the same Method to simplify the explanation):
+
+```python
+@app.post("/api")
+async def api():
+    ...
+
+@app.post("/api")
+async def create_api():
+    ...
+
+@app.post("/api/<int:id>")
+async def read_api(id):
+    ...
+
+@app.post("/api/<int:id>/edit")
+async def api_edit(id):
+    ...
+
+@app.post("/<path:path>")
+async def create_post(path):
+    ...
+
+@app.post("/<path:path>/edit")
+async def edit_post(path):
+    ...
+```
+
+These are represented by the following states and transitions:
+
+```
+State 1:
+  api        -> State 2
+  (.*?)/edit -> [Final] edit_post
+  (.*?)      -> [Final] create_post
+
+State 2:
+  ""         -> [Final] create_api
+  (\\d+)      -> State 3
+
+State 3:
+  ""         -> [Final] read_api
+  edit       -> State 4
+
+State 4:
+  ""         -> [Final] api_edit
+```
+
+A request to `/api` is first split into parts by the `/` seperator
+(with the first part disregarded) giving `["api"]`. Starting at State
+1 the first transition is tested and matched leading to state 2. As
+there are no more parts the `""` transition is tested and matches
+leading to `create_api` being called.
+
+Next lets consider `/api/bob/2/edit` this splits into `["api", "bob",
+"2", "edit"]`. Starting at State 1 the first transition is tested and
+matches leading to state 2. As neither transition in State 2 matches
+the `bob` part the algorithm backtracks to State 1. The next
+transition `(.*?)/edit` is then tested against the remaining parts
+joined i.e. `bob/2/edit`. This is does as it is a final transition due
+to the wildcard. It matches and `edit_post("bob/2")` is called.
+
+Next consider `/api/2/edit` which has the parts `["api", "2",
+"edit"]`. Starting at State 1 the `api` transition matches the first
+part (`api`) leading to State 2. Next the `(\\d+)` transition matches
+the second part (`2`) leading to State 3. Then the `edit` transition
+matches the third part (`edit`) leading to State 4. As there are no
+more parts the `""` transition is followed and `api_edit` is called.
+
+This algorithm is a combination of a tree and table algorithm and in
+the worst case, whereby all rules start with a wildcard, has the same
+performance characteristics as the regex table. However, in practice
+rules have a tree structure and hence the performance follows that
+of the tree.
+
+This is the algorithm I've implemented for Werkzeug. However, the
+actual algorithm is more complex as it must also support additional
+Werkzeug features such as strict slashes.
+
+## Conclusion
+
+I expect this improvement to make a real noticeable difference to your
+production Flask or Quart app. Please let me know if it does :).
+
+I started investigating improvements to Werkzeug's router in early
+2021, initially by trying a radix tree. Once I'd established this
+couldn't support all Werkzeug's features I found myself
+stuck. Fortunately I had a lot of time this past month (made
+redundant) to sit and figure this out.
+
+With thanks to Adam Hopkins to getting me interested in routers, and
+his explanations
+[here](https://community.sanicframework.org/t/a-fast-new-router/649). Thanks
+also to Makoto Kuwata who's
+[presentation](https://2018.ploneconf.org/talks/python-web-day/how-to-make-the-fastest-router-in-python.html)
+I recently found and subsequently stole the state machine terminology
+from.
+
+"""
