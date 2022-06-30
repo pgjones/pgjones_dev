@@ -20,6 +20,12 @@ routing table and so you are likely to see further increases in your
 production applications. However, simple routing tables, as seen in
 micro-benchmarks, are unaffected and are unlikely to show a speedup.
 
+The speedup is achieved by changing the algorithm from the original
+that matches against a list of regexs. Initially a radix/prefix tree
+algorithm was tried, but it couldn't support all of Werkzeug's
+features. Instead a state machine algorithm has been developed to be
+the new routing algorithm for Werkzeug.
+
 To explain how Werkzeug's router is faster, we need to first consider
 what routing is.
 
