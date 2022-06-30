@@ -43,7 +43,7 @@
       } else {
         return code;
       }
-    }
+    },
   });
 
   const body = Marked.parse(post.body);
