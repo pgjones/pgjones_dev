@@ -32,13 +32,18 @@
 
   hljs.registerLanguage("javascript", javascript);
   hljs.registerLanguage("python", python);
-  hljs.registerLanguage("javascript", javascript);
   hljs.registerLanguage("shell", shell);
   hljs.registerLanguage("sql", sql);
   hljs_svelte(hljs);
 
   Marked.setOptions({
-    highlight: (code, language) => hljs.highlight(code, { language }).value,
+    highlight: (code, language) => {
+      if (language) {
+        return hljs.highlight(code, { language }).value;
+      } else {
+        return code;
+      }
+    }
   });
 
   const body = Marked.parse(post.body);
