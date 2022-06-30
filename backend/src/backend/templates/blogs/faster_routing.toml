@@ -25,7 +25,7 @@ what routing is.
 
 ## HTTP routing
 
-The aim of a HTTP router is to match the HTTP request to a function,
+The aim of a HTTP router is to match the HTTP request to a function
 that can handle the request. In Flask and Quart the routing is defined
 using decorators which define the method, scheme, and path that should
 match the decorated function for example:
@@ -46,8 +46,9 @@ api()`. In addition it defines a rule such that any HTTP-POST requests
 with a path that matches the regex `/api/([^/]+)` result in
 `api_id(id)` being called, with the `id` argument matched from the
 regex i.e. `HTTP-POST /api/2 -> api_id("2")` or `HTTP-POST /api/bob ->
-api_id("bob")`. Other requests should either 404 (no match at all) or
-405 if the wrong HTTP-method was used i.e. `HTTP-PUT /api -> 405`.
+api_id("bob")`. Other requests should either 404 (no match at all)
+i.e. `HTTP-GET /user -> 404` or 405 if the wrong HTTP-method was used
+i.e. `HTTP-PUT /api -> 405`.
 
 The path parameter in the second route `<id>` can be converted to
 a Python type using a converter. For example for integer ids we can
@@ -71,8 +72,8 @@ redirects, and post-wildcard matching. All of these add complexity can
 constraints to the matching algorithm but mean that users of Flask and
 Quart can add whatever routing rules they desire or can imagine.
 
-The new router is faster due to an improvement to the matching
-algorithm. So to start lets consider the original algorithm.
+To support these features Werkzeug's original router used a regex
+table algorithm which I'll explain next.
 
 ## Regex table algorithm
 
@@ -116,14 +117,14 @@ The `path` converter will match anything including `/`, for this
 reason it is called a wildcard parameter by other routers. These rules
 are then compiled to the following regex table:
 
-| ID | Scheme - Method | Path              | Regex        | Function            |
-|----|-----------------|-------------------|--------------|---------------------|
-| 1  | HTTP - GET      | /api              | /api         | api()               |
-| 2  | HTTP - POST     | /api              | /api         | create_api()        |
-| 3  | HTTP - GET      | /api/<int:id>     | /api/(\\d+)  | read_api(id)        |
-| 4  | HTTP - POST     | /api/<int:id>     | /api/(\\d+)  | api_edit(id)        |
-| 5  | HTTP - POST     | /<path:path>/edit | /(.*?)/edit  | edit_post(path)     |
-| 6  | HTTP - POST     | /<path:path>      | /(.*?)       | create_post(path)   |
+| ID | Scheme - Method | Path                | Regex        | Function            |
+|----|-----------------|---------------------|--------------|---------------------|
+| 1  | HTTP - GET      | /api                | /api         | api()               |
+| 2  | HTTP - POST     | /api                | /api         | create_api()        |
+| 3  | HTTP - GET      | /api/\<int:id\>     | /api/(\\d+)  | read_api(id)        |
+| 4  | HTTP - POST     | /api/\<int:id\>     | /api/(\\d+)  | api_edit(id)        |
+| 5  | HTTP - POST     | /\<path:path\>/edit | /(.*?)/edit  | edit_post(path)     |
+| 6  | HTTP - POST     | /\<path:path\>      | /(.*?)       | create_post(path)   |
 
 A request is then matched by testing the request path against each of
 the compiled regex rules until a match is found or no match is found
@@ -185,13 +186,15 @@ to the existing regex table router. This is as I don't believe making
 these changes to Werkzeug's router will result in a benefit that
 outways the cost of the more complex code.
 
-Next I looked at using a Radix tree as the routing algorithm.
+The first algorithm I investigated was a Radix tree, which we'll
+consider next.
 
 ## Radix tree algorithm
 
 An alternative algorithm for routing utilises a [Radix or
 prefix](https://en.wikipedia.org/wiki/Radix_tree) tree. This algorithm
-is also popular in the Python community with a specific implementation
+is also popular in the Python community with Falcon and Sanic keen
+advocats. There is also a specific implementation
 [xrtr](https://github.com/vltr/xrtr) useable as a third party library.
 
 This algorithm works by building a radix tree of the rules and then
@@ -226,12 +229,12 @@ hence the above rules become the following two trees:
 ```
 GET
 `-- /api              -> api()
-    `-- /(\\d+)       -> read_api()
+    `-- /(\\d+)        -> read_api()
 
 
 POST
 |-- /api              -> create_api()
-|   `-- /(\\d+)/edit  -> api_edit()
+|   `-- /(\\d+)/edit   -> api_edit()
 `-- /(.*?)            -> create_post()
 ```
 
@@ -306,10 +309,13 @@ algorithm. Instead a related state machine algorithm can be used.
 ## State machine algorithm
 
 To overcome the Radix tree's restriction on wildcard usage we can
-instead consider a state machine algorithm. Whereby a rule is
-represented as a list of transitions that consume the request path,
-much like the radix tree. However, any transition starting with a
-wildcard must then consume the remaining path.
+instead consider a state machine algorithm. This works by representing
+a rule as a sequence of transitions that each consume part the request
+path for a successful match where the path is split into parts
+delimited by `/`. For example a path of `/api/2/edit` has parts
+`["api", "2", "edit"]`. Crucially though, any transition including a
+wildcard must then consume the entire remaining path rather than just
+the next part.
 
 To understand the state machine algorithm consider the following rules
 (note they all have the same Method to simplify the explanation):
@@ -371,8 +377,9 @@ Next lets consider `/api/bob/2/edit` this splits into `["api", "bob",
 matches leading to state 2. As neither transition in State 2 matches
 the `bob` part the algorithm backtracks to State 1. The next
 transition `(.*?)/edit` is then tested against the remaining parts
-joined i.e. `bob/2/edit`. This is does as it is a final transition due
-to the wildcard. It matches and `edit_post("bob/2")` is called.
+joined i.e. `bob/2/edit` rather than a the next singular part. This
+must be done due to the wildcard. It matches and `edit_post("bob/2")`
+is called.
 
 Next consider `/api/2/edit` which has the parts `["api", "2",
 "edit"]`. Starting at State 1 the `api` transition matches the first
@@ -396,8 +403,8 @@ benchmark the performance change.
 
 To benchmark the router change I've written a short
 [script](https://gist.github.com/pgjones/c71d07a5a11bc96326a84fca9e24643b).
-As the router improvements are best seen with complex realistic routes
-I've used the GitHub API from [Falcon Routing
+As the router improvements are best seen with realistic routes I've
+used the GitHub API from [Falcon Routing
 Survey](https://github.com/richardolsson/falcon-routing-survey).
 
 The benchmark compares the performance of the original Werkzeug
@@ -423,7 +430,7 @@ however it clearly depends on the rules and typical traffic.
 
 I expect this improvement to make a real noticeable difference to your
 production Flask or Quart app. Please let me know if it does or
-doesn't :) - I'm [@pdgjones](https://twitter.com/pdgjones).
+doesn't :).
 
 I started investigating improvements to Werkzeug's router in early
 2021, initially by trying a radix tree. Once I'd established this
