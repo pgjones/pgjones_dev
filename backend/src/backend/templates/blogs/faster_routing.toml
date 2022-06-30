@@ -239,6 +239,11 @@ A request is then matched by choosing the appropriate tree based on
 the Method and then traversing the tree based on the request path
 until a match is found or no match is found and a 404 is returned.
 
+The traversal works by trying each possible edge in order and
+consuming the matched part of the path before moving to the next
+node. If a leaf is reached and there is path remaining the algorithm
+backtracks up the tree.
+
 Considering a `HTTP-POST /api` request this starts with the POST-
 tree.  As it matches the `/api` branch that is traversed first
 consuming the `/api` part of the path. As the path is now fully
@@ -384,12 +389,41 @@ of the tree.
 
 This is the algorithm I've implemented for Werkzeug. However, the
 actual algorithm is more complex as it must also support additional
-Werkzeug features such as strict slashes.
+Werkzeug features such as strict slashes. With it implemented I can
+benchmark the performance change.
+
+## Benchmarking
+
+To benchmark the router change I've written a short
+[script](https://gist.github.com/pgjones/c71d07a5a11bc96326a84fca9e24643b).
+As the router improvements are best seen with complex realistic routes
+I've used the GitHub API from [Falcon Routing
+Survey](https://github.com/richardolsson/falcon-routing-survey).
+
+The benchmark compares the performance of the original Werkzeug
+(table) algorithm and the new (state machine) algorithm by choosing 20
+of the possible paths and timing how long it takes to match them. A
+ratio of the new algorithm time over the original is the result.
+
+Having run the script a few times I can say most paths are improved,
+however a few take longer for example
+`/setup/api/settings/authorized-keys` has a ratio of `1.05`. Most
+though are like `/teams/{id}/members/{username}` with a ratio of
+`0.53` or better.
+
+The worst ratio seen is for
+`/repos/{owner}/{repo}/pages/builds/latest` with a ratio of `1.18`,
+whereas the best is `/repos/{owner}/{repo}/labels/{name}` with a ratio
+of `0.23`. The average ratio is `0.56`.
+
+I would therefore expect you to see an improvement for your app,
+however it clearly depends on the rules and typical traffic.
 
 ## Conclusion
 
 I expect this improvement to make a real noticeable difference to your
-production Flask or Quart app. Please let me know if it does :).
+production Flask or Quart app. Please let me know if it does or
+doesn't :) - I'm [@pdgjones](https://twitter.com/pdgjones).
 
 I started investigating improvements to Werkzeug's router in early
 2021, initially by trying a radix tree. Once I'd established this
