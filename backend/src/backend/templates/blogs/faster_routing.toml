@@ -121,10 +121,10 @@ are then compiled to the following regex table:
 |----|-----------------|---------------------|--------------|---------------------|
 | 1  | HTTP - GET      | /api                | /api         | api()               |
 | 2  | HTTP - POST     | /api                | /api         | create_api()        |
-| 3  | HTTP - GET      | /api/\<int:id\>     | /api/(\\d+)  | read_api(id)        |
-| 4  | HTTP - POST     | /api/\<int:id\>     | /api/(\\d+)  | api_edit(id)        |
-| 5  | HTTP - POST     | /\<path:path\>/edit | /(.*?)/edit  | edit_post(path)     |
-| 6  | HTTP - POST     | /\<path:path\>      | /(.*?)       | create_post(path)   |
+| 3  | HTTP - GET      | /api/&lt;int:id&gt;     | /api/(\\d+)  | read_api(id)        |
+| 4  | HTTP - POST     | /api/&lt;int:id&gt;     | /api/(\\d+)  | api_edit(id)        |
+| 5  | HTTP - POST     | /&lt;path:path&gt;/edit | /(.*?)/edit  | edit_post(path)     |
+| 6  | HTTP - POST     | /&lt;path:path&gt;      | /(.*?)       | create_post(path)   |
 
 A request is then matched by testing the request path against each of
 the compiled regex rules until a match is found or no match is found
