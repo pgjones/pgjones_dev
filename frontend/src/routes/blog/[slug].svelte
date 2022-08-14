@@ -1,9 +1,8 @@
 <script context="module" lang="ts">
-  export async function load({ params }) {
+  export async function load({ fetch, params }) {
     const response = await fetch(`/v0/blogs/${params.slug}/`);
-    const data = await response.json();
-
     if (response.status === 200) {
+      const data = await response.json();
       return { props: { post: data } };
     }
   }
@@ -26,7 +25,7 @@
   import python from "highlight.js/lib/languages/python";
   import shell from "highlight.js/lib/languages/shell";
   import sql from "highlight.js/lib/languages/sql";
-  import hljs_svelte from "highlightjs-svelte";
+  import hljs_svelte from "$lib/highlightjs-svelte";
   import { onMount } from "svelte";
   import Icon from "svelte-awesome/components/Icon.svelte";
 
@@ -34,7 +33,7 @@
   hljs.registerLanguage("python", python);
   hljs.registerLanguage("shell", shell);
   hljs.registerLanguage("sql", sql);
-  hljs_svelte(hljs);
+  hljs.registerLanguage("svelte", hljs_svelte);
 
   Marked.setOptions({
     highlight: (code, language) => {

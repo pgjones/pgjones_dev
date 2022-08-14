@@ -1,9 +1,4 @@
 <script context="module" lang="ts">
-  import { faRssSquare } from "@fortawesome/free-solid-svg-icons";
-  import Icon from "svelte-awesome/components/Icon.svelte";
-
-  import PostCard from "$lib/PostCard.svelte";
-
   export async function load({ fetch }) {
     const response = await fetch("/v0/blogs/");
     return {
@@ -13,6 +8,11 @@
 </script>
 
 <script lang="ts">
+  import { faRssSquare } from "@fortawesome/free-solid-svg-icons";
+  import Icon from "svelte-awesome/components/Icon.svelte";
+
+  import PostCard from "$lib/PostCard.svelte";
+
   interface IPostCard {
     date: string;
     id: string;

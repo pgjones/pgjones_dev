@@ -2,13 +2,12 @@
   "name": "pgjones_dev_frontend",
   "version": "0.1.0",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "PRIVATE",
   "scripts": {
-    "build": "svelte-kit build",
-    "format": "prettier --list-different --plugin-search-dir=. .",
+    "build": "vite build",
+    "format": "prettier --write --plugin-search-dir=. .",
     "lint": "prettier --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
-    "reformat": "prettier --write --plugin-search-dir=. .",
-    "start": "svelte-kit dev"
+    "start": "vite dev"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "next",
@@ -31,7 +30,7 @@
     "@fortawesome/free-solid-svg-icons": "<6",
     "@ts-stack/markdown": "*",
     "highlight.js": "*",
-    "highlightjs-svelte": "*",
-    "svelte-awesome": "*"
+    "svelte-awesome": "*",
+    "vite": "*"
   }
 }
