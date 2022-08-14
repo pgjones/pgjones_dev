@@ -1,43 +1,38 @@
-FROM node:16-alpine as frontend
+FROM node:18-bullseye-slim as frontend
 
 COPY frontend /frontend/
 WORKDIR /frontend/
 RUN npm install && npm run build
 
-# hadolint ignore=DL3059
-RUN mv /frontend/build/_app /frontend/buildjs
+FROM python:3.10.1-slim-bullseye
 
-FROM python:3.10-alpine
+# hadolint ignore=DL3008
+RUN apt-get update && apt-get install -y dumb-init --no-install-recommends \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 
 EXPOSE 8080 8443
-ENTRYPOINT ["dumb-init"]
-CMD ["./app"]
-COPY app hypercorn.toml /app/
+RUN mkdir -p /app
+WORKDIR /app
+COPY hypercorn.toml /app/
+CMD ["pdm", "run", "hypercorn", "--config", "hypercorn.toml", "backend.run:create_app()"]
 
-# hadolint ignore=DL3018
-RUN apk --no-cache add build-base cargo gcc git gzip libffi-dev libxml2-dev \
-    libxslt-dev musl-dev openssl openssl-dev bsd-compat-headers
-
-# hadolint ignore=DL3059
 RUN python -m venv /ve
 ENV PATH=/ve/bin:${PATH}
+
 # hadolint ignore=DL3013
-RUN pip install --no-cache-dir dumb-init poetry
+RUN pip install --no-cache-dir pdm
 
-# hadolint ignore=DL3059
-RUN mkdir -p /app/static/_app/ /app/templates/svelte/ /root/.config/pypoetry
+COPY backend/pdm.lock backend/pyproject.toml /app/
+RUN pdm install --prod --no-lock --no-editable
 
-COPY backend/poetry.lock backend/pyproject.toml /app/
-WORKDIR /app
-RUN poetry config virtualenvs.create false \
-    && poetry install \
-    && poetry cache clear pypi --all --no-interaction
-
-COPY backend/src/backend/ /app/
-COPY --from=frontend /frontend/buildjs/ /app/static/_app/
+COPY --from=frontend /frontend/build/_app/ /app/static/_app/
 COPY --from=frontend /frontend/build/ /app/templates/svelte/
 
 RUN gzip --keep --recursive /app/static/*
+
+COPY backend/src/ /app/
 
 USER nobody
 

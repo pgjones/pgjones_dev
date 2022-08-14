@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+
+  backend:
+    runs-on: ubuntu-latest
+
+    container: python:3.10.1-slim-bullseye
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install system dependencies
+        run: apt-get update && apt-get install -y openssl
+
+      - name: Initialise dependencies
+        run: |
+          pip install pdm
+          pdm install
+
+      - name: Linting
+        run: pdm run lint
+
+  frontend:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - uses: actions/checkout@v3
+
+      - name: Initialise dependencies
+        run: npm ci --cache .npm --prefer-offline
+
+      - name: Check formatting
+        run: npm run format
+
+      - name: Linting
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+  docker:
+    runs-on: ubuntu-latest
+
+    container: hadolint/hadolint:latest-debian
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: hadolint Dockerfile
