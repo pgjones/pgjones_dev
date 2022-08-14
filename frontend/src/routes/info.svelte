@@ -41,7 +41,7 @@
     <h2 class="section-title font-weight-bold mb-3">This website</h2>
     <p class="section-intro mb-5">
       This site is{" "}
-      <a href="https://gitlab.com/pgjones/pgjones_dev">open source</a>
+      <a href="https://github.com/pgjones/pgjones_dev">open source</a>
       with the frontend written in Typescript using the Svelte framework and the
       backend written in Python using the Quart framework.
     </p>
