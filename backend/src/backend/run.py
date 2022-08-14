@@ -3,14 +3,15 @@ from pathlib import Path
 from typing import List, Tuple
 
 import toml
-from blueprints.blogs import blueprint as blogs_blueprint
-from blueprints.chat import blueprint as chat_blueprint
-from blueprints.serving import blueprint as serving_blueprint
 from feedgen.feed import FeedGenerator
 from hypercorn.middleware import HTTPToHTTPSRedirectMiddleware
-from lib.chat import Chat
-from lib.json_quart import JSONQuart
 from quart import Response
+
+from backend.blueprints.blogs import blueprint as blogs_blueprint
+from backend.blueprints.chat import blueprint as chat_blueprint
+from backend.blueprints.serving import blueprint as serving_blueprint
+from backend.lib.chat import Chat
+from backend.lib.json_quart import JSONQuart
 
 
 def create_app() -> JSONQuart:

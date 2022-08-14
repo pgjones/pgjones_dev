@@ -7,7 +7,7 @@ from quart_trio import QuartTrio
 from werkzeug.exceptions import NotFound
 from werkzeug.utils import safe_join
 
-from .chat import Chat
+from backend.lib.chat import Chat
 
 
 class JSONQuart(QuartTrio):
