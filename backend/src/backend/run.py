@@ -1,37 +1,25 @@
-import os
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
-from typing import cast, List, Tuple
+from typing import List, Tuple
 
-import sentry_sdk
 import toml
-from feedgen.feed import FeedGenerator
-from hypercorn.middleware import HTTPToHTTPSRedirectMiddleware
-from quart import Response
-
 from blueprints.blogs import blueprint as blogs_blueprint
 from blueprints.chat import blueprint as chat_blueprint
 from blueprints.serving import blueprint as serving_blueprint
+from feedgen.feed import FeedGenerator
+from hypercorn.middleware import HTTPToHTTPSRedirectMiddleware
 from lib.chat import Chat
 from lib.json_quart import JSONQuart
-from lib.sentry import QuartIntegration
+from quart import Response
 
 
-def create_app(production: bool = True) -> JSONQuart:
-    if os.environ.get("SENTRY_DSN") is not None:
-        # Needs to be pre app creation
-        sentry_sdk.init(
-            dsn=os.environ["SENTRY_DSN"],
-            integrations=[QuartIntegration()],
-        )
-
+def create_app() -> JSONQuart:
     app = JSONQuart(__name__)
+    app.config.from_prefixed_env()
     app.config["SEND_FILE_MAX_AGE_DEFAULT"] = timedelta(days=90)
 
     @app.before_serving
     async def startup() -> None:
-        static_root = app.static_folder
-        static_root = cast(str, static_root)
         app.blogs = _extract_blogs(app.root_path / app.template_folder)  # type: ignore
         app.chat = Chat()
         app.add_background_task(app.chat.broadcast)
@@ -42,7 +30,7 @@ def create_app(production: bool = True) -> JSONQuart:
     app.register_blueprint(chat_blueprint)
     app.register_blueprint(serving_blueprint)
 
-    if production:
+    if app.debug:
         return HTTPToHTTPSRedirectMiddleware(app, "pgjones.dev")  # type: ignore
     else:
         app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -50,7 +38,9 @@ def create_app(production: bool = True) -> JSONQuart:
 
 
 def _add_secure_headers(response: Response) -> Response:
-    response.headers["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains; preload"
+    response.headers[
+        "Strict-Transport-Security"
+    ] = "max-age=63072000; includeSubDomains; preload"
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
 
@@ -88,14 +78,11 @@ def _create_feeds(blogs: List[dict]) -> Tuple[bytes, bytes]:
         entry.link(href=f"https://pgjones.dev/blog/{blog['id']}/")
         entry.title(blog["title"])
         entry.summary(blog["summary"])
-        published = datetime.combine(date.fromisoformat(blog["date"]), datetime.min.time())
+        published = datetime.combine(
+            date.fromisoformat(blog["date"]), datetime.min.time()
+        )
         published = published.astimezone(timezone.utc)
         entry.published(published)
         last_updated = max(last_updated, published)
     feed.updated(last_updated)
     return feed.rss_str(), feed.atom_str()
-
-
-if __name__ == "__main__":
-    app = create_app(False)
-    app.run()

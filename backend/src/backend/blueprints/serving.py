@@ -1,13 +1,14 @@
+from pathlib import Path
 from secrets import token_urlsafe
 from typing import Optional
 
 from jinja2.exceptions import TemplateNotFound
 from quart import (
     Blueprint,
+    ResponseReturnValue,
     current_app,
     make_response,
     render_template,
-    ResponseReturnValue,
     send_from_directory,
 )
 from quart.helpers import safe_join, send_file
@@ -18,10 +19,14 @@ from werkzeug.sansio.response import Response
 blueprint = Blueprint("serving", __name__)
 
 
-def _apply_security_headers(response: Response, nonce: Optional[str] = None) -> Response:
+def _apply_security_headers(
+    response: Response, nonce: Optional[str] = None
+) -> Response:
     response.content_security_policy.default_src = "'self'"
     response.content_security_policy.base_uri = "'self'"
-    response.content_security_policy.connect_src = "'self' https://cloudflareinsights.com"
+    response.content_security_policy.connect_src = (
+        "'self' https://cloudflareinsights.com"
+    )
     response.content_security_policy.form_action = "'self'"
     response.content_security_policy.frame_ancestors = "'none'"
     response.content_security_policy.frame_src = "https://www.youtube-nocookie.com"
@@ -68,7 +73,9 @@ async def tozo(path: str) -> ResponseReturnValue:
     try:
         response = await send_from_directory(current_app.root_path, f"tozo/{path}")
     except NotFound:
-        response = await send_from_directory(current_app.root_path, f"tozo/{path}/index.html")
+        response = await send_from_directory(
+            current_app.root_path, f"tozo/{path}/index.html"
+        )
     return _apply_security_headers(response)
 
 
@@ -84,7 +91,7 @@ async def rss_feed() -> ResponseReturnValue:
 
 @blueprint.route("/manifest.json")
 async def manifest() -> ResponseReturnValue:
-    path = safe_join(current_app.static_folder, "manifest.json")  # type: ignore
+    path = Path(safe_join(current_app.static_folder, "manifest.json"))  # type: ignore
     return await send_file(path)
 
 

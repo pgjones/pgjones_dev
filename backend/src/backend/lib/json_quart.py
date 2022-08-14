@@ -1,9 +1,11 @@
 import mimetypes
-from typing import cast, List, Tuple
+from pathlib import Path
+from typing import List, Tuple, cast
 
-from quart import request, Response, safe_join, send_file
+from quart import Response, request, send_file
 from quart_trio import QuartTrio
 from werkzeug.exceptions import NotFound
+from werkzeug.utils import safe_join
 
 from .chat import Chat
 
@@ -14,7 +16,7 @@ class JSONQuart(QuartTrio):
     feeds: Tuple[bytes, bytes]
 
     async def send_static_file(self, filename: str) -> Response:
-        path = safe_join(self.static_folder, filename)  # type: ignore
+        path = Path(safe_join(self.static_folder, filename))  # type: ignore
         gzip_path = path.with_suffix(path.suffix + ".gz")
         if "gzip" in request.accept_encodings and gzip_path.is_file():
             response = await send_file(gzip_path)

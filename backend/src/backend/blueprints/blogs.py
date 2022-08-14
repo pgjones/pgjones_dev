@@ -1,4 +1,4 @@
-from quart import abort, Blueprint, current_app, ResponseReturnValue
+from quart import Blueprint, ResponseReturnValue, abort, current_app
 
 blueprint = Blueprint("blogs", __name__)
 
@@ -6,7 +6,12 @@ blueprint = Blueprint("blogs", __name__)
 @blueprint.route("/v0/blogs/")
 async def get_posts() -> ResponseReturnValue:
     summaries = [
-        {"date": blog["date"], "id": blog["id"], "summary": blog["summary"], "title": blog["title"]}
+        {
+            "date": blog["date"],
+            "id": blog["id"],
+            "summary": blog["summary"],
+            "title": blog["title"],
+        }
         for blog in current_app.blogs  # type: ignore
     ]
     return {"posts": summaries}
