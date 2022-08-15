@@ -6,7 +6,6 @@ const config = {
   server: {
     port: 3000,
     proxy: {
-      "/static": "http://127.0.0.1:5050",
       "/v0": "http://127.0.0.1:5050",
     },
   },

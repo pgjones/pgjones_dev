@@ -10,9 +10,6 @@ const config = {
       assets: "build",
       fallback: "fallback.html",
     }),
-    prerender: {
-      entries: [],
-    },
     trailingSlash: "always",
   },
 };

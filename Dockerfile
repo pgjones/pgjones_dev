@@ -6,6 +6,8 @@ RUN npm install && npm run build
 
 # hadolint ignore=DL3059
 RUN mv /frontend/build/_app /frontend/buildjs
+# hadolint ignore=DL3059
+RUN mv /frontend/build/static /frontend/buildstatic
 
 FROM python:3.10.1-slim-bullseye
 
@@ -32,6 +34,7 @@ RUN pdm install --prod --no-lock --no-editable
 
 COPY backend/src/ /app/
 COPY --from=frontend /frontend/buildjs/ /app/backend/static/_app/
+COPY --from=frontend /frontend/buildstatic/ /app/backend/static/
 COPY --from=frontend /frontend/build/ /app/backend/templates/svelte/
 
 RUN gzip --keep --recursive /app/backend/static/*
