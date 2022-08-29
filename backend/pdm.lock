@@ -223,7 +223,7 @@ dependencies = [
 
 [[package]]
 name = "hypercorn"
-version = "0.13.2"
+version = "0.14.1"
 requires_python = ">=3.7"
 summary = "A ASGI Server based on Hyper libraries and inspired by Gunicorn"
 dependencies = [
@@ -236,23 +236,23 @@ dependencies = [
 
 [[package]]
 name = "hypercorn"
-version = "0.13.2"
+version = "0.14.1"
 extras = ["h3"]
 requires_python = ">=3.7"
 summary = "A ASGI Server based on Hyper libraries and inspired by Gunicorn"
 dependencies = [
     "aioquic<1.0,>=0.9.0",
-    "hypercorn==0.13.2",
+    "hypercorn==0.14.1",
 ]
 
 [[package]]
 name = "hypercorn"
-version = "0.13.2"
+version = "0.14.1"
 extras = ["trio"]
 requires_python = ">=3.7"
 summary = "A ASGI Server based on Hyper libraries and inspired by Gunicorn"
 dependencies = [
-    "hypercorn==0.13.2",
+    "hypercorn==0.14.1",
     "trio>=0.11.0",
 ]
 
@@ -588,7 +588,7 @@ dependencies = [
 
 [[package]]
 name = "setuptools"
-version = "64.0.3"
+version = "65.3.0"
 requires_python = ">=3.7"
 summary = "Easily download, build, install, upgrade, and uninstall Python packages"
 
@@ -939,9 +939,9 @@ content_hash = "sha256:6a0e9b9a825a9dbb04205283f2f8357867b70fbfb59ed3021bc59b10b
     {url = "https://files.pythonhosted.org/packages/6c/dd/a834df6482147d48e225a49515aabc28974ad5a4ca3215c18a882565b028/html5lib-1.1-py2.py3-none-any.whl", hash = "sha256:0d78f8fde1c230e99fe37986a60526d7049ed4bf8a9fadbad5f00e22e58e041d"},
     {url = "https://files.pythonhosted.org/packages/ac/b6/b55c3f49042f1df3dcd422b7f224f939892ee94f22abcf503a9b7339eaf2/html5lib-1.1.tar.gz", hash = "sha256:b2e5b40261e20f354d198eae92afc10d750afb487ed5e50f9c4eaf07c184146f"},
 ]
-"hypercorn 0.13.2" = [
-    {url = "https://files.pythonhosted.org/packages/a1/dd/22595a064a6e85b885965f467284a5921de8c6109e1aff8a07b27766817f/Hypercorn-0.13.2.tar.gz", hash = "sha256:6307be5cbdf6ba411967d4661202dc4f79bd511b5d318bc4eed88b09418427f8"},
-    {url = "https://files.pythonhosted.org/packages/c9/28/79bbca7d9218d37f8888a0f3215e7ba03851d1c77c11d841542e33cc3190/Hypercorn-0.13.2-py3-none-any.whl", hash = "sha256:ca18f91ab3fa823cbe9e949738f9f2cc07027cd647c80d8f93e4b1a2a175f112"},
+"hypercorn 0.14.1" = [
+    {url = "https://files.pythonhosted.org/packages/19/97/55d740f338fdce0a0a1e9c460b47f803f9aee7627b32063dbb4858a48673/Hypercorn-0.14.1.tar.gz", hash = "sha256:1132a64316c8c6db79b5b4f2f6be77d4d99854a6add7fcdcfc9612e728e5cf10"},
+    {url = "https://files.pythonhosted.org/packages/4e/41/9687e24af6de469b397a06eb78ba58ef9d1564cfe136f784578676d7dc74/Hypercorn-0.14.1-py3-none-any.whl", hash = "sha256:b71b61698a9fb498564762cef0d18e52e416ab7301e2e55744c92ccaded11b2c"},
 ]
 "hyperframe 6.0.1" = [
     {url = "https://files.pythonhosted.org/packages/5a/2a/4747bff0a17f7281abe73e955d60d80aae537a5d203f417fa1c2e7578ebb/hyperframe-6.0.1.tar.gz", hash = "sha256:ae510046231dc8e9ecb1a6586f63d2347bf4c8905914aa84ba585ae85f28a914"},
@@ -1359,9 +1359,9 @@ content_hash = "sha256:6a0e9b9a825a9dbb04205283f2f8357867b70fbfb59ed3021bc59b10b
     {url = "https://files.pythonhosted.org/packages/bb/2d/c902484141330ded63c6c40d66a9725f8da5e818770f67241cf429eef825/rich-12.5.1.tar.gz", hash = "sha256:63a5c5ce3673d3d5fbbf23cd87e11ab84b6b451436f1b7f19ec54b6bc36ed7ca"},
     {url = "https://files.pythonhosted.org/packages/f6/39/4cb526e0d505464376e3c47a812df6e6638363ebe66e6a63618831fe47ad/rich-12.5.1-py3-none-any.whl", hash = "sha256:2eb4e6894cde1e017976d2975ac210ef515d7548bc595ba20e195fb9628acdeb"},
 ]
-"setuptools 64.0.3" = [
-    {url = "https://files.pythonhosted.org/packages/6f/a9/1d019cf4d87be67e4d156f95f258e206833aa6d45c183014d091ef9cb0d3/setuptools-64.0.3-py3-none-any.whl", hash = "sha256:194b74f2c2d1800268fe2d857d99981e7c04d010de3099f04ee45ebec535e560"},
-    {url = "https://files.pythonhosted.org/packages/c1/9c/67d1cb3ede2b167ee271ff22c398e7067715f294994fb18164f40ac981e4/setuptools-64.0.3.tar.gz", hash = "sha256:3bcaf6e27ad3b0f643ba0a48c5ab9eca930c3eb51df0e068f4826ab880c394ea"},
+"setuptools 65.3.0" = [
+    {url = "https://files.pythonhosted.org/packages/cc/83/7ea9d9b3a6ff3225aca2fce5e4df373bee7e0a74c539711a4fbfda53374f/setuptools-65.3.0.tar.gz", hash = "sha256:7732871f4f7fa58fb6bdcaeadb0161b2bd046c85905dbaa066bdcbcc81953b57"},
+    {url = "https://files.pythonhosted.org/packages/d9/5f/2daccd14278b6b780ae6799f85998377c06019354982391245f4b58a927d/setuptools-65.3.0-py3-none-any.whl", hash = "sha256:2e24e0bec025f035a2e72cdd1961119f557d78ad331bb00ff82efb2ab8da8e82"},
 ]
 "six 1.16.0" = [
     {url = "https://files.pythonhosted.org/packages/71/39/171f1c67cd00715f190ba0b100d606d440a28c93c7714febeca8b79af85e/six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
