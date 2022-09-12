@@ -9,10 +9,8 @@ from quart import (
     current_app,
     make_response,
     render_template,
-    send_from_directory,
 )
 from quart.helpers import safe_join, send_file
-from werkzeug.exceptions import NotFound
 from werkzeug.http import COOP
 from werkzeug.sansio.response import Response
 
