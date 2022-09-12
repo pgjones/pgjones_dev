@@ -1,12 +1,3 @@
-<script context="module" lang="ts">
-  export async function load({ fetch }) {
-    const response = await fetch("/v0/blogs/");
-    return {
-      props: await response.json(),
-    };
-  }
-</script>
-
 <script lang="ts">
   import { faRssSquare } from "@fortawesome/free-solid-svg-icons";
   import Icon from "svelte-awesome/components/Icon.svelte";
@@ -21,7 +12,12 @@
     title: string;
   }
 
-  export let posts: IPostCard[];
+  interface IData {
+    posts: IPostCard[];
+  }
+
+  export let data: IData;
+  export let posts = data.posts;
 </script>
 
 <svelte:head>

@@ -1,13 +1,3 @@
-<script context="module" lang="ts">
-  export async function load({ fetch, params }) {
-    const response = await fetch(`/v0/blogs/${params.slug}/`);
-    if (response.status === 200) {
-      const data = await response.json();
-      return { props: { post: data } };
-    }
-  }
-</script>
-
 <script lang="ts">
   interface IPost {
     body: string;
@@ -16,7 +6,12 @@
     title: string;
   }
 
-  export let post: IPost;
+  interface IData {
+    post: IPost;
+  }
+
+  export let data: IData;
+  let post = data.post;
 
   import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
   import { Marked } from "@ts-stack/markdown";

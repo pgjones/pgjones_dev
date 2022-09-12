@@ -1,5 +1,21 @@
-<script context="module">
-  export const prerender = true;
+<script lang="ts">
+  import { faShareAlt } from "@fortawesome/free-solid-svg-icons";
+  import { onMount } from "svelte";
+  import Icon from "svelte-awesome/components/Icon.svelte";
+
+  let canShare = false;
+
+  onMount(() => {
+    canShare = !!window.navigator.share;
+  });
+
+  const shareClick = () => {
+    window.navigator.share({
+      title: "A Blueprint for Production-Ready Web Applications",
+      text: "Leverage industry best practices to create complete web apps with Python, TypeScript, and AWS",
+      url: document.location.href,
+    });
+  };
 </script>
 
 <svelte:head>
@@ -24,10 +40,32 @@
               Python, TypeScript, and AWS
             </div>
           </div>
-          <div class="col-md-3">
-            <img src="/static/Cover.jpg" />
+          <div class="d-none d-md-block col-md-3">
+            <img class="w-100" alt="The book cover" src="/static/Cover.jpg" />
           </div>
         </div>
+        <p>
+          <button
+            class="btn btn-primary"
+            href="https://www.packtpub.com/product/blueprint-for-production-ready-web-development/9781803248509"
+            >Read book</button
+          >
+          <button
+            class="btn btn-secondary"
+            href="https://github.com/pgjones/tozo">View code</button
+          >
+          <button class="btn btn-secondary" href="https://tozo.dev"
+            >View app</button
+          >
+          <button
+            on:click={shareClick}
+            class="btn btn-secondary"
+            class:d-none={!canShare}
+          >
+            <Icon data={faShareAlt} />
+            <span class="d-none d-md-inline-block">Share</span>
+          </button>
+        </p>
         <p class="bio mb-4">
           A Blueprint for Production-Ready Web Applications will help you expand
           upon your coding knowledge and teach you how to create a complete web
