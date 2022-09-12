@@ -131,7 +131,7 @@
               Tutorials
             </a>
           </li>
-          <li class="nav-item">
+          <li class:active={section === "tozo"} class="nav-item">
             <a href="/tozo/" class="nav-link">
               <Icon data={faBook} />
               My Book
