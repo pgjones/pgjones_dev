@@ -67,18 +67,6 @@ async def client_static(path: str) -> ResponseReturnValue:
     return await current_app.send_static_file(f"_app/{path}")
 
 
-@blueprint.route("/tozo/", defaults={"path": ""})
-@blueprint.route("/tozo/<path:path>")
-async def tozo(path: str) -> ResponseReturnValue:
-    try:
-        response = await send_from_directory(current_app.root_path, f"tozo/{path}")
-    except NotFound:
-        response = await send_from_directory(
-            current_app.root_path, f"tozo/{path}/index.html"
-        )
-    return _apply_security_headers(response)
-
-
 @blueprint.route("/blog/atom.xml")
 async def atom_feed() -> ResponseReturnValue:
     return current_app.feeds[1], {"Content-Type": "text/xml"}  # type: ignore

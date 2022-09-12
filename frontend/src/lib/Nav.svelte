@@ -132,9 +132,9 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="/tozo/" class="nav-link" rel="external">
+            <a href="/tozo/" class="nav-link">
               <Icon data={faBook} />
-              Zero to production web apps - book
+              My Book
             </a>
           </li>
         </ul>
