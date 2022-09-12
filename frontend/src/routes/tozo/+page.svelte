@@ -45,17 +45,18 @@
           </div>
         </div>
         <p>
-          <button
+          <a
             class="btn btn-primary"
             href="https://www.packtpub.com/product/blueprint-for-production-ready-web-development/9781803248509"
-            >Read book</button
+            rel="external">Read book</a
           >
-          <button
+          <a
             class="btn btn-secondary"
-            href="https://github.com/pgjones/tozo">View code</button
+            href="https://github.com/pgjones/tozo"
+            rel="external">View code</a
           >
-          <button class="btn btn-secondary" href="https://tozo.dev"
-            >View app</button
+          <a class="btn btn-secondary" href="https://tozo.dev" rel="external"
+            >View app</a
           >
           <button
             on:click={shareClick}
