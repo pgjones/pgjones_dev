@@ -18,8 +18,8 @@
   <div class="container">
     <div class="row">
       <TutorialCard
-        title="How to build a RESTful API with Quart & Quart-Schema"
-        video="https://www.youtube-nocookie.com/embed/0aCHKGRJgUc"
+        title="How to build a RESTful API with Quart, Quart-DB & Quart-Schema"
+        video="https://www.youtube-nocookie.com/embed/LyEh4AwHdDM"
       />
     </div>
   </div>
