@@ -20,6 +20,23 @@
   <div class="container">
     <div class="row">
       <Talk
+        event="London Python 2022"
+        slidesHref="https://docs.google.com/presentation/d/1BZfku5qdYFcWubckMx72hUMz_gzsNjSzKFvWvsEVCAo/edit?usp=sharing"
+        title="Speeding up Flask & Quart’s routing"
+      >
+        <p class="card-text">
+          The routing algorithm used by Flask & Quart to match requests to the
+          relevant handler has recently been changed from using a regex table to
+          using a state machine. This has improved the performance, with a 5
+          times improvement being seen in the best case.
+        </p>
+        <p class="card-text">
+          This talk will explain what routing is, how the algorithms work, and
+          what it means for Flask and Quart.
+        </p>
+      </Talk>
+
+      <Talk
         event="PyCon 2021"
         slidesHref="https://docs.google.com/presentation/d/1RpzvHtIyASJZ2IRFPuVm5lw7b3ftuoO6hxB5dN4QaWo/edit?usp=sharing"
         title="What's new in Flask 2.0"
