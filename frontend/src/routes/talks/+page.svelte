@@ -23,6 +23,7 @@
         event="London Python 2022"
         slidesHref="https://docs.google.com/presentation/d/1BZfku5qdYFcWubckMx72hUMz_gzsNjSzKFvWvsEVCAo/edit?usp=sharing"
         title="Speeding up Flask & Quart’s routing"
+        videoHref="https://youtu.be/Gcys2KWY2FY"
       >
         <p class="card-text">
           The routing algorithm used by Flask & Quart to match requests to the
