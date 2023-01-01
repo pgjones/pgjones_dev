@@ -8,18 +8,18 @@
     <div class="profile-teaser media flex-column flex-lg-row">
       <div class="media-body">
         <h2 class="name font-weight-bold mb-1">Phil Jones</h2>
-        <div class="tagline mb-3">CTO Brickvest</div>
+        <div class="tagline mb-3">VP Technology Curaleaf International</div>
         <p class="bio mb-4">
-          I am a software engineer based in London and the CTO of{" "}
-          <a href="https://brickvest.com">Brickvest</a>. I initially studied
-          Physics at the University of Oxford, where I undertook my
-          undergraduate studies before completing a DPhil in particle physics
-          2011. After a period of postdoctoral study at Queen Mary’s University
-          of London I switched to industry, securing roles as Head of
-          Engineering at{" "}
-          <a href="https://octopuswealth.com/">Octopus Wealth</a>
-          and VP Engineering at
-          <a href="https://smarkets.com/">Smarkets</a>.
+          I am a software engineer based in London and the VP Technology of {" "}
+          <a href="https://curaleafinternational.com">Curaleaf International</a
+          >. I initially studied Physics at the University of Oxford, where I
+          undertook my undergraduate studies before completing a DPhil in
+          particle physics 2011. After a period of postdoctoral study at Queen
+          Mary’s University of London I switched to industry, securing roles as
+          VP Engineering at
+          <a href="https://smarkets.com/">Smarkets</a>, Head of Engineering at
+          <a href="https://octopuswealth.com/">Octopus Wealth</a>, and CTO at
+          <a href="https://brickvest.com">Brickvest</a>.
         </p>
         <p>
           At present I contribute to open source in Python on projects relating
