@@ -18,6 +18,10 @@
   <div class="container">
     <div class="row">
       <TutorialCard
+        title="How to Authenticate with Quart, and Quart-Auth"
+        video="https://www.youtube-nocookie.com/embed/l72qqAgTqyQ"
+      />
+      <TutorialCard
         title="How to build a RESTful API with Quart, Quart-DB & Quart-Schema"
         video="https://www.youtube-nocookie.com/embed/LyEh4AwHdDM"
       />
