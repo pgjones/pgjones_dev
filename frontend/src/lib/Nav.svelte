@@ -11,6 +11,7 @@
 
   import Github from "$lib/Github.svelte";
   import Gitlab from "$lib/Gitlab.svelte";
+  import Mastodon from "$lib/Mastodon.svelte";
   import Stackoverflow from "$lib/Stackoverflow.svelte";
   import Twitter from "$lib/Twitter.svelte";
 
@@ -81,6 +82,12 @@
               <a href="https://gitlab.com/pgjones">
                 <Gitlab />
                 <span class="sr-only">GitLab profile</span>
+              </a>
+            </li>
+            <li class="list-inline-item">
+              <a href="https://fosstodon.org/@pgjones">
+                <Mastodon />
+                <span class="sr-only">Mastodon profile</span>
               </a>
             </li>
             <li class="list-inline-item">
