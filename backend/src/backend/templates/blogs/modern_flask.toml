@@ -10,11 +10,10 @@ body = """
 
 Flask is approaching its 13th birthday, still in active development,
 and still adding features that make it easier for you to build your
-web application. On release the industry and Flask focused on server
-rendered pages, now there is a as strong a focus on APIs both for
-client rendered pages and services. In Flask has modernised by adding
-features that make API development easier, as shown in this simple
-example:
+web application. 13 years ago the industry and Flask focused on server
+rendered pages, now there is a strong focus on APIs both for client
+rendered pages and services. Flask has modernised by adding features
+that make API development easier, as shown in this simple example:
 
 ```python
 from flask import Flask, ResponseReturnValue
@@ -55,9 +54,9 @@ def create_resource():
     ...
 ```
 
-With this shorthand the common HTTP-methods {GET, POST, PUT, DELETE,
-PATCH} are all available in shorthand. The other methods {HEAD,
-CONNECT, OPTIONS, TRACE} are mostly automatically handled by Flask.
+With this shorthand the common HTTP-methods `{GET, POST, PUT, DELETE,
+PATCH}` are all available in shorthand. The other methods `{HEAD,
+CONNECT, OPTIONS, TRACE}` are mostly automatically handled by Flask.
 
 ## 2. JSON return values
 
@@ -92,9 +91,9 @@ def resource():
 
 ## 3. Configuration via the environment
 
-A Twelve-Factor app will store its config in the environment, rather
-than in a file (or elsewhere). This is now supported in Flask via the
-config `from_prefixed_env` method:
+A [Twelve-Factor](https://12factor.net/) app will store its config in
+the environment, rather than in a file (or elsewhere). This is now
+supported in Flask via the config `from_prefixed_env` method:
 
 ```python
 app.config.from_prefixed_env()
@@ -120,7 +119,7 @@ When writing RESTful APIs OpenAPI has become the go to standard for
 documenting the API for both human and computer usage. On this basis
 many libraries that offer serialisation and validation have added
 OpenAPI autogeneration giving a wide choice. As always Flask takes a
-agnostic stance with the Flaskeco system suppling many great
+agnostic stance with the Flask ecosystem suppling many great
 options. For example with Marshmallow, consider
 [APIFlask](https://apiflask.com/):
 
@@ -209,8 +208,8 @@ async def index():
 
 Flask allows apps to be split into blueprints, thereby allowing
 related routes to be grouped together. Modern Flask allows nested
-blueprints, thereby allowing related routes to be grouped to be
-grouped together across multiple blueprints.
+blueprints, thereby allowing related routes to be grouped together
+across multiple blueprints.
 
 As an example consider if you have an monitor blueprint that you wish
 to use on both the shop and admin parts of your app:
@@ -233,22 +232,21 @@ app.register_blueprint(shop, url_prefix="/shop")
 ```
 
 The paths `/admin/monitor` and `/shop/monitor` now both call the
-`status` route-handler. Blueprints can also be given subdomains, which
-also nest.
+`status` route-handler. (Blueprints can also be given subdomains,
+which also nest).
 
 ## 8. Customising JSON serialisation
 
 By default Flask serialises JSON using the standard library `json`
-module. This can be customised, as may be desired to support
-additional features, or to utilise a more performant serialiser.
-
-Customisation is achieved by implementing a JSONProvider, for example
+module. This can be customised, for example to support additional
+features, or to utilise a more performant serialiser. This
+customisation is achieved by implementing a JSONProvider. For example
 using [orjson](https://pypi.org/project/orjson) (a faster serialiser)
 can be achieved via:
 
 ```python
-from flask.json.provider import JSONProvider
 import orjson
+from flask.json.provider import JSONProvider
 
 class OrJSONProvider(JSONProvider):
     def dumps(self, obj, *, option=None, **kwargs):
@@ -265,7 +263,7 @@ app.json = OrJSONProvider(app)
 
 Note many other frameworks change their default JSON serailiser to
 improve the micro-benchmark performance and hence the comparison
-becomes between serialisers rather than the framework - be aware that
+becomes between serialisers rather than the frameworks - be aware that
 micro-benchmarks are highly misleading.
 
 ## 9. Customising url_for, abort, and redirect
@@ -278,17 +276,21 @@ Flask pattern of allowing customisation via app methods, specifically
 ## 10. Using Quart
 
 Quart is a reimplementation of Flask using async/await thereby being
-an ASGI rather than WSGI framework (as Flask is). This allows
-async/await based libraries and extensions to be used throughout -
-whereas async/await is limited to certain functions in Flask.
+an [ASGI](https://asgi.readthedocs.io/en/latest/) rather than
+[WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface)
+framework (as Flask is). This allows async/await based libraries and
+extensions to be used throughout - whereas async/await is
+[limited](https://flask.palletsprojects.com/en/2.1.x/async-await/) to
+certain functions in Flask.
 
 Our aim is to merge Flask and Quart, once we overcome some large
-technical hurdles. For now though we maintain both as part of the
+technical hurdles. For now we maintain both as part of the
 [Pallets](https://palletsprojects.com) group.
 
-This example usage of [Quart](https://quart.palletsprojects.com/) and
-[QuartSchema](https://quart-schema.readthedocs.io/), to utilise
-pydantic based validation and autogeneration of OpenAPI documentation:
+This example usage of [Quart](https://quart.palletsprojects.com/) is
+with [QuartSchema](https://quart-schema.readthedocs.io/). This
+utilises pydantic based validation and autogeneration of OpenAPI
+documentation:
 
 ```python
 from dataclasses import dataclass
