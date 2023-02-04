@@ -13,6 +13,7 @@ async def get_posts() -> ResponseReturnValue:
             "title": blog["title"],
         }
         for blog in current_app.blogs  # type: ignore
+        if not blog.get("preview")
     ]
     return {"posts": summaries}
 

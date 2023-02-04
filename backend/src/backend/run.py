@@ -74,6 +74,8 @@ def _create_feeds(blogs: List[dict]) -> Tuple[bytes, bytes]:
     feed.description("Blog posts from PGJones")
     last_updated = datetime(2019, 1, 1).astimezone(timezone.utc)
     for blog in blogs:
+        if blog.get("preview"):
+            continue
         entry = feed.add_entry()
         entry.id(f"https://pgjones.dev/blog/{blog['id']}/")
         entry.link(href=f"https://pgjones.dev/blog/{blog['id']}/")
