@@ -1,11 +1,10 @@
-date = "2023-01-30"
+date = "2023-02-06"
 id = "modern-flask-2023"
-preview = true
 summary = """
 With Flask approaching 13 years old I thought it would be helpful to
 compile 13 tips and techniques to get the most out of Modern Flask.
 """
-title = "Modern Flask - 13 tips and techniques for 13 years"
+title = "13 tips and techniques for modern Flask apps"
 
 body = """
 
@@ -190,6 +189,9 @@ def index() -> ResponseReturnValue:
 
 As the correct return value should be `return "Hello", status,
 headers` type checkers will error saving an annoying runtime failure.
+
+Please note that `ResponseReturnValue` does not have to be used, a
+specific return value will also be checked.
 
 ## 6. Using async libraries
 
