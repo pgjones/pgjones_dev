@@ -41,7 +41,7 @@ from flask import redirect, render_template, request, url_for
 
 @app.route("/page", methods={"GET", "POST"})
 def page():
-    if request.method:
+    if request.method == "POST":
         ...  # Handle form post
         return redirect(url_form("home"))
     return render_template("form.html")
