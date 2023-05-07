@@ -1,0 +1,140 @@
+date = "2023-05-07"
+id = "trusted-plublishing-2023"
+summary = """
+PyPI have recently introduced a method to publish to PyPI via a github
+action without the need for manual tokens or username and
+passwords. In this post I show how I've set this up for the
+projects I maintain.
+"""
+title = "Trusted Publishing; how to publish to PyPI with Github Actions"
+
+body = """
+
+PyPI recently introduced [Trusted
+Publishing](https://blog.pypi.org/posts/2023-04-20-introducing-trusted-publishers/)
+via a Github action. Allowing for a relatively easy and secure method
+to publish to PyPI. I've used this to publish [Quart-DB
+0.5.0](https://pypi.org/project/quart-db/0.5.0/) via the following
+setup.
+
+## The github action
+
+As per the [PyPI docs](https://docs.pypi.org/trusted-publishers/) we
+need to setup the repository, starting with a github action. The
+action will need to build the distribution and publish it to PyPI and
+should run whenever I push a tag to github. This is done via the
+following, as placed in `.github/workflows/publish.yml`,
+
+```yaml
+name: Publish
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v3
+        with:
+          python-version: 3.11
+
+      - run: |
+          pip install poetry
+          poetry build
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ./dist
+
+  pypi-publish:
+    needs: ['build']
+    environment: 'publish'
+
+    name: upload release to PyPI
+    runs-on: ubuntu-latest
+    permissions:
+      # IMPORTANT: this permission is mandatory for trusted publishing
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v3
+
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages_dir: artifact/
+```
+
+Note that the `build` and `pypi-publish` jobs are split so that the
+additional permissions are only granted to the `pypi-publish` job.
+
+The build job is a standard poetry based build, with the most notable
+line being `poetry build`. This should be changed to whatever method
+your project uses to build a distribution (typically `python -m
+build`).
+
+The `pypi-publish` job is as described in [the
+docs](https://docs.pypi.org/trusted-publishers/using-a-publisher/)
+with the additional `needs` and `download-artifact` step to fetch the
+built distribution and the addition of a `publish` environment
+(explained next).
+
+## Configuring github
+
+As the action will run on any pushed tag I have restricted who can
+push tags. As I manage my repositories with Terraform I've used the
+following,
+
+```
+resource "github_repository_tag_protection" "all" {
+  repository = github_repository.default.name
+  pattern    = "*"
+}
+```
+
+(Alternatively this can be done via the Github UI).
+
+I've then created the `publish` environment that restricts reviewers
+to myself. This is an additional check to prevent others from creating
+PyPI releases,
+
+```
+data "github_user" "pgjones" {
+  username = "pgjones"
+}
+
+resource "github_repository_environment" "publish" {
+  environment = "publish"
+  repository  = github_repository.default.name
+
+  reviewers {
+    users = [data.github_user.pgjones.id]
+  }
+}
+```
+
+I think the environment is optional, but is considered best practice.
+
+## Configuring PyPI
+
+Finally, as outlined in the [PyPI
+docs](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/)
+the Quart-DB project on PyPI needs to have a publisher added to
+it. This is done via the following settings (for Quart-DB),
+
+![](/static/media/trusted-plublishing-2023.png)
+
+## Conclusion
+
+So far it has been quite a simple exercise that has replaced a whole
+lot of manual effort to publish my projects. I'd recommend this, and
+I'll look at moving the Hyper libraries to this system next.
+
+David, a fellow Pallets maintainer, has gone a few steps further for
+[Flask](https://github.com/pallets/flask/blob/main/.github/workflows/publish.yaml)
+by adding provenance steps to help prove the distribution on PyPI
+matches that built on Github.
+
+"""

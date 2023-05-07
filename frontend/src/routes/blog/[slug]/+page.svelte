@@ -20,6 +20,7 @@
   import python from "highlight.js/lib/languages/python";
   import shell from "highlight.js/lib/languages/shell";
   import sql from "highlight.js/lib/languages/sql";
+  import yaml from "highlight.js/lib/languages/yaml";
   import hljs_svelte from "$lib/highlightjs-svelte";
   import { onMount } from "svelte";
   import Icon from "svelte-awesome/components/Icon.svelte";
@@ -28,6 +29,7 @@
   hljs.registerLanguage("python", python);
   hljs.registerLanguage("shell", shell);
   hljs.registerLanguage("sql", sql);
+  hljs.registerLanguage("yaml", yaml);
   hljs.registerLanguage("svelte", hljs_svelte);
 
   Marked.setOptions({
