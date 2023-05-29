@@ -1,0 +1,307 @@
+date = "2023-05-30"
+preview=true
+id = "bcrypt-to-argon2-2023"
+summary = """
+The current OWASP guidance (early 2023) is to use Argon2id for
+password hashing. This has required me to change from bcrypt, which is
+now considered legacy. This is how I upgraded.
+"""
+title = "Migrating from bcrypt to Argon2id for password hashing"
+
+body = """
+
+The current [OWASP
+guidance](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)
+recommends that Argon2id be used for password hashing (storage). I
+however, use bcrypt and have been for a good number of
+years. Therefore I need to switch the hashing algorithm, whilst
+allowing members that have existing bcrypt hashes to continue to
+login.
+
+Note that as bcrypt is considered legacy, rather than insecure, I'm
+going to change the member's password hash on login rather than layer
+the hashes as discussed in this
+[OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html#upgrading-legacy-hashes)
+documentation.
+
+## My bcrypt login setup
+
+To start I've taken a slightly simplified version of the session
+creation code used in [my book](https://pgjones.dev/tozo/). You can
+see the full version (with MFA)
+[here](https://github.com/pgjones/tozo/blob/main/backend/src/backend/blueprints/sessions.py#L20).
+
+```python
+from dataclasses import dataclass
+from datetime import timedelta
+
+import bcrypt
+from pydantic import EmailStr, SecretStr
+from quart import Blueprint, ResponseReturnValue, g
+from quart_auth import AuthUser, login_user
+from quart_rate_limiter import rate_limit
+from quart_schema import validate_request
+
+from backend.lib.api_error import APIError
+from backend.models.member import select_member_by_email
+
+blueprint = Blueprint("sessions", __name__)
+
+REFERENCE_HASH = "$2b$12$A.BRD7hCbGciBiqNRTqxZ.odBxGo.XmRmgN4u9Jq7VUkW9xRmPxK."
+
+@dataclass
+class LoginData:
+    email: EmailStr
+    password: SecretStr
+    remember: bool
+
+@blueprint.post("/sessions/")
+@rate_limit(5, timedelta(minutes=1))
+@validate_request(LoginData)
+async def login(data: LoginData) -> ResponseReturnValue:
+    member = await select_member_by_email(g.connection, data.email)
+    password_hash = REFERENCE_HASH
+    if member is not None:
+        password_hash = member.password_hash
+
+    passwords_match = bcrypt.checkpw(
+        data.password.get_secret_value().encode("utf-8"),
+        password_hash.encode("utf-8"),
+    )
+    if passwords_match:
+        assert member is not None  # nosec
+
+        login_user(AuthUser(str(member.id)), data.remember)
+        return {}, 200
+    else:
+        raise APIError(401, "INVALID_CREDENTIALS")
+```
+
+This code expects a request to `POST /sessions/` to have a JSON-body
+that includes an `email`, `password`, and a `remember` key. The route
+handler (`login` function) then does the following,
+
+1. The member data (including password hash) is fetched from the
+database given the email.
+
+2. If the member is not present in the DB a reference hash is used as
+the `password_hash`. This is to prevent account enumeration via timing
+attacks.
+
+3. Check if the hash of the provided password matches the stored
+`password_hash`.
+
+4. If it matches log the member in.
+
+5. If not return a 401 response.
+
+With the bcrypt standard set, we can consider adding Argon2.
+
+## Adding Argon2 to logins
+
+As there is no Argon2 support in the stdlib I've opted for [Argon2 for
+Python](https://github.com/hynek/argon2-cffi). I've chosen this
+library as it does exactly what I need and is maintained by Hynek.
+
+The API for this library is quite simple, so I'm going to jump ahead
+and show the new `login` function and required imports,
+
+```python
+from argon2 import PasswordHasher
+from argon2.exceptions import VerifyMismatchError
+
+from backend.models.member import update_member_password
+
+REFERENCE_HASH = "$argon2id$v=19$m=65536,t=3,p=4$WEkH2pGsLBEzZZcx4pXEFw$/Lnml02WzWsduASnSQyPv8WdGsRKFyERonphzgoyK8I"
+
+@blueprint.post("/sessions/")
+@rate_limit(5, timedelta(minutes=1))
+@validate_request(LoginData)
+async def login(data: LoginData) -> ResponseReturnValue:
+    member = await select_member_by_email(g.connection, data.email)
+    password_hash = REFERENCE_HASH
+    if member is not None:
+        password_hash = member.password_hash
+
+    ph = PasswordHasher()
+    passwords_match = False
+    needs_rehash = False
+    if password_hash.startswith("$2b"):
+        passwords_match = bcrypt.checkpw(
+            data.password.get_secret_value().encode("utf-8"),
+            password_hash.encode("utf-8"),
+        )
+        needs_rehash = True
+    else:
+        try:
+            ph.verify(password_hash, data.password.get_secret_value())
+        except VerifyMismatchError:
+            passwords_match = False
+        else:
+            passwords_match = True
+            needs_rehash = ph.check_needs_rehash(password_hash)
+
+    if passwords_match and member is not None:
+        login_user(AuthUser(str(member.id)), data.remember)
+
+        if needs_rehash:
+            await update_staff_member_password(
+                g.connection, member.id, ph.hash(data.password.get_secret_value())
+            )
+
+        return {}, 200
+    else:
+        raise APIError(401, "INVALID_CREDENTIALS")
+```
+
+This is now more complex as it upgrades (rehashes) the member's
+existing password hash when required. In the appendix I've shown a
+pure Argon2 version to demonstrate how simple it is.
+
+As prevously this code expects a request to `POST /sessions/` to have
+a JSON-body that includes an `email`, `password`, and a `remember`
+key. The route handler (`login` function) then does the following,
+
+1. The member data (including password hash) is fetched from the
+database given the email.
+
+2. If the member is not present in the DB a reference hash is used as
+the `password_hash`. This is to prevent account enumeration via timing
+attacks.
+
+3. If the hash starts with the bcrypt prefix, the provided password is
+hashed using bcrypt and checked against the stored `password_hash`
+with `needs_rehash` set to true.
+
+4. If the hash does not start with the bcrypt prefix, the provided
+password is hashed using Argon2 and checked against the stored
+`password_hash`. `needs_rehash` is set based on the Argon2 library
+`check_needs_rehash` which returns true if the hash was created with
+outdated parameters.
+
+5. If the password matches the member is logged in. At this stage if
+`needs_rehash` is True then a new hash is created and stored in the
+DB. This allows the bcrypt hash or weaker Argon2 hashes to be
+replaced.
+
+6. If the password does not match return a 401 response.
+
+Now that we've improved the login we can turn to the password change
+functionality.
+
+## Adding Argon2 to password changes
+
+The next code to consider is the route that allows a member to change
+their password. As you'd expect this
+[code](https://github.com/pgjones/tozo/blob/main/backend/src/backend/blueprints/members.py#L125)
+requires the member to provide their existing password as part of the
+request body (keyed `current_password`). The critical lines are,
+
+```python
+async def change_password(data: PasswordData) -> ResponseReturnValue:
+    ...
+    passwords_match = bcrypt.checkpw(
+        data.current_password.get_secret_value().encode("utf-8"),
+        member.password_hash.encode("utf-8"),
+    )
+    if not passwords_match:
+        raise APIError(401, "INVALID_PASSWORD")
+    ...
+```
+
+As with the login code we need this to work for bcrypt and Argon2
+hashes, which is achieved by the following,
+
+```python
+async def change_password(data: PasswordData) -> ResponseReturnValue:
+    ...
+    password_hash = member.password_hash
+    ph = PasswordHasher()
+    passwords_match = False
+    if password_hash.startswith("$2b"):
+        passwords_match = bcrypt.checkpw(
+            data.current_password.get_secret_value().encode("utf-8"),
+            password_hash.encode("utf-8"),
+        )
+    else:
+        try:
+            ph.verify(password_hash, data.current_password.get_secret_value())
+        except VerifyMismatchError:
+            passwords_match = False
+        else:
+            passwords_match = True
+
+    if not passwords_match:
+        raise APIError(401, "INVALID_PASSWORD")
+    ...
+```
+
+The login and change password functionality is the most complex, and
+leaves only basic usage to replace.
+
+## Using Argon2 elsewhere
+
+bcrypt is used in two more places within the Tozo app (and probably
+most codebases), firstly when a member is
+[created](https://github.com/pgjones/tozo/blob/main/backend/src/backend/blueprints/members.py#L48),
+and secondly when a member [resets their
+password](https://github.com/pgjones/tozo/blob/main/backend/src/backend/blueprints/members.py#L195). In
+both cases a hash is created without reference to an existing hash. As
+this case is simpler the existing,
+
+```python
+hashed_password = bcrypt.hashpw(
+    data.password.get_secret_value().encode("utf-8"),
+    bcrypt.gensalt(14),
+)
+```
+
+Can be changed to the Argon2 equivalent,
+
+```python
+ph = PasswordHasher()
+hashed_password = ph.hash(data.password.get_secret_value())
+```
+
+## Conclusion
+
+This was actually very easy and has immediately improved the security
+of the apps I develop and maintain. I'm also very happy that the
+Argon2 for Python library will choose the [best
+parameters](https://argon2-cffi.readthedocs.io/en/stable/parameters.html)
+for me.
+
+## Appendix
+
+The simpler pure Argon2 login function is as follows,
+
+```python
+@blueprint.post("/sessions/")
+@rate_limit(5, timedelta(minutes=1))
+@validate_request(LoginData)
+async def login(data: LoginData) -> ResponseReturnValue:
+    member = await select_member_by_email(g.connection, data.email)
+    password_hash = REFERENCE_HASH
+    if member is not None:
+        password_hash = member.password_hash
+
+    ph = PasswordHasher()
+    try:
+        ph.verify(password_hash, data.password.get_secret_value())
+    except VerifyMismatchError:
+        raise APIError(401, "INVALID_CREDENTIALS")
+
+    if member is None:
+        raise APIError(401, "INVALID_CREDENTIALS")
+
+    login_user(AuthUser(str(member.id)), data.remember)
+
+    if ph.check_needs_rehash(password_hash):
+        await update_staff_member_password(
+            g.connection, member.id, ph.hash(data.password.get_secret_value())
+        )
+
+    return {}, 200
+```
+
+"""
