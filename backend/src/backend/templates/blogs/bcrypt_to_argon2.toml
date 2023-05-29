@@ -12,11 +12,13 @@ body = """
 
 The current [OWASP
 guidance](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html)
-recommends that Argon2id be used for password hashing (storage). I
-however, use bcrypt and have been for a good number of
-years. Therefore I need to switch the hashing algorithm, whilst
-allowing members that have existing bcrypt hashes to continue to
-login.
+recommends that Argon2id be used for password hashing
+(storage). However, I use bcrypt and have been for a good number of
+years, therefore I've decided to switch the hashing algorithm.
+
+Switching the algorithm alone is a fairly easy task, however I want to
+ensure that exiting members with bcrypt hashes can continue to login
+and get upgraded to the more secure Argon2 algorithm.
 
 Note that as bcrypt is considered legacy, rather than insecure, I'm
 going to change the member's password hash on login rather than layer
@@ -95,9 +97,10 @@ attacks.
 
 5. If not return a 401 response.
 
-With the bcrypt standard set, we can consider adding Argon2.
+With my existing bcrypt standard code understood, we can consider
+adding Argon2.
 
-## Adding Argon2 to logins
+## Adding Argon2 to login
 
 As there is no Argon2 support in the stdlib I've opted for [Argon2 for
 Python](https://github.com/hynek/argon2-cffi). I've chosen this
@@ -154,9 +157,9 @@ async def login(data: LoginData) -> ResponseReturnValue:
         raise APIError(401, "INVALID_CREDENTIALS")
 ```
 
-This is now more complex as it upgrades (rehashes) the member's
-existing password hash when required. In the appendix I've shown a
-pure Argon2 version to demonstrate how simple it is.
+This is now more complex as it upgrades (re-hashes) the member's
+existing password as required. In the appendix I've shown a pure
+Argon2 version to demonstrate how simple it is.
 
 As prevously this code expects a request to `POST /sessions/` to have
 a JSON-body that includes an `email`, `password`, and a `remember`
@@ -180,14 +183,13 @@ password is hashed using Argon2 and checked against the stored
 outdated parameters.
 
 5. If the password matches the member is logged in. At this stage if
-`needs_rehash` is True then a new hash is created and stored in the
-DB. This allows the bcrypt hash or weaker Argon2 hashes to be
-replaced.
+`needs_rehash` is true then a new hash is created and stored in the
+DB. This allows the bcrypt or weaker Argon2 hashes to be replaced.
 
 6. If the password does not match return a 401 response.
 
-Now that we've improved the login we can turn to the password change
-functionality.
+Whilst the login functionality is the most complex, the functionality
+to change a member's password is a close second as we'll see next.
 
 ## Adding Argon2 to password changes
 
@@ -236,10 +238,10 @@ async def change_password(data: PasswordData) -> ResponseReturnValue:
     ...
 ```
 
-The login and change password functionality is the most complex, and
-leaves only basic usage to replace.
+Finally we need to change the hash creation in here and elsewhere to
+Argon2, as shown next.
 
-## Using Argon2 elsewhere
+## Using Argon2 for hashing throughout
 
 bcrypt is used in two more places within the Tozo app (and probably
 most codebases), firstly when a member is
