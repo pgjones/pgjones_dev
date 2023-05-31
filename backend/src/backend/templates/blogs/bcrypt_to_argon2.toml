@@ -1,5 +1,4 @@
 date = "2023-05-30"
-preview=true
 id = "bcrypt-to-argon2-2023"
 summary = """
 The current OWASP guidance (early 2023) is to use Argon2id for
