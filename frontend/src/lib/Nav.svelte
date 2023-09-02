@@ -6,6 +6,7 @@
     faChalkboard,
     faPlay,
     faBook,
+    faBookBookmark,
   } from "@fortawesome/free-solid-svg-icons";
   import Icon from "svelte-awesome/components/Icon.svelte";
 
@@ -142,6 +143,12 @@
             <a href="/tozo/" class="nav-link">
               <Icon data={faBook} />
               My Book
+            </a>
+          </li>
+          <li class:active={section === "tozo"} class="nav-item">
+            <a href="/books/" class="nav-link">
+              <Icon data={faBookBookmark} />
+              Books
             </a>
           </li>
         </ul>
