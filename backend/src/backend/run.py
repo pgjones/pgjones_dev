@@ -1,8 +1,8 @@
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+from tomllib import loads
 from typing import List, Tuple
 
-import toml
 from feedgen.feed import FeedGenerator
 from hypercorn.middleware import HTTPToHTTPSRedirectMiddleware
 from quart import Response
@@ -58,7 +58,7 @@ def _extract_blogs(template_root: Path) -> List[dict]:
     blogs: List[dict] = []
     path = template_root / "blogs"
     for blog in path.glob("*.toml"):
-        blogs.append(toml.loads(blog.read_text()))  # type: ignore
+        blogs.append(loads(blog.read_text()))  # type: ignore
     return sorted(blogs, key=lambda blog: blog["date"], reverse=True)
 
 

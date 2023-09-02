@@ -33,7 +33,6 @@ dev = [
     "djhtml>=1.5.2",
     "setuptools>=63.2.0",
     "pip-audit>=2.4.2",
-    "types-toml>=0.10.8",
 ]
 
 [tool.black]

@@ -6,7 +6,7 @@ groups = ["default", "dev"]
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:53cf769e36b094ba46d9690212a2a2f35a55dabfa8f4ab7efe95dcdc06c5fedc"
+content_hash = "sha256:492a26e4d656270c62966a9cde040435008f5d23b4474ef03fe5cf453fadf6c0"
 
 [[package]]
 name = "aiofiles"
@@ -1127,15 +1127,6 @@ dependencies = [
 files = [
     {file = "trio-0.22.2-py3-none-any.whl", hash = "sha256:f43da357620e5872b3d940a2e3589aa251fd3f881b65a608d742e00809b1ec38"},
     {file = "trio-0.22.2.tar.gz", hash = "sha256:3887cf18c8bcc894433420305468388dac76932e9668afa1c49aa3806b6accb3"},
-]
-
-[[package]]
-name = "types-toml"
-version = "0.10.8.7"
-summary = "Typing stubs for toml"
-files = [
-    {file = "types-toml-0.10.8.7.tar.gz", hash = "sha256:58b0781c681e671ff0b5c0319309910689f4ab40e8a2431e205d70c94bb6efb1"},
-    {file = "types_toml-0.10.8.7-py3-none-any.whl", hash = "sha256:61951da6ad410794c97bec035d59376ce1cbf4453dc9b6f90477e81e4442d631"},
 ]
 
 [[package]]
