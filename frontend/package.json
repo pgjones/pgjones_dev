@@ -5,8 +5,8 @@
   "license": "PRIVATE",
   "scripts": {
     "build": "vite build",
-    "format": "prettier --write --plugin-search-dir=. .",
-    "lint": "prettier --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
+    "format": "prettier --write .",
+    "lint": "prettier --check . && eslint --ignore-path .gitignore .",
     "start": "vite dev"
   },
   "devDependencies": {
@@ -27,7 +27,7 @@
   },
   "type": "module",
   "dependencies": {
-    "@fortawesome/free-solid-svg-icons": "<6",
+    "@fortawesome/free-solid-svg-icons": "*",
     "@ts-stack/markdown": "*",
     "highlight.js": "*",
     "svelte-awesome": "*",
