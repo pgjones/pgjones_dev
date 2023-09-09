@@ -145,7 +145,7 @@
               My Book
             </a>
           </li>
-          <li class:active={section === "tozo"} class="nav-item">
+          <li class:active={section === "books"} class="nav-item">
             <a href="/books/" class="nav-link">
               <Icon data={faBookBookmark} />
               Books
