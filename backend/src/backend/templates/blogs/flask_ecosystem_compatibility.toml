@@ -6,7 +6,6 @@ when we make changes to Flask. I argue that users can expect
 stability, but that does not imply no breaking changes.
 """
 title = "Flask, its ecosystem, and backwards compatibility"
-preview = true
 
 body = """
 
@@ -90,8 +89,10 @@ this article is in response to
 [Miguel's](https://blog.miguelgrinberg.com/post/we-have-to-talk-about-flask)
 view.
 
-Finally I'd like to draw attention to the Pallets-Eco organisation,
-which extension maintainers can join should they want assistance, or
-simply to join a group of like minded individuals.
+Finally, I'd like to draw attention to the [Pallets-Eco
+organisation](https://palletsprojects.com/blog/pallets-community-org/). This
+organisation works alongside the Pallets organisation (maintainers of
+Flask) to maintain a select few extensions. This organisation is open
+should you want to join.
 
 """
