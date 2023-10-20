@@ -66,10 +66,10 @@ I'd also like to emphasise that changes made simply to benefit the
 maintainers of Flask are good. We have limited time to cover a large
 codebase and easier maintenance means we can do more.
 
-## Users should expect stability, but cannot expect Flask to be fixed
+## Users should expect stability, but cannot expect Flask to be frozen
 
 Users of Flask should expect to update their code to work with newer
-versions of Flask (or they could pin to a fixed
+versions of Flask (or they could pin to a frozen
 version). Equivalently, I do not believe users can expect to utilise
 newer versions of Flask without any changes.
 
