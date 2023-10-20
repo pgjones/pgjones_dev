@@ -1,0 +1,97 @@
+date = "2023-10-19"
+id = "flask-ecosystem-compatibility-2023"
+summary = """
+Flask has a great ecosystem of extensions. Many of which can be broken
+when we make changes to Flask. I argue that users can expect
+stability, but that does not imply no breaking changes.
+"""
+title = "Flask, its ecosystem, and backwards compatibility"
+preview = true
+
+body = """
+
+Flask is a microframework which means it only includes the bare
+minimum required to be useful. Fortunately it has a great ecosystem of
+extensions to provide extra functionality, such as database
+interactions, and authentication management. This is Flask's great
+strength as it allows the user to choose the extension that is best
+for them rather than force a choice on them. By example, consider
+wanting to use a no SQL database. With Flask you can choose an
+appropriate extension, e.g. Flask-PyMongo, and continue.
+
+This strength unsurprisingly comes with a maintainance cost - every
+breaking change of Flask may require a fix in each and every
+extension. As each extension typically has different maintainers this
+becomes very difficult to coordinate. By contrast a batteries included
+framework could make the fix directly and release it with the breaking
+change.
+
+Inevitably, in my view, breaking changes will not be fixed in all the
+extensions, or at least not in a timely manner. This then typically
+leads to users installing incompatible versions of Flask and an
+extension and hence general frustration.
+
+## Flask can't avoid breaking changes
+
+Flask has been in use for over 13 years, and subsequently every aspect
+of it is depended upon by someone - this is simply Hyrum's law (see
+also [xkcd-1172](https://xkcd.com/1172/)). It is therefore very hard
+to make changes that don't impact someone.
+
+Another consequence of Flask's longevity is that improvements
+elsewhere, particularly in the standard library, eventually impact
+Flask and require changes to code which is now many years
+outdated. With each change potentially breaking someone's code.
+
+## Flask should make changes
+
+Flask is not museum code, it is meant to be used today, and I'd like
+to see it being used in 13 years time. If we are to achieve this we
+need to keep up to date with better practices and better code. Hence
+we need to be changing Flask.
+
+As we've developed Flask we've made mistakes and learnt from
+others. It is therefore important that we change APIs that can be
+improved. Or equivalently we don't constrain Flask's future by the
+mistakes of the past.
+
+## Changes will not benefit everyone
+
+Flask has a variety of uses, and users which means that any change
+made is likely to benefit some uses/users and cause work for
+others. As the maintainers we try to pick the changes that best
+advance Flask without impacting too many uses and users. There is no
+perfect choice however.
+
+I'd also like to emphasise that changes made simply to benefit the
+maintainers of Flask are good. We have limited time to cover a large
+codebase.
+
+## Users should expect stability, but cannot expect Flask to be fixed
+
+Users of Flask should expect to update their code to work with newer
+versions of Flask, or they should pin to a fixed version. I do not
+believe users can expect to utilise newer versions of Flask without
+any changes.
+
+Users of Flask should also expect a level of stability, so that they
+don't have to do a lot of work to update their code on every
+release.
+
+## Our aim is to make stable changes
+
+Clearly then we have to make changes to Flask, but as we do so should
+avoid breaking users code and if we know we have communicate these
+changes well so that users know how to fix their code.
+
+So far, I think we've done a very good job changing Flask whilst
+keeping stability. I understand that not everyone will agree, indeed
+this article is in response to
+[Miguel's](https://blog.miguelgrinberg.com/post/we-have-to-talk-about-flask)
+view.
+
+Finally I'd like to draw attention to the Pallets-Eco organisation,
+which extension maintainers can join should they want assistance, or
+simply to join a group of like minded individuals.
+
+"""
