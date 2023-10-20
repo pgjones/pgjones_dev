@@ -13,9 +13,9 @@ body = """
 Flask is a microframework which means it only includes the bare
 minimum required to be useful. Fortunately it has a great ecosystem of
 extensions to provide extra functionality, such as database
-interactions, and authentication management. This is Flask's great
-strength as it allows the user to choose the extension that is best
-for them rather than force a choice on them. By example, consider
+interactions, or authentication management. This is Flask's great
+strength as it allows users to choose tools (extensions) that are best
+for them rather than having tools forced on them. By example, consider
 wanting to use a no SQL database. With Flask you can choose an
 appropriate extension, e.g. Flask-PyMongo, and continue.
 
@@ -23,13 +23,13 @@ This strength unsurprisingly comes with a maintainance cost - every
 breaking change of Flask may require a fix in each and every
 extension. As each extension typically has different maintainers this
 becomes very difficult to coordinate. By contrast a batteries included
-framework could make the fix directly and release it with the breaking
-change.
+framework can make the change thoughout the single codebase without
+breaking anything externally.
 
 Inevitably, in my view, breaking changes will not be fixed in all the
 extensions, or at least not in a timely manner. This then typically
 leads to users installing incompatible versions of Flask and an
-extension and hence general frustration.
+extension and hence a leverl of user frustration.
 
 ## Flask can't avoid breaking changes
 
@@ -60,19 +60,19 @@ mistakes of the past.
 Flask has a variety of uses, and users which means that any change
 made is likely to benefit some uses/users and cause work for
 others. As the maintainers we try to pick the changes that best
-advance Flask without impacting too many uses and users. There is no
-perfect choice however.
+advance Flask without impacting to many uses and users. There is no
+perfect choice here.
 
 I'd also like to emphasise that changes made simply to benefit the
 maintainers of Flask are good. We have limited time to cover a large
-codebase.
+codebase and easier maintenance means we can do more.
 
 ## Users should expect stability, but cannot expect Flask to be fixed
 
 Users of Flask should expect to update their code to work with newer
-versions of Flask, or they should pin to a fixed version. I do not
-believe users can expect to utilise newer versions of Flask without
-any changes.
+versions of Flask (or they could pin to a fixed
+version). Equivalently, I do not believe users can expect to utilise
+newer versions of Flask without any changes.
 
 Users of Flask should also expect a level of stability, so that they
 don't have to do a lot of work to update their code on every
@@ -81,7 +81,7 @@ release.
 ## Our aim is to make stable changes
 
 Clearly then we have to make changes to Flask, but as we do so should
-avoid breaking users code and if we know we have communicate these
+avoid breaking users code and, if we know we have, communicate these
 changes well so that users know how to fix their code.
 
 So far, I think we've done a very good job changing Flask whilst
