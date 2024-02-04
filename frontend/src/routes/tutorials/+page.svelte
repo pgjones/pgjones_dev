@@ -18,6 +18,10 @@
   <div class="container">
     <div class="row">
       <TutorialCard
+        title="How to run scheduled/cron tasks with Quart"
+        video="https://www.youtube-nocookie.com/embed/_yqSYS6WVoM"
+      />
+      <TutorialCard
         title="How to Authenticate with Quart, and Quart-Auth"
         video="https://www.youtube-nocookie.com/embed/l72qqAgTqyQ"
       />
