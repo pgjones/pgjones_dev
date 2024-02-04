@@ -3,9 +3,8 @@
 
 [metadata]
 groups = ["default", "dev"]
-cross_platform = true
-static_urls = false
-lock_version = "4.3"
+strategy = ["cross_platform"]
+lock_version = "4.4.1"
 content_hash = "sha256:492a26e4d656270c62966a9cde040435008f5d23b4474ef03fe5cf453fadf6c0"
 
 [[package]]
@@ -429,13 +428,12 @@ files = [
 [[package]]
 name = "hypercorn"
 version = "0.14.4"
+extras = ["trio"]
 requires_python = ">=3.7"
 summary = "A ASGI Server based on Hyper libraries and inspired by Gunicorn"
 dependencies = [
-    "h11",
-    "h2>=3.1.0",
-    "priority",
-    "wsproto>=0.14.0",
+    "hypercorn==0.14.4",
+    "trio>=0.22.0",
 ]
 files = [
     {file = "hypercorn-0.14.4-py3-none-any.whl", hash = "sha256:f956200dbf8677684e6e976219ffa6691d6cf795281184b41dbb0b135ab37b8d"},

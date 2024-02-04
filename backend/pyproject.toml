@@ -1,6 +1,6 @@
 [project]
 name = "PGJones.dev Backend"
-version = ""
+version = "0.1.0"
 description = ""
 authors = [
     {name = "Phil Jones", email = "philip.graham.jones@googlemail.com"},
