@@ -8,9 +8,7 @@ from hypercorn.middleware import HTTPToHTTPSRedirectMiddleware
 from quart import Response
 
 from backend.blueprints.blogs import blueprint as blogs_blueprint
-from backend.blueprints.chat import blueprint as chat_blueprint
 from backend.blueprints.serving import blueprint as serving_blueprint
-from backend.lib.chat import Chat
 from backend.lib.json_quart import JSONQuart
 
 
@@ -22,13 +20,10 @@ def create_app() -> JSONQuart:
     @app.before_serving
     async def startup() -> None:
         app.blogs = _extract_blogs(app.root_path / app.template_folder)  # type: ignore
-        app.chat = Chat()
-        app.add_background_task(app.chat.broadcast)
         app.feeds = _create_feeds(app.blogs)
 
     app.after_request(_add_secure_headers)
     app.register_blueprint(blogs_blueprint)
-    app.register_blueprint(chat_blueprint)
     app.register_blueprint(serving_blueprint)
 
     if app.debug:
@@ -39,9 +34,9 @@ def create_app() -> JSONQuart:
 
 
 def _add_secure_headers(response: Response) -> Response:
-    response.headers[
-        "Strict-Transport-Security"
-    ] = "max-age=63072000; includeSubDomains; preload"
+    response.headers["Strict-Transport-Security"] = (
+        "max-age=63072000; includeSubDomains; preload"
+    )
     response.headers["X-Content-Type-Options"] = "nosniff"
     return response
 

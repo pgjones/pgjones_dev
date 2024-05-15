@@ -12,7 +12,7 @@ jobs:
   backend:
     runs-on: ubuntu-latest
 
-    container: python:3.11-slim-bullseye
+    container: python:3.12-slim-bullseye
 
     defaults:
       run:

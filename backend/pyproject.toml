@@ -12,7 +12,7 @@ dependencies = [
     "quart-rate-limiter>=0.7.0",
     "quart-trio>=0.10.0",
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = {text = "Private"}
 [build-system]
 requires = ["pdm-pep517>=1.0.0"]

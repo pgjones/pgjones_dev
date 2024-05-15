@@ -1,10 +1,11 @@
 from pathlib import Path
 from secrets import token_urlsafe
-from typing import Optional
+from typing import Optional, cast
 
 from jinja2.exceptions import TemplateNotFound
 from quart import (
     Blueprint,
+    Response,
     ResponseReturnValue,
     current_app,
     make_response,
@@ -12,7 +13,6 @@ from quart import (
 )
 from quart.helpers import safe_join, send_file
 from werkzeug.http import COOP
-from werkzeug.sansio.response import Response
 
 blueprint = Blueprint("serving", __name__)
 
@@ -56,7 +56,7 @@ async def index(path: Optional[str] = None) -> ResponseReturnValue:
         body = await render_template("svelte/fallback.html", nonce=nonce)
 
     body = body.replace('type="module"', f'type="module" nonce="{nonce}"')
-    response = await make_response(body)
+    response = cast(Response, await make_response(body))
     return _apply_security_headers(response, nonce)
 
 

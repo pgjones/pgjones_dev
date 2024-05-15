@@ -9,7 +9,7 @@ RUN mv /frontend/build/_app /frontend/buildjs
 # hadolint ignore=DL3059
 RUN mv /frontend/build/static /frontend/buildstatic
 
-FROM python:3.11-slim-bullseye
+FROM python:3.12-slim-bullseye
 
 # hadolint ignore=DL3008
 RUN apt-get update && apt-get install -y dumb-init --no-install-recommends \
