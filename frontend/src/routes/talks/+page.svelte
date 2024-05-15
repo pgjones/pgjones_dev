@@ -20,6 +20,24 @@
   <div class="container">
     <div class="row">
       <Talk
+        event="Flaskcon 2024"
+        slidesHref="https://docs.google.com/presentation/d/1w_M8DXquyqgfsu0fQA4d6F6ckH--1q5Zl7ffHwT3SHo/edit?usp=sharing"
+        title="Async Flask"
+      >
+        <p class="card-text">
+          Flask has many options to process requests asynchronously
+          and options to utilise the async await keywords. Yet for
+          modern async ASGI support is required, which is where Quart
+          becomes useful to Flask users.
+        </p>
+        <p class="card-text">
+          This talk will explain why Flask is and has always been an
+          async framework, why ASGI matters and hence why Quart is the
+          solution for async Flask.
+        </p>
+      </Talk>
+
+      <Talk
         event="London Python 2022"
         slidesHref="https://docs.google.com/presentation/d/1BZfku5qdYFcWubckMx72hUMz_gzsNjSzKFvWvsEVCAo/edit?usp=sharing"
         title="Speeding up Flask & Quart’s routing"
