@@ -19,7 +19,9 @@ def create_app() -> JSONQuart:
 
     @app.before_serving
     async def startup() -> None:
-        app.blogs = _extract_blogs(app.root_path / app.template_folder)  # type: ignore
+        app.blogs = _extract_blogs(
+            Path(app.root_path) / app.template_folder  # type: ignore
+        )
         app.feeds = _create_feeds(app.blogs)
 
     app.after_request(_add_secure_headers)
