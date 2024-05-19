@@ -86,7 +86,7 @@
               </a>
             </li>
             <li class="list-inline-item">
-              <a href="https://fosstodon.org/@pgjones">
+              <a rel="me" href="https://fosstodon.org/@pgjones">
                 <Mastodon />
                 <span class="sr-only">Mastodon profile</span>
               </a>
