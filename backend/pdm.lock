@@ -450,7 +450,7 @@ files = [
 
 [[package]]
 name = "hypercorn"
-version = "0.17.0"
+version = "0.17.1"
 requires_python = ">=3.8"
 summary = "A ASGI Server based on Hyper libraries and inspired by Gunicorn"
 groups = ["default"]
@@ -461,40 +461,40 @@ dependencies = [
     "wsproto>=0.14.0",
 ]
 files = [
-    {file = "hypercorn-0.17.0-py3-none-any.whl", hash = "sha256:d44d8f39ac733b2c566481f5be5b00350e202b0f58108a8457ea2f0c66d63fed"},
-    {file = "hypercorn-0.17.0.tar.gz", hash = "sha256:e76685390e730269881e651e8325e0357249f8704dd5a8aede3531cb679fca79"},
+    {file = "hypercorn-0.17.1-py3-none-any.whl", hash = "sha256:51512bb5a52b73bb170e3632ca8daab99d226f1ab1d5b1dabfb20cd2594400e2"},
+    {file = "hypercorn-0.17.1.tar.gz", hash = "sha256:109675bc48cfefaf798bed440afadb2e8f9f982fb4175b3b26faf802b4d2883c"},
 ]
 
 [[package]]
 name = "hypercorn"
-version = "0.17.0"
+version = "0.17.1"
 extras = ["h3"]
 requires_python = ">=3.8"
 summary = "A ASGI Server based on Hyper libraries and inspired by Gunicorn"
 groups = ["default"]
 dependencies = [
     "aioquic<1.0,>=0.9.0",
-    "hypercorn==0.17.0",
+    "hypercorn==0.17.1",
 ]
 files = [
-    {file = "hypercorn-0.17.0-py3-none-any.whl", hash = "sha256:d44d8f39ac733b2c566481f5be5b00350e202b0f58108a8457ea2f0c66d63fed"},
-    {file = "hypercorn-0.17.0.tar.gz", hash = "sha256:e76685390e730269881e651e8325e0357249f8704dd5a8aede3531cb679fca79"},
+    {file = "hypercorn-0.17.1-py3-none-any.whl", hash = "sha256:51512bb5a52b73bb170e3632ca8daab99d226f1ab1d5b1dabfb20cd2594400e2"},
+    {file = "hypercorn-0.17.1.tar.gz", hash = "sha256:109675bc48cfefaf798bed440afadb2e8f9f982fb4175b3b26faf802b4d2883c"},
 ]
 
 [[package]]
 name = "hypercorn"
-version = "0.17.0"
+version = "0.17.1"
 extras = ["trio"]
 requires_python = ">=3.8"
 summary = "A ASGI Server based on Hyper libraries and inspired by Gunicorn"
 groups = ["default"]
 dependencies = [
-    "hypercorn==0.17.0",
+    "hypercorn==0.17.1",
     "trio>=0.22.0",
 ]
 files = [
-    {file = "hypercorn-0.17.0-py3-none-any.whl", hash = "sha256:d44d8f39ac733b2c566481f5be5b00350e202b0f58108a8457ea2f0c66d63fed"},
-    {file = "hypercorn-0.17.0.tar.gz", hash = "sha256:e76685390e730269881e651e8325e0357249f8704dd5a8aede3531cb679fca79"},
+    {file = "hypercorn-0.17.1-py3-none-any.whl", hash = "sha256:51512bb5a52b73bb170e3632ca8daab99d226f1ab1d5b1dabfb20cd2594400e2"},
+    {file = "hypercorn-0.17.1.tar.gz", hash = "sha256:109675bc48cfefaf798bed440afadb2e8f9f982fb4175b3b26faf802b4d2883c"},
 ]
 
 [[package]]
