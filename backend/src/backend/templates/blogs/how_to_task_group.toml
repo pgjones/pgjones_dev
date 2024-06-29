@@ -1,0 +1,151 @@
+date = "2024-06-29"
+id = "how-to-task-group-2024"
+summary = """
+Asyncio's TaskGroup makes it much easier to write concurrent code and
+hence have faster routes. This article will show how using Quart and
+Quart-DB examples.
+"""
+title = "How to use asyncio's TaskGroup for Faster routes"
+
+body = """
+
+Often web apps have routes that fetch and aggregate data from multiple
+sources for example, multiple DB queries or HTTP requests to other
+microservices. As these fetches use IO they can run concurrently,
+however they are often implemented as a sequence of fetches as
+concurrent code has historically been hard to write. This changed with
+the introduction of
+[TaskGroups](https://docs.python.org/3/library/asyncio-task.html#task-groups)
+in Python 3.11 as I'll show in this article.
+
+Concurrent code is preferable as it should lead to faster response
+times for the client. This is because with sequential code each fetch
+must complete before the next can start, resulting in the total time
+taken being equal to the sum of the time taken by the
+fetches. However, if the fetches run concurrently then they run at the
+same time meaning the total time taken is equal to the time taken by
+the slowest of the fetches[1].
+
+## An abstract example
+
+To begin consider this sequential setup whereby a
+[Quart](https://quart.palletsprojects.com/en/latest/) route fetches
+information from 3 sources I've called `fetch_1`, `fetch_2`, and
+`fetch_3`,
+
+```python
+from quart import Quart
+
+app = Quart(__name__)
+
+async def fetch_1(): ...
+
+async def fetch_2(): ...
+
+async def fetch_3(): ...
+
+
+@app.get("/")
+async def fetch_all():
+    data = {
+        "result_1": await fetch_1(),
+        "result_2": await fetch_2(),
+        "result_3": await fetch_3(),
+    }
+    return data
+```
+
+When a client requests `GET /` `fetch_1` will be awaited, then
+`fetch_2`, and finally `fetch_3` before the data is returned (as
+JSON). Therefore the total time to respond is the time taken by
+`fetch_1` plus `fetch_2` plus `fetch_3` plus some small overhead taken
+by Quart.
+
+Clearly this code is easy to write, however with TaskGroups it is just
+as easy to write a concurrent version, by changing the `fetch_all`
+route handler to,
+
+```python
+from asyncio import TaskGroup
+
+@app.get("/")
+async def fetch_all():
+    async with TaskGroup as tg:
+        task_1 = tg.create_task(fetch_1())
+        task_2 = tg.create_task(fetch_2())
+        task_3 = tg.create_task(fetch_3())
+    data = {
+        "result_1": task_1.result(),
+        "result_2": task_2.result(),
+        "result_3": task_3.result(),
+    }
+    return data
+```
+
+Now when a client requests `GET /` `fetch_1`, `fetch_2`, and `fetch_3`
+will be awaited concurrently before the data is returned. This means
+the total time taken to responde is the time taken by the longest of
+`fetch_1`, `fetch_2`, and `fetch_3` plus some small overhead taken by
+Quart. This is therefore potentially as much as 3 times quicker than
+before[2].
+
+## Concurrent DB queries
+
+To put this into practice lets create a route that fetches data via
+multiple DB queries using
+[Quart-DB](https://quart-db.readthedocs.io/en/latest/index.html),
+
+
+```python
+from asyncio import TaskGroup
+
+from quart import Quart
+from quart_db import QuartDB
+
+app = Quart(__name__)
+db = QuartDB(app, url="sqlite:memory:")
+
+async def fetch_db_1():
+    async with db.connection() as connection:
+        return await connection.fetch_val(...)
+
+async def fetch_db_2():
+    async with db.connection() as connection:
+        return await connection.fetch_val(...)
+
+async def fetch_db_3():
+    async with db.connection() as connection:
+        return await connection.fetch_val(...)
+
+
+@app.get("/")
+async def fetch_db_all():
+    async with TaskGroup as tg:
+        task_1 = tg.create_task(fetch_db_1())
+        task_2 = tg.create_task(fetch_db_2())
+        task_3 = tg.create_task(fetch_db_3())
+    data = {
+        "result_1": task_1.result(),
+        "result_2": task_2.result(),
+        "result_3": task_3.result(),
+    }
+```
+
+I've chosen this example as it is important to know what the fetches
+do, as in this case to see a speedup each individual fetch must use
+it's own connection. If a single connection e.g. using `g.connection`
+provided by Quart-DB, is used it will execute each query sequentially
+thereby negating the TaskGroup usage.
+
+I hope you've found this useful and you now have some faster routes.
+
+### Footnotes
+
+[1]: This explanation negates additional overhead taken by the event
+loop running the code concurrently as this is typically much smaller
+than the fetch time for web servers and is hence negligible.
+
+[2]: This assumes each fetch takes the same time to execute and the
+overhead is much smaller. This is often true for web servers.
+
+"""
