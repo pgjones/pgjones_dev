@@ -1,0 +1,175 @@
+date = "2025-03-02"
+id = "how-to-type-zod-form-schemas-2025"
+summary = """
+I like to use zod and react-hook-form to validate and manage my
+frontend forms. These require careful typing to work correctly, as
+this article explains.
+"""
+title = "How to type zod schemas for forms"
+
+body = """
+
+I like to use [zod](https://github.com/colinhacks/zod) to validate the
+data entered into forms as doing so on the frontend gives instant
+feedback to the user if there are any errors. For example the
+following schema will ensure that the value for the key `age` is a
+number and return the parsed value,
+
+```typescript
+const schema = z.object({
+  age: z.number(),
+});
+
+schema.parse({ age: 2 }); // => { age: 2 }
+schema.parse({ age: "a" }); // => ZodError: Expected number, received string
+```
+
+Whilst this is great, a problem imediately arises for form inputs as
+even though an input can have a type equal to number its value is a
+string. To solve this the string must be coerced into a number by zod
+as it parses,
+
+```typescript
+const schema = z.object({
+  age: z.coerce.number(),
+});
+
+schema.parse({ age: 2 }); // => { age: 2 }
+schema.parse({ age: "2" }); // => { age: 2 }
+schema.parse({ age: "a" }); // => ZodError: Expected number, received string
+```
+
+We can now extract the types of the schema via the zod `input` and
+`output` helper functions. These represent the type expected as an
+argument to `parse` and the type returned by it if successful,
+
+```typescript
+type formType = z.input<typeof schema>;
+type validatedType = z.output<typeof schema>;
+```
+
+Frustratingly these are both the same and give the type as,
+
+```typescript
+type formType = validatedType = {
+  age: number;
+}
+```
+
+whereas the formType should be (based on the schema),
+
+```typescript
+type formType = {
+  age: number | string;
+}
+```
+
+i.e. anything that can be coerced into a number.
+
+Yet if the formType was `number | string` it would be incorrect for my
+usage as I know the input value is a `string` and never a `number`.
+
+This becomes a problem for me as I use
+[react-hook-form](https://react-hook-form.com/) which ideally requires
+the `formType`, context type (which I will put as `any`), and
+`validatedType` to be specified,
+
+```typescript
+const schema = z.object({
+  age: z.coerce.number(),
+});
+type formType = z.input<typeof schema>;
+type validatedType = z.output<typeof schema>;
+
+const methods = useForm<formType, any, validatedType>({
+  defaultValues: { age: "2" },
+  resolver: zodResolver(FormSchema),
+);
+```
+
+with the `defaultValues` required to have the same type as `formType`
+which in the above example fails as `"2"` is not a `number`.
+
+My solution is to define the following helper function and use it in
+the schema definition,
+
+```typescript
+const field = <TOutput, TInput>(schema: z.ZodSchema<TOutput, any, TInput>) =>
+    z
+      .string()
+      .pipe(schema);
+
+const schema = z.object({
+  age: z.field(z.coerce.number()),
+});
+```
+
+Now the `validatedType` is unchanged, however the `formType` becomes,
+
+```typescript
+type formType = {
+  age: string;
+}
+```
+
+as desired.
+
+This then allows the `defaultValues` to have a string value for `age`
+including an empty string `""` which is the likely default value for
+all inputs.
+
+As an aside here if `null` or `undefined` were used as the default
+value the input would start uncontrolled and hence raise a warning if
+the intended use is a controlled input. With react-hook-form all
+inputs are typically controlled.
+
+# Extras
+
+## Optional fields
+
+Not every input in a form is required and therefore it is useful to be
+able to add `.optional()` to the schema to allow for optional
+values. This presents another problem as optional refers to
+`undefined` in zod yet an optional input value is an empty string. To
+support this I've adjusted my field function to,
+
+```typescript
+const field = <TOutput, TInput>(schema: z.ZodSchema<TOutput, any, TInput>) =>
+    z
+      .string()
+      .transform((value) => (value.trim() === "" ? undefined : value))
+      .pipe(schema);
+
+const schema = z.object({
+  age: z.field(z.coerce.number().optiona()),
+});
+```
+
+which changes empty strings to `undefined` and allows `undefined` as a
+value for `age` via the `.optional()` addition.
+
+## Field arrays
+
+The field helper function is meant for a value, rather than an array
+of values. Hence I also use this helper function,
+
+```typescript
+const fieldArray: <TOutput, TInput>(schema: z.ZodSchema<TOutput, any, TInput>) =>
+    z
+      .array(z.string())
+      .transform((values) => values.filter((value) => value.trim() !== ""))
+      .pipe(schema);
+
+const schema = z.object({
+  ages: fieldArray(z.array(z.coerce.number())),
+});
+```
+
+## Hookform resolvers bug in 4.1.X
+
+Please note there is a
+[bug](https://github.com/react-hook-form/resolvers/issues/743) in the
+zodResolver from versions 4.1.X of @hookform/resolvers so to follow
+along with this blog please either use <4.1 or a fix (when available).
+
+"""
