@@ -20,6 +20,7 @@
   import python from "highlight.js/lib/languages/python";
   import shell from "highlight.js/lib/languages/shell";
   import sql from "highlight.js/lib/languages/sql";
+  import typescript from "highlight.js/lib/languages/typescript";
   import yaml from "highlight.js/lib/languages/yaml";
   import hljs_svelte from "$lib/highlightjs-svelte";
   import { onMount } from "svelte";
@@ -29,6 +30,7 @@
   hljs.registerLanguage("python", python);
   hljs.registerLanguage("shell", shell);
   hljs.registerLanguage("sql", sql);
+  hljs.registerLanguage("typescript", typescript);
   hljs.registerLanguage("yaml", yaml);
   hljs.registerLanguage("svelte", hljs_svelte);
 
