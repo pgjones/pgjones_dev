@@ -1,0 +1,258 @@
+preview = true
+date = "2025-03-02"
+id = "amundsens-maxim-in-practice-2025"
+summary = """
+
+"""
+title = "Amundsen's Maxim in practice"
+
+body = """
+
+I was recently introduced to [Amundsen's
+Maxim](https://www.amundsens-maxim.com/) as a follow on to Hynek's
+excellent [Design Pressure
+talk](https://hynek.me/talks/design-pressure/) and I think these
+describe how I like to build APIs. Specifically I find it helpful if
+the resource the APIs shares externally does not have to match the
+model it uses internally. Amundsen's maxim describes this in a clearer
+manner,
+
+    Remember, when designing your Web API, your data model is not your
+    object model is not your resource model is not your message model.
+
+To show how I do this in practice I'm going to use
+[Quart](https://github.com/pallets/quart),
+[Quart-DB](https://github.com/pgjones/quart-db),
+[SQL-tString](https://github.com/pgjones/sql-tstring), and
+[Quart-Schema](https://github.com/pgjones/quart-schema) which are all
+libraries I've authored and
+[Pydantic](https://github.com/pydantic/pydantic).
+
+## API Requirements
+
+The API will be used to store records of orders for products either
+sold by the gram or milliliters. It will therefore need an interface
+to create an order and another to return orders that have happened. To
+keep it as simple as possible it will have a concept of products
+(name, size) and orders (product, ordered_at).
+
+To begin I can create the Quart app using Quart-DB and Quart-Schema,
+
+```python
+from quart import Quart
+from quart_db import QuartDB
+from quart_schema import QuartSchema
+
+app = Quart(__name__)
+db = QuartDB(app)
+schema = QuartSchema(app)
+```
+
+For brevity I'll skip over the configuration of the app.
+
+## Data model
+
+The data model represents how the information is stored in the
+database.
+
+In this example two models are required, a products table and an order
+table. Using a [Quart-DB
+migration](https://quart-db.readthedocs.io/en/latest/how_to_guides/migrations.html)
+I can define these via the following code,
+
+```python
+from quart_db import Connection
+
+
+async def migrate(connection: Connection) -> None:
+    await connection.execute(
+        \"CREATE TYPE UNIT_T AS ENUM ('g', 'ml')\"
+    )
+
+    await connection.execute(
+        \"\"\"CREATE TABLE products(
+            id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+            name TEXT NOT NULL,
+            quantity NUMERIC NOT NULL,
+            unit UNIT_T NOT NULL
+        )\"\"\",
+    )
+
+    await connection.execute(
+        \"\"\"CREATE TABLE orders (
+            id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+            created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+            ordered_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+            product_id INT NOT NULL REFERENCES products (id)
+        )\"\"\",
+   )
+```
+
+Note that I've defined the data models in SQL which allows
+
+## Object model
+
+The object model defines how the information is structured in
+application code.
+
+In this simple example we need an object models to store information
+in the database, which I can implement as follows,
+
+```python
+from datetime import datetime
+from enum import StrEnum, unique
+
+from pydantic import BaseModel
+from sql_tstring import sql
+
+
+@unique
+class Unit(StrEnum):
+    g = "g"
+    ml = "ml"
+
+
+class ProductModel(BaseModel):
+    id: int
+    name: str
+    quantity: Decimal
+    unit: Unit
+
+
+class OrderModel(BaseModel):
+    id: int
+    ordered_at: datetime
+    product_id: int
+
+
+async def insert_product(
+    connection: Connection, name: str, quantity: Decimal, unit: Unit
+) -> ProductModel:
+    query, values = sql(
+        t"""INSERT INTO products (name, quantity, unit)
+                 VALUES ({name}, {quantity}, {unit})
+              RETURNING id, name, quantity, unit""",
+    )
+    result = await connection.fetch_one(query, values)
+    return ProductModel(**result)
+
+
+async def insert_order(
+    connection: Connection, product_id: int
+) -> OrderModel:
+    query, values = sql(
+        t"""INSERT INTO orders (product_id)
+                 VALUES ({product_id})
+              RETURNING id, ordered_at, product_it""",
+    )
+    result = await connection.fetch_one(query, values)
+    return OrderModel(**result)
+```
+
+### Relationship between data and object models
+
+In practice I find the object model closely follows the data model
+they do not have to match exactly. I've demonstrated this in this
+example via the created_at field which is only present in the data
+model. This can often be the case for fields that are used in offline
+analysis but not in the application code.
+
+Note to conver the data UNIT_T enum and the Python Enum I can add a
+converter to QuartDB as follows,
+
+```python
+db.set_converter("unit_t", lambda type_: type_.value, Unit, pytype=Unit)
+```
+
+## Resource model
+
+The resource model determines how clients interact with the API.
+
+In this example we need a resource returning order information,
+another to create an order, and a final one to create products. I
+implement these as follows,
+
+```python
+from quart import g
+from quart_schema import validate_request, validate_response
+
+
+class OrderResource(BaseModel):
+    id: int
+    ordered_at: datetime
+    product_id: int
+    product_name: str
+    product_quantity: Decimal
+    product_unit: Unit
+
+
+class OrdersResource(BaseModel):
+    orders: list[OrderResource]
+
+
+
+@app.get("/orders/")
+@validate_response(OrdersResource)
+async def get_orders() -> OrdersResource:
+    query, values = sql(
+        t"""SELECT o.id,
+                   o.ordered_at,
+                   p.id AS product_id,
+                   p.name AS product_name,
+                   p.quantity AS product_quantity,
+                   p.unit AS product_unit
+              FROM orders o
+              JOIN products p ON p.id = o.product_id""",
+    )
+    orders = [
+        OrderResource(**row)
+        async for order in connection.iterate(query, values)
+    ]
+    return OrdersResource(orders=orders)
+
+
+class OrderDataResource(BaseModel):
+    product_id: int
+
+
+@app.post("/orders/")
+@validate_request(OrderDataResource)
+async def create_order(data: OrderDataResource) -> OrderModel:
+    order = await insert_order(g.connection, data.product_id)
+    return order
+
+
+class ProductDataResource(BaseModel):
+    name: str
+    quantity: Decimal
+    unit: Unit
+
+
+@app.post("/products/")
+@validate_request(ProductDataResource)
+async def create_order(data: ProductDataResource) -> ProductrModel:
+    product = await insert_product(g.connection, data.name, data.quantity, data.unit)
+    return product
+```
+
+### Relationship between object and resource models
+
+The resource models allow the client to receive a much richer
+description of the order than the object model alone
+gives. Specifically I've included the product details as the client
+will find these useful.
+
+## Message model
+
+Finally the message model dictates how data is exchanged over the network.
+
+As I'm using Quart-Schema this will be JSON. Note though that the
+`Decimal` and `datetime` types present in the resource models have no
+native JSON equivalents Quart-Schema defines how they are serialised
+and parsed using standard Pydantic methods.
+
+# Conclusion
+
+
+
+"""
