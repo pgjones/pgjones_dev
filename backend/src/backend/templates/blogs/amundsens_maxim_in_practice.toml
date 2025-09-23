@@ -30,11 +30,13 @@ libraries I've authored and
 
 ## API Requirements
 
-The API will be used to store records of orders for products either
-sold by the gram or milliliters. It will therefore need an interface
-to create an order and another to return orders that have happened. To
-keep it as simple as possible it will have a concept of products
-(name, size) and orders (product, ordered_at).
+The API will be used to store records of orders for products. The
+products will either be flower or oil, with flowers having a grower
+email and requiring that email be notified on every order. The API
+will need an interface to create an order and another to return orders
+that have happened. To keep it as simple as possible it will have a
+concept of products (name, size, grower) and orders (product,
+paid_at).
 
 To begin I can create the Quart app using Quart-DB and Quart-Schema,
 
@@ -66,29 +68,27 @@ from quart_db import Connection
 
 async def migrate(connection: Connection) -> None:
     await connection.execute(
-        \"CREATE TYPE UNIT_T AS ENUM ('g', 'ml')\"
-    )
-
-    await connection.execute(
-        \"\"\"CREATE TABLE products(
+        """CREATE TABLE products(
             id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+            grower TEXT,
             name TEXT NOT NULL,
-            quantity NUMERIC NOT NULL,
-            unit UNIT_T NOT NULL
-        )\"\"\",
+            quantity NUMERIC NOT NULL
+        )""",
     )
 
     await connection.execute(
-        \"\"\"CREATE TABLE orders (
+        """CREATE TABLE orders (
             id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
             created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-            ordered_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+            paid_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
             product_id INT NOT NULL REFERENCES products (id)
-        )\"\"\",
+        )""",
    )
 ```
 
-Note that I've defined the data models in SQL which allows
+Note that I've defined the data models in SQL rather than via Python
+classes e.g. as an ORM. This means that the data model is not the
+object model.
 
 ## Object model
 
@@ -99,42 +99,50 @@ In this simple example we need an object models to store information
 in the database, which I can implement as follows,
 
 ```python
+from dataclasses import dataclass
 from datetime import datetime
-from enum import StrEnum, unique
 
 from pydantic import BaseModel
 from sql_tstring import sql
 
 
-@unique
-class Unit(StrEnum):
-    g = "g"
-    ml = "ml"
+@dataclass
+class FlowerModel:
+    id: int
+    grower: str
+    name: str
+    quantity: Decimal
 
 
-class ProductModel(BaseModel):
+@dataclass
+class OilModel:
     id: int
     name: str
     quantity: Decimal
-    unit: Unit
 
 
-class OrderModel(BaseModel):
-    id: int
-    ordered_at: datetime
-    product_id: int
-
-
-async def insert_product(
-    connection: Connection, name: str, quantity: Decimal, unit: Unit
-) -> ProductModel:
+async def select_product(
+    connection: Connection, product_id: int
+) -> FlowerModel | OilModel:
     query, values = sql(
-        t"""INSERT INTO products (name, quantity, unit)
-                 VALUES ({name}, {quantity}, {unit})
-              RETURNING id, name, quantity, unit""",
+        t"""SELECT id, grower, name, quantity
+              FROM products
+             WHERE id = {product_id}""",
     )
     result = await connection.fetch_one(query, values)
-    return ProductModel(**result)
+    if result["grower"] is not None:
+        return FlowerModel(**result)
+    else:
+        return OilModel(
+            id=result["id"], name=result["name"], quantity=result["quantity"]
+        )
+
+
+@dataclass
+class OrderModel:
+    id: int
+    paid_at: datetime
+    product_id: int
 
 
 async def insert_order(
@@ -143,7 +151,7 @@ async def insert_order(
     query, values = sql(
         t"""INSERT INTO orders (product_id)
                  VALUES ({product_id})
-              RETURNING id, ordered_at, product_it""",
+              RETURNING id, paid_at, product_it""",
     )
     result = await connection.fetch_one(query, values)
     return OrderModel(**result)
@@ -157,20 +165,14 @@ example via the created_at field which is only present in the data
 model. This can often be the case for fields that are used in offline
 analysis but not in the application code.
 
-Note to conver the data UNIT_T enum and the Python Enum I can add a
-converter to QuartDB as follows,
-
-```python
-db.set_converter("unit_t", lambda type_: type_.value, Unit, pytype=Unit)
-```
-
 ## Resource model
 
 The resource model determines how clients interact with the API.
 
 In this example we need a resource returning order information,
-another to create an order, and a final one to create products. I
-implement these as follows,
+another to create an order, and a final one to create products. When
+creating oils additional business logic is required. I implement these
+as follows,
 
 ```python
 from quart import g
@@ -179,7 +181,7 @@ from quart_schema import validate_request, validate_response
 
 class OrderResource(BaseModel):
     id: int
-    ordered_at: datetime
+    paid_at: datetime
     product_id: int
     product_name: str
     product_quantity: Decimal
@@ -196,11 +198,10 @@ class OrdersResource(BaseModel):
 async def get_orders() -> OrdersResource:
     query, values = sql(
         t"""SELECT o.id,
-                   o.ordered_at,
+                   o.paid_at,
                    p.id AS product_id,
                    p.name AS product_name,
-                   p.quantity AS product_quantity,
-                   p.unit AS product_unit
+                   p.quantity AS product_quantity
               FROM orders o
               JOIN products p ON p.id = o.product_id""",
     )
@@ -219,28 +220,27 @@ class OrderDataResource(BaseModel):
 @validate_request(OrderDataResource)
 async def create_order(data: OrderDataResource) -> OrderModel:
     order = await insert_order(g.connection, data.product_id)
+    product = await select_product(g.connection, data.product_id)
+    if isinstance(product, FlowerModel):
+        await _email_grower(product)
     return order
 
 
-class ProductDataResource(BaseModel):
-    name: str
-    quantity: Decimal
-    unit: Unit
-
-
-@app.post("/products/")
-@validate_request(ProductDataResource)
-async def create_order(data: ProductDataResource) -> ProductrModel:
-    product = await insert_product(g.connection, data.name, data.quantity, data.unit)
-    return product
+async def _email_grower(product: FlowerModel) -> None:
+    body = f"{product.name} purchased"
+    await send(product.grower, body)
 ```
 
 ### Relationship between object and resource models
 
 The resource models allow the client to receive a much richer
 description of the order than the object model alone
-gives. Specifically I've included the product details as the client
-will find these useful.
+gives. Specifically I've included the product name and quantity whilst
+excluding the grower email as that is for internal use only.
+
+The object model, specifically the `FlowerModel` does provide the
+grower email for the `_email_grower` usage and does so in a type safe
+manner (no checks for `product.grower is not None` are required).
 
 ## Message model
 
@@ -253,6 +253,8 @@ and parsed using standard Pydantic methods.
 
 # Conclusion
 
-
-
+This article is in contrast to those that claim that using the same
+class is an advantage. In my experience it constrains the API with the
+resulting design pressure forcing awkward workarounds such as giant
+models full of optional attributes.
 """
