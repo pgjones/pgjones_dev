@@ -1,13 +1,12 @@
-preview = true
-date = "2025-03-02"
+date = "2025-10-03"
 id = "amundsens-maxim-in-practice-2025"
 summary = """
-
+Amunden's Maxim, is a great guide to building applications. In this
+article I'll show how it can be applied in practice.
 """
 title = "Amundsen's Maxim in practice"
 
 body = """
-
 I was recently introduced to [Amundsen's
 Maxim](https://www.amundsens-maxim.com/) as a follow on to Hynek's
 excellent [Design Pressure
@@ -25,18 +24,21 @@ To show how I do this in practice I'm going to use
 [Quart-DB](https://github.com/pgjones/quart-db),
 [SQL-tString](https://github.com/pgjones/sql-tstring), and
 [Quart-Schema](https://github.com/pgjones/quart-schema) which are all
-libraries I've authored and
+libraries I've authored with
 [Pydantic](https://github.com/pydantic/pydantic).
 
 ## API Requirements
 
-The API will be used to store records of orders for products. The
-products will either be flower or oil, with flowers having a grower
-email and requiring that email be notified on every order. The API
-will need an interface to create an order and another to return orders
-that have happened. To keep it as simple as possible it will have a
-concept of products (name, size, grower) and orders (product,
-paid_at).
+To demonstrate the maxim I'll build an API to store order
+records. Each order will consist of a product that is either flower or
+oil. Additionally, to demonstrate typical business logic, flowers will
+have a grower email and each order of a flower recorded should be
+accompanied with an email sent to the grower.
+
+To do the above the API will need an interface to create an order and
+another to return orders that have happened. To keep it as simple as
+possible it will have a concept of products (name, size, grower) and
+orders (product, paid_at).
 
 To begin I can create the Quart app using Quart-DB and Quart-Schema,
 
@@ -68,21 +70,21 @@ from quart_db import Connection
 
 async def migrate(connection: Connection) -> None:
     await connection.execute(
-        """CREATE TABLE products(
+        \"\"\"CREATE TABLE products(
             id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
             grower TEXT,
             name TEXT NOT NULL,
             quantity NUMERIC NOT NULL
-        )""",
+        )\"\"\",
     )
 
     await connection.execute(
-        """CREATE TABLE orders (
+        \"\"\"CREATE TABLE orders (
             id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
             created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
             paid_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
             product_id INT NOT NULL REFERENCES products (id)
-        )""",
+        )\"\"\",
    )
 ```
 
@@ -95,8 +97,8 @@ object model.
 The object model defines how the information is structured in
 application code.
 
-In this simple example we need an object models to store information
-in the database, which I can implement as follows,
+In this simple example we need an object models to contain information
+from the database, which I can implement as follows,
 
 ```python
 from dataclasses import dataclass
@@ -125,9 +127,9 @@ async def select_product(
     connection: Connection, product_id: int
 ) -> FlowerModel | OilModel:
     query, values = sql(
-        t"""SELECT id, grower, name, quantity
+        t\"\"\"SELECT id, grower, name, quantity
               FROM products
-             WHERE id = {product_id}""",
+             WHERE id = {product_id}\"\"\",
     )
     result = await connection.fetch_one(query, values)
     if result["grower"] is not None:
@@ -149,9 +151,9 @@ async def insert_order(
     connection: Connection, product_id: int
 ) -> OrderModel:
     query, values = sql(
-        t"""INSERT INTO orders (product_id)
+        t\"\"\"INSERT INTO orders (product_id)
                  VALUES ({product_id})
-              RETURNING id, paid_at, product_it""",
+              RETURNING id, paid_at, product_it\"\"\",
     )
     result = await connection.fetch_one(query, values)
     return OrderModel(**result)
@@ -159,8 +161,8 @@ async def insert_order(
 
 ### Relationship between data and object models
 
-In practice I find the object model closely follows the data model
-they do not have to match exactly. I've demonstrated this in this
+In practice I find the object model closely follows the data model,
+yet they do not have to match exactly. I've demonstrated this in this
 example via the created_at field which is only present in the data
 model. This can often be the case for fields that are used in offline
 analysis but not in the application code.
@@ -169,10 +171,9 @@ analysis but not in the application code.
 
 The resource model determines how clients interact with the API.
 
-In this example we need a resource returning order information,
-another to create an order, and a final one to create products. When
-creating oils additional business logic is required. I implement these
-as follows,
+In this example we need a route to return order information, and
+another to create an order. Both require resource definitions. I'll
+implement these as follows,
 
 ```python
 from quart import g
@@ -192,18 +193,17 @@ class OrdersResource(BaseModel):
     orders: list[OrderResource]
 
 
-
 @app.get("/orders/")
 @validate_response(OrdersResource)
 async def get_orders() -> OrdersResource:
     query, values = sql(
-        t"""SELECT o.id,
+        t\"\"\"SELECT o.id,
                    o.paid_at,
                    p.id AS product_id,
                    p.name AS product_name,
                    p.quantity AS product_quantity
               FROM orders o
-              JOIN products p ON p.id = o.product_id""",
+              JOIN products p ON p.id = o.product_id\"\"\",
     )
     orders = [
         OrderResource(**row)
@@ -254,7 +254,9 @@ and parsed using standard Pydantic methods.
 # Conclusion
 
 This article is in contrast to those that claim that using the same
-class is an advantage. In my experience it constrains the API with the
-resulting design pressure forcing awkward workarounds such as giant
-models full of optional attributes.
+model/class is an advantage. In my experience using the same
+model/class constrains the API with the resulting design pressure
+forcing awkward workarounds such as giant models full of optional
+attributes.
+
 """
