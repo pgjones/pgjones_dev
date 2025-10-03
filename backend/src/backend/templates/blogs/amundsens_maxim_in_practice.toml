@@ -22,9 +22,8 @@ manner,
 To show how I do this in practice I'm going to use
 [Quart](https://github.com/pallets/quart),
 [Quart-DB](https://github.com/pgjones/quart-db),
-[SQL-tString](https://github.com/pgjones/sql-tstring), and
-[Quart-Schema](https://github.com/pgjones/quart-schema) which are all
-libraries I've authored with
+[SQL-tString](https://github.com/pgjones/sql-tstring),
+[Quart-Schema](https://github.com/pgjones/quart-schema), and
 [Pydantic](https://github.com/pydantic/pydantic).
 
 ## API Requirements
