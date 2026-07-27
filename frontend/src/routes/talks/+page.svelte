@@ -22,6 +22,7 @@
       <Talk
         event="PyCon UK 2025"
         slidesHref="https://docs.google.com/presentation/d/1S3svFlPk5G8aSTm-D8LOr648TX9sQI8ZwbN9Q63-MTs/edit?usp=sharing"
+        videoHref="https://www.youtube.com/watch?v=naQyq9kd2_w"
         title="Building SQL queries using t-strings">
         <p class="card-text">
           It is painfully difficult to dynamically build SQL queries in Python. Fortunately Python 3.14 introduces t-strings which provide custom string processing of template strings. My library, SQL-tString, builds SQL queries from these template strings, making it easy to build dynamic queries in Python by writing SQL directly.
