@@ -1,0 +1,51 @@
+date = "2026-08-29"
+id = "quart-0-23-released-2026"
+summary = """
+Quart 0.23 is a new major release of Quart with a 25% performance
+improvement over Quart 0.22, a new development reloader, and
+backpressure handling.
+"""
+title = "Quart 0.23 is 25% quicker and available now"
+
+body = """
+
+Quart 0.23 can serve 25% (1.25x) more requests per second than Quart
+0.22 in microbenchmarks. This performance improvement comes from a
+rework of how Quart handles requests and provides backpressure to the
+server. 0.23 also comes with a development reloader that does not
+crash on syntax errors and should work across all systems/setups.
+
+To understand the performance improvement it is first important to
+note that Quart will create two asyncio tasks per request. One of
+these tasks will run the app and send the result to the server, whilst
+the other will handle messages from the server. This means that Quart
+can buffer inbound data whilst the app task is awaiting IO and more
+importantly Quart will cancel both tasks if the client disconnects.
+
+The ability to cancel both tasks on a client disconnect is
+advantageuos in production code where the app is likely to execute
+complex business logic and/or DB queries. Hence, cancelling this work
+will overall save time.
+
+Creating two tasks per request and switching the handling to them is
+problematic for microbenchmarks as in the tight loop the cost of
+creating the tasks and then switching to them is a large proportion of
+the total time. Thus any improvement to this code can lead to large
+microbenchmark improvements.
+
+In Quart 0.23 modern asyncio code, notably a TaskGroup, to replace
+older slower code. This is the main reason for the speedup. In
+addition Quart will no longer fully buffer the request body and
+instead provide backpressue to the server. This also improves
+microbenchmarks as less work is done per request.
+
+Backpressure is important as it prevents clients from overloading the
+server by making it process more data than it can/will use. It works
+by Quart refusing to accept any more data from the server until it
+is ready to use it, hence back pressure to the server.
+
+Finally Quart's reloader now works the same way as Flask's which makes
+the development experience much nicer as it keeps reloading even when
+the app cannot start.
+
+"""
